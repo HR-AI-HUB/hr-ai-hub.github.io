@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="nl">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="generator" content="ReSpec 24.5.2">
+    <style>
+      /* Stijlen behouden uit origineel voor consistentie */
+      span.example-title { text-transform: none; }
+      aside.example, div.example { padding: .5em; border-left: .5em solid #e0cb52; background: #fcfaee; margin: 1em 0; }
+      code { color: #c83500; }
+      .simple { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+      .simple th { background: #005a9c; color: #fff; padding: 5px; text-align: left; }
+      .simple td { padding: 5px; border-top: 1px solid #ddd; }
+    </style>
+    <link rel="stylesheet" href="respec/style/HR-AI-HUB.css">
+    <link rel="shortcut icon" type="image/x-icon" href="respec/style/logos/HR-Logo.png">
+    <title>HR AI-Hub - Hogeschool Rotterdam</title>
+  </head>  
+<body class="h-entry">  
+  <div class="head">  
+    <a href="https://hr-ai-hub.github.io/" class="logo">  
+      <img id="AI-Hub" alt="HR AI Hub" src="respec/style/logos/HR-Logo.png" width="150">  
+    </a>  
+  
+    <h1 class="title p-name" id="title">HR SURF AI-Hub</h1>  
+  
+    <dl>  
+      <dt>Versie: 16-feb-2026</dt>  
+      <dd><a class="u-url" href="https://hr-ai-hub.github.io/">https://hr-ai-hub.github.io/</a></dd>  
+      <dt>Opdrachtgever:</dt>  
+      <dd class="p-author h-card vcard">  
+        <span class="p-name fn">Hogeschool Rotterdam</span>  
+      </dd>  
+    </dl>  
+  
+    <hr title="Separator for header">  
+  </div>  
+  
+  <nav id="toc">  
+    <h2 class="introductory" id="inhoudsopgave">Inhoudsopgave</h2>  
+    <ol class="toc">  
+      <li class="tocline"><a class="tocxref" href="#wat-is-ai-hub">1. Wat is de AI-Hub?</a></li>  
+      <li class="tocline"><a class="tocxref" href="#modellen">2. Modellen</a></li>  
+      <li class="tocline"><a class="tocxref" href="#latency-mode">3. Latency modi</a></li>  
+      <li class="tocline"><a class="tocxref" href="#integraties">4. Integraties</a></li>  
+      <li class="tocline"><a class="tocxref" href="#development">5. Ontwikkeling (Development)</a></li>  
+      <li class="tocline"><a class="tocxref" href="#whats-next">6. Wat is de volgende stap?</a></li>  
+    </ol>  
+  </nav>  
+  
+  <section id="wat-is-ai-hub">  
+    <h2>1. Wat is de HR SURF AI-HUB?</h2>  
+    <p>  
+      De <strong>AI-Hub</strong> is een soeverein AI-platform dat wordt ontwikkeld op basis van de publieke waarden die binnen de sector zijn afgesproken (autonomie, menselijkheid, rechtvaardigheid).  
+    </p>
+    <p>
+      Op de AI-Hub kunt u verschillende taalmodellen <em>on-premises</em> draaien in het datacenter van SURF. Het belangrijkste doel van de AI-Hub is het bieden van een API waarmee onderzoekers, ontwikkelaars en systeembeheerders AI-inference kunnen gebruiken met publiek beschikbare AI-modellen in een vertrouwde omgeving.
+    </p>  
+  
+    <div class="example">
+      <span class="example-title"><strong>Pilotfase</strong></span>
+      <p>De AI-Hub is in actieve ontwikkeling en nog niet algemeen beschikbaar voor alle instituten. Interesse om deel te nemen aan de pilot? Meld je aan via het Pilot-registratieformulier.</p>
+    </div>
+  </section>  
+  
+  <section id="modellen">  
+    <h2>2. Modellen</h2>  
+    <p>Tijdens de Pilot draaien er diverse <em>open-weights</em> modellen voor verschillende modaliteiten:</p>  
+    <ul>  
+      <li><strong>Tekst:</strong> Llama70b (default-text-large), Mistral Small (EU alternatief)</li>  
+      <li><strong>Transcripties:</strong> Whisper-Large-v2</li>  
+      <li><strong>Beeldanalyse:</strong> Qwen 2.5-VL-32B-Instruct</li>  
+      <li><strong>Beeldgeneratie:</strong> FLUX.1-schnell (default-image)</li>  
+      <li><strong>Code:</strong> Qwen 2.5-Coder-32B-Instruct (beperkt beschikbaar)</li>  
+      <li><strong>GPT-OSS:</strong> OpenAI's onlangs uitgebrachte open-weight model (binnenkort beschikbaar)</li>  
+      <li><strong>Embeddings:</strong> Qwen3-embedding-8B (vervangt Llama70b in embedding-modus)</li>
+    </ul>  
+    <p>
+      We gebruiken <strong>aliassen</strong> (zoals <code>default-text-medium</code>) voor automatische upgrades. Bekijk de modeltabel in de backoffice voor een actueel overzicht.
+    </p>
+  </section>  
+  
+  <section id="latency-mode">  
+    <h2>3. Latency modi</h2>  
+    <p>De API ondersteunt verschillende snelheden (latency modi):</p>  
+    <table class="simple">  
+      <thead>  
+        <tr><th>Mode</th><th>Snelheid</th><th>Modellen</th><th>Gebruik</th></tr>  
+      </thead>  
+      <tbody>  
+        <tr><td><strong>Always-on</strong></td><td>< 10 sec</td><td>Alleen 'always-on' modellen</td><td>Chat-interfaces</td></tr>  
+        <tr><td><strong>On-demand</strong></td><td>< 30 min</td><td>Alle beschikbare modellen</td><td>Playground</td></tr>  
+        <tr><td><strong>Batch</strong></td><td>< 24 uur</td><td>Alle beschikbare modellen</td><td>Onderzoek, workflows</td></tr>  
+      </tbody>  
+    </table>  
+  </section>  
+  
+  <section id="integraties">  
+    <h2>4. Integraties</h2>  
+    <p>De AI-Hub fungeert als backend voor applicaties die de <strong>OpenAI API-standaard</strong> ondersteunen:</p>  
+    <ul>  
+      <li><strong>OpenWebUI:</strong> Browser-interface voor LLM-beheer.</li>  
+      <li><strong>Nvidia Nemo Guardrails:</strong> Voor het toevoegen van veiligheidsregels aan applicaties.</li>  
+      <li><strong>PyCharm:</strong> Populaire IDE voor Python-ontwikkeling.</li>  
+      <li><strong>Elastic Security:</strong> Gebruik de AI-Hub als inference provider voor de AI Assistant.</li>  
+      <li><strong>LibreChat:</strong> Open-source self-hosted alternatief voor ChatGPT.</li>  
+    </ul>  
+    <p><em>Let op: Het verantwoord uitrollen van deze integraties binnen uw instituut is een eigen verantwoordelijkheid.</em></p>
+  </section>  
+  
+  <section id="development">  
+    <h2>5. Ontwikkeling (Development)</h2>  
+    <p>Ontwikkel eigen workflows of applicaties via de AI-Hub API:</p>  
+    <ul>  
+      <li><strong>Onboarding:</strong> Documentatie om van start te gaan.</li>  
+      <li><strong>Python voorbeelden:</strong> Code voor diverse functies zoals <em>tool calling</em> (achter login).</li>  
+      <li><strong>API Swagger:</strong> Gedetailleerde technische specificaties van de endpoints (achter login).</li>  
+    </ul>  
+  </section>  
+  
+  <section id="whats-next">  
+    <h2>6. Wat is de volgende stap?</h2>  
+    <p>Lees onze <strong>Docs</strong> en <strong>F.A.Q.</strong> en begin met bouwen.</p>  
+    <p><em>Happy coding!</em></p>  
+  </section>  
+  
+</body>  
+</html>
