@@ -379,6 +379,22 @@ table.simple-table tbody tr:last-child td:last-child {
 }
 
 .project-card .tag {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 0 0.4em 0.5em 0;
+  padding: 0.2em 0.65em;
+  border-radius: 999px;
+  border: 1px solid #cfd9e6;
+  background: #eef2f7;
+  color: #36506b !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+}
+
+.project-card .tag {
   margin-bottom: 0.45em;
 }
 
