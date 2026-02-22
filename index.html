@@ -4,11 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <meta name="generator" content="ReSpec 24.5.2">
-  <link rel="stylesheet" href="respec/style/HR-AI-HUB.css">
-	<link rel="icon" type="image/png" href="respec/style/logos/hr-ai-hub-data-stack.png">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-
-</head>
+		<link rel="stylesheet" href="respec/style/HR-AI-HUB.css">
+		<link rel="icon" type="image/png" href="respec/style/logos/hr-ai-hub-data-stack.png">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
 <body class="h-entry">
   <div class="head">
     <a href="https://hr-ai-hub.github.io/" class="logo">
@@ -19,18 +18,19 @@
 
     <dl>
       <dt>Opdrachtgever:</dt>
-		Programma AI &amp; Ethiek Hogeschool Rotterdam (HR)&nbsp;<br>
-		<a class="u-url" href="https://www.hogeschoolrotterdam.nl/go/jaaropening/online-festivalprogramma/workshops/niet-live/kunstmatige-intelligentie-raakt-ons-allen/">Kunstmatige intelligentie raakt ons allen!
-<br>
-		<br>
-		</a>
+			<dd>
+				Programma AI &amp; Ethiek Hogeschool Rotterdam (HR)
+				<br>
+				<a class="u-url" href="https://www.hogeschoolrotterdam.nl/go/jaaropening/online-festivalprogramma/workshops/niet-live/kunstmatige-intelligentie-raakt-ons-allen/">Kunstmatige intelligentie raakt ons allen!</a>
+			</dd>
       <dt>Gerealiseerd door:</dt>
-		<dd class="p-author h-card vcard">
-      <span class="p-name fn">RFvdW</span>,
-      <a class="p-org org h-org h-card" href="https://www.hogeschoolrotterdam.nl/onderzoek/lectoren/zorginnovatie/medewerkers/van-der-willigen-rob/">Tech-Lead</a>
-		<dd class="p-author h-card vcard">
-      <span class="p-name fn">Alfons Loman,</span>
-      <a class="p-org org h-org h-card" href="https://www.hogeschoolrotterdam.nl/onderzoek/lectoren/business-innovation/onderzoekers/alfons-looman/">Coördinator Datalabs</a>
+			<dd class="p-author h-card vcard">
+				<span class="p-name fn">RFvdW</span>,
+				<a class="p-org org h-org h-card" href="https://www.hogeschoolrotterdam.nl/onderzoek/lectoren/zorginnovatie/medewerkers/van-der-willigen-rob/">Tech-Lead</a>
+			</dd>
+			<dd class="p-author h-card vcard">
+				<span class="p-name fn">Alfons Loman</span>,
+				<a class="p-org org h-org h-card" href="https://www.hogeschoolrotterdam.nl/onderzoek/lectoren/business-innovation/onderzoekers/alfons-looman/">Coördinator Datalabs</a>
       </dd>
     </dl>
 
@@ -78,7 +78,7 @@
 				</li>
 				  
 				<li class="tocline">
-				  <a class="tocxref" href="#overeenkomst"><span class="secno">5. </span>HR AI-Hub Pilot</a> <br> <br>
+				  <a class="tocxref" href="#overeenkomst"><span class="secno">5. </span>HR AI-Hub Pilot</a>
 				</li>  
 				  
 			  </ol>
@@ -98,7 +98,7 @@
 						  De <strong>HR AI‑Hub Pilot</strong> maakt onderdeel uit van het <a href="https://www.researchgate.net/profile/Robert-Van-Der-Willigen-2/publication/360951391_Professionaliseringsaanpak_voor_docenten_in_het_hoger_onderwijs_Werkpakket_Proeftuin_AI_in_het_hoger_onderwijs/links/629532c46886635d5cb13fbc/Professionaliseringsaanpak-voor-docenten-in-het-hoger-onderwijs-Werkpakket-Proeftuin-AI-in-het-hoger-onderwijs.pdf" target="_blank"><strong>HR-brede programma AI & Ethiek</strong></a> dat inzet op “Responsible Applied AI”. 
 							Het biedt onderzoekers, docenten, ondersteuners en studenten van <strong>Hogeschool Rotterdam (HR)</strong> een gecontroleerde omgeving om met generatieve AI‑taalmodellen te experimenteren en deze in onderwijs en onderzoek toe te passen. De AI‑Hub draait volledig in de eigen datacenters van SURF en zal na certificering ook geschikt zijn voor vertrouwelijke gegevens, zodat AI‑workflows structureel en duurzaam kunnen worden ingericht. 
 						</p>
-						  Deze pilot sluit aan bij de bredere ambitie van Hogeschool Rotterdam om het experimenteren en innoveren met nieuwe digitale technologieën laagdrepelig te stimuleren via 
+					  <p>Deze pilot sluit aan bij de bredere ambitie van Hogeschool Rotterdam om het experimenteren en innoveren met nieuwe digitale technologieën laagdrepelig te stimuleren via 
 							<a href="https://www.hogeschoolrotterdam.nl/samenwerking/andere-samenwerkingsvormen/datalabs/" target="_blank"><strong>DataLabs</strong></a>. 
 							Sinds het in 2019 opgerichte <a href="https://github.com/HR-DATA-FABRIC/PROMETHEUS/blob/main/README.md" target="_blank"><strong>PROMETHEUS DataLab </strong></a>
 						  zijn er zes datalabs gerealiseerd. Ze vormen een fedratieve "data fabric" bestaande uit zowel fysieke locaties als digitale omgevingen waar zowel ervaren als beginnende Data Scientists &amp; Data Engineers
@@ -109,117 +109,79 @@
 
 
 				
-				<div class="example"><h1>Truth Finding [“Waarheidsvinding”]</h1> 
-				  <ul>  
-					  <strong>Detectie en mitigatie van hallucinaties.</strong><br>  
-					  <code>Dit betreft het identificeren en tegengaan van onjuiste, verzonnen of niet‑onderbouwde informatie in de gegenereerde output van LLM’s.</code>  <br>
-							  
-					  <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
-						<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-						  Anh-Hoang, D., Tran, V., & Nguyen, L.-M. (2025). 
-						  <a href="https://doi.org/10.3389/frai.2025.1622292" 
-							   style="color: #8B0000; text-decoration: none;" 
-							   target="_blank">Survey and analysis of hallucinations in large language models: Attribution to prompting strategies or model behavior</a>. 
-						  <i>Frontiers in Artificial Intelligence, 8</i>, 1622292. 
-						  <a href="https://doi.org/10.3389/frai.2025.1622292" 
-							   style="color: #8B0000; text-decoration: underline;" 
-							   target="_blank">https://doi.org/10.3389/frai.2025.1622292</a>
-					  </ul><br>
-
-				     
-					  <strong>Geautomatiseerde fact‑checking en claimverificatie.</strong><br>  
-					  <code>LLM’s inzetten als forensische tools voor de verificatie van feitelijke uitspraken.</code>  
-				    
-					  <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
-						<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-						  Rahman, S. S., Islam, M. A., Alam, M. M., Zeba, M., Rahman, M. A., Chowa, S. S., … & Azam, S. (2026). 
-						  <a href="https://doi.org/10.1007/s10462-026-11111-5" 
-							   style="color: #8B0000; text-decoration: none;" 
-							   target="_blank">Hallucination to truth: A review of fact-checking and factuality evaluation in large language models</a>. 
-						  <i>Artificial Intelligence Review</i>. 
-						  <a href="https://doi.org/10.1007/s10462-026-11111-5" 
-							   style="color: #8B0000; text-decoration: underline;" 
-							   target="_blank">https://doi.org/10.1007/s10462-026-11111-5</a>
-					    </li>
-					  </ul>
-					  <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
-						<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-						  Krishnamurthy, V., & Balaji, V. (2024). 
-						  <a href="https://doi.org/10.1109/ACCESS.2024.3520187" 
-							   style="color: #8B0000; text-decoration: none;" 
-							   target="_blank">Yours truly: A credibility framework for effortless LLM-powered fact checking</a>. 
-						  <i>IEEE Access, 12</i>, 195152-195173. 
-						  <a href="https://doi.org/10.1109/ACCESS.2024.3520187" 
-							   style="color: #8B0000; text-decoration: underline;" 
-							   target="_blank">https://doi.org/10.1109/ACCESS.2024.3520187</a>
-					    </li>
-					  </ul><br>
-
-
-					<strong>Bron‑gegronde (“grounded”) attributie.</strong><br>  
-				    <code>Geautomatiseerde koppeling van standpunten aan geverifieerde broninformatie ("Contextually grounded research").</code>
-					    
-					<ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
-					<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-					Asai, A., He, J., Shao, R., et al. (2026). 
-					<a href="https://doi.org/10.1038/s41586-025-10072-4" 
-					   style="color: #8B0000; text-decoration: none;" 
-					   target="_blank">Synthesizing scientific literature with retrieval-augmented language models</a>. 
-					<i>Nature</i>. 
-					<a href="https://doi.org/10.1038/s41586-025-10072-4" 
-					   style="color: #8B0000; text-decoration: underline;" 
-					   target="_blank">https://doi.org/10.1038/s41586-025-10072-4</a>
-					</li>
-					</ul>
-
-					<ul style="list-style-type: disc; padding-left: 1.2em; margin: 0.5em 0;">
-					<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-					Slobodkin, A., Hirsch, E., Cattan, A., Schuster, T., & Dagan, I. (2024, August). 
-					<a href="https://doi.org/10.18653/v1/2024.acl-long.182" style="color: #8B0000; text-decoration: none;" target="_blank">
-					Attribute first, then generate: Locally-attributable grounded text generation.
-					</a>
-					<i>In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</i>, 3309–3344. 
-					<a href="https://doi.org/10.18653/v1/2024.acl-long.182" style="color: #8B0000; text-decoration: underline;" target="_blank">
-					https://doi.org/10.18653/v1/2024.acl-long.182
-					</a>
-					</li>
-					</ul><br>
-					  					  
-					<strong>Onzekerheid, kalibratie en “weten dat je het niet weet”</strong><br>  
-				    <code>LLMs dwingen om kennisgrenzen transperant te maken —welke informatie is zeer waarschijnlijk en waarom, —waar begint de onzekerheid, en wat ligt buiten het bereik van de LLM?</code>
-										  
-					<ul style="list-style-type: disc; padding-left: 1.2em; margin: 0.5em 0;">
-					<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-					Xue, B., Mi, F., Zhu, Q., Wang, H., Wang, R., Wang, S., … & Wong, K. F. (2025). 
-					<a href="https://doi.org/10.18653/v1/2025.acl-long.299" style="color: #8B0000; text-decoration: none;" target="_blank">
-					UAalign: Leveraging uncertainty estimations for factuality alignment on large language models
-					</a>. 
-					<i>In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</i>, 6002–6024. 
-					<a href="https://doi.org/10.18653/v1/2025.acl-long.299" style="color: #8B0000; text-decoration: underline;" target="_blank">
-					https://doi.org/10.18653/v1/2025.acl-long.299
-					</a>
-					</li>
-					</ul>
-
-					<ul style="list-style-type: disc; padding-left: 1.2em; margin: 0.5em 0;">
-						<li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
-						Qian, C., Acikgoz, E. C., Wang, H., Chen, X., Sil, A., Hakkani-Tür, D., Tur, G., & Ji, H. (2025, July). 
-						<a href="https://doi.org/10.18653/v1/2025.findings-acl.239" style="color: #8B0000; text-decoration: none;" target="_blank">
-						SMART: Self-aware agent for tool overuse mitigation
-						</a>. 
-						<i>Findings of the Association for Computational Linguistics: ACL 2025</i>, 4604–4621. 
-						<a href="https://doi.org/10.18653/v1/2025.findings-acl.239" style="color: #8B0000; text-decoration: underline;" target="_blank">
-						https://doi.org/10.18653/v1/2025.findings-acl.239
-						</a>
-						</li>
-					</ul>
-
-				  
-				  </ul><br>
+				<div class="example">
+				  <h1>Truth Finding [“Waarheidsvinding”]</h1>
+				  <ul>
+				    <li>
+				      <strong>Detectie en mitigatie van hallucinaties.</strong><br>
+				      <code>Dit betreft het identificeren en tegengaan van onjuiste, verzonnen of niet‑onderbouwde informatie in de gegenereerde output van LLM’s.</code><br>
+				      <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Anh-Hoang, D., Tran, V., & Nguyen, L.-M. (2025).
+				          <a href="https://doi.org/10.3389/frai.2025.1622292" style="color: #8B0000; text-decoration: none;" target="_blank">Survey and analysis of hallucinations in large language models: Attribution to prompting strategies or model behavior</a>.
+				          <i>Frontiers in Artificial Intelligence, 8</i>, 1622292.
+				          <a href="https://doi.org/10.3389/frai.2025.1622292" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.3389/frai.2025.1622292</a>
+				        </li>
+				      </ul>
+				    </li>
+				    <li>
+				      <strong>Geautomatiseerde fact‑checking en claimverificatie.</strong><br>
+				      <code>LLM’s inzetten als forensische tools voor de verificatie van feitelijke uitspraken.</code>
+				      <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Rahman, S. S., Islam, M. A., Alam, M. M., Zeba, M., Rahman, M. A., Chowa, S. S., … & Azam, S. (2026).
+				          <a href="https://doi.org/10.1007/s10462-026-11111-5" style="color: #8B0000; text-decoration: none;" target="_blank">Hallucination to truth: A review of fact-checking and factuality evaluation in large language models</a>.
+				          <i>Artificial Intelligence Review</i>.
+				          <a href="https://doi.org/10.1007/s10462-026-11111-5" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.1007/s10462-026-11111-5</a>
+				        </li>
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Krishnamurthy, V., & Balaji, V. (2024).
+				          <a href="https://doi.org/10.1109/ACCESS.2024.3520187" style="color: #8B0000; text-decoration: none;" target="_blank">Yours truly: A credibility framework for effortless LLM-powered fact checking</a>.
+				          <i>IEEE Access, 12</i>, 195152-195173.
+				          <a href="https://doi.org/10.1109/ACCESS.2024.3520187" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.1109/ACCESS.2024.3520187</a>
+				        </li>
+				      </ul>
+				    </li>
+				    <li>
+				      <strong>Bron‑gegronde (“grounded”) attributie.</strong><br>
+				      <code>Geautomatiseerde koppeling van standpunten aan geverifieerde broninformatie ("Contextually grounded research").</code>
+				      <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0;">
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Asai, A., He, J., Shao, R., et al. (2026).
+				          <a href="https://doi.org/10.1038/s41586-025-10072-4" style="color: #8B0000; text-decoration: none;" target="_blank">Synthesizing scientific literature with retrieval-augmented language models</a>.
+				          <i>Nature</i>.
+				          <a href="https://doi.org/10.1038/s41586-025-10072-4" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.1038/s41586-025-10072-4</a>
+				        </li>
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Slobodkin, A., Hirsch, E., Cattan, A., Schuster, T., & Dagan, I. (2024, August).
+				          <a href="https://doi.org/10.18653/v1/2024.acl-long.182" style="color: #8B0000; text-decoration: none;" target="_blank">Attribute first, then generate: Locally-attributable grounded text generation.</a>
+				          <i>In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</i>, 3309–3344.
+				          <a href="https://doi.org/10.18653/v1/2024.acl-long.182" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.18653/v1/2024.acl-long.182</a>
+				        </li>
+				      </ul>
+				    </li>
+				    <li>
+				      <strong>Onzekerheid, kalibratie en “weten dat je het niet weet”</strong><br>
+				      <code>LLMs dwingen om kennisgrenzen transparant te maken — welke informatie is zeer waarschijnlijk en waarom, waar begint de onzekerheid, en wat ligt buiten het bereik van de LLM?</code>
+				      <ul style="list-style-type: disc; padding-left: 1.2em; margin: 0.5em 0;">
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Xue, B., Mi, F., Zhu, Q., Wang, H., Wang, R., Wang, S., … & Wong, K. F. (2025).
+				          <a href="https://doi.org/10.18653/v1/2025.acl-long.299" style="color: #8B0000; text-decoration: none;" target="_blank">UAalign: Leveraging uncertainty estimations for factuality alignment on large language models</a>.
+				          <i>In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</i>, 6002–6024.
+				          <a href="https://doi.org/10.18653/v1/2025.acl-long.299" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.18653/v1/2025.acl-long.299</a>
+				        </li>
+				        <li style="color: #8B0000; font-size: 0.85em; line-height: 1.1;">
+				          Qian, C., Acikgoz, E. C., Wang, H., Chen, X., Sil, A., Hakkani-Tür, D., Tur, G., & Ji, H. (2025, July).
+				          <a href="https://doi.org/10.18653/v1/2025.findings-acl.239" style="color: #8B0000; text-decoration: none;" target="_blank">SMART: Self-aware agent for tool overuse mitigation</a>.
+				          <i>Findings of the Association for Computational Linguistics: ACL 2025</i>, 4604–4621.
+				          <a href="https://doi.org/10.18653/v1/2025.findings-acl.239" style="color: #8B0000; text-decoration: underline;" target="_blank">https://doi.org/10.18653/v1/2025.findings-acl.239</a>
+				        </li>
+				      </ul>
+				    </li>
+				  </ul>
 				</div>
             </section>	
 						
-		  <p>
             <section id="showcase">
                 <h1>2. Gerealiseerde Implementaties (Showcases)</h1>
 				
@@ -304,25 +266,27 @@
 			<h1>4. Onboarding &amp; Support</h1>
 			<p>Voor docenten en onderzoekers die gebruik willen maken van de AI-Hub infrastrutuur, zijn de volgende bronnen en kanalen beschikbaar:</p>
 
+			<code>
 			<ul>
-				<code>
+				<li>
 					<strong>Documentatie:</strong> 
 					Technische specificaties van de endpoints en informatie over latency-modi zijn beschikbaar via de SURF Servicedesk (inloggen via SURF/SRAM vereist).
-					[<a href="https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/219086851/AI-Hub+WiLLMa+Pilot+phase#AIHub(WiLLMa)%3APilotphase-Latencymode" target="_blank">Servicedesk SURF</a>]<br><br>
-				
-				
+					[<a href="https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/219086851/AI-Hub+WiLLMa+Pilot+phase#AIHub(WiLLMa)%3APilotphase-Latencymode" target="_blank">Servicedesk SURF</a>]
+				</li>
+				<li>
 					<strong>Python SDK &amp; Voorbeelden:</strong> 
 					Praktische code-voorbeelden voor tool-calling, visuele workflows en diverse model-modaliteiten zijn te vinden in de Research Support repositories van de deelnemende datalabs.
-					[<a href="https://github.com/HR-DataLab-hr-ai-hub/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW" target="_blank">Zie o.a. de Langflow implementie van Willma LLMs door datalab hr-ai-hub</a>]<br><br>
-				
-				
+					[<a href="https://github.com/HR-DataLab-hr-ai-hub/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW" target="_blank">Zie o.a. de Langflow implementie van Willma LLMs door datalab hr-ai-hub</a>]
+				</li>
+				<li>
 					<strong>Project Intake &amp; Support:</strong> 
 					Nieuwe AI-Hub projecten worden gefaciliteerd via een gestructureerd intakeproces. 
-					[<a href="https://github.com/HR-DataLab-hr-ai-hub/RESEARCH_SUPPORT/blob/main/PROJECTS/Intake_Procedure_Data_Science_Projects/Readme.md" target="_blank">Intakeproces Data Science</a>]<br><br>
-				
-				
+					[<a href="https://github.com/HR-DataLab-hr-ai-hub/RESEARCH_SUPPORT/blob/main/PROJECTS/Intake_Procedure_Data_Science_Projects/Readme.md" target="_blank">Intakeproces Data Science</a>]
+				</li>
+				<li>
 					<strong>Lopende initiatieven: </strong> 
-					Informatie over lopende initiatieven is te verkrijgen via <a href="https://www.hogeschoolrotterdam.nl/samenwerking/andere-samenwerkingsvormen/datalabs/" target="_blank"><strong> Datalabs: </strong> EAS / hr-ai-hub / AI  SusTech </p> <br><br>
+					Informatie over lopende initiatieven is te verkrijgen via <a href="https://www.hogeschoolrotterdam.nl/samenwerking/andere-samenwerkingsvormen/datalabs/" target="_blank"><strong>Datalabs:</strong> EAS / hr-ai-hub / AI SusTech</a>.
+				</li>
 				</code>
 			</ul>
 		</section>
@@ -337,10 +301,12 @@
 									<a href="surf-verklaring-van-toepasselijkheid-2024.pdf" class="citation-link-underline" target="_blank">
 										surf-verklaring-van-toepasselijkheid-2024.pdf
 									</a>
+								</li>
 								<li><strong>Vertrouwelijkheid: <br> </strong> Er gelden strikte afspraken over informatiebeveiliging en het gebruik van open-source componenten.</li>
 								<li><strong>Looptijd: <br>  </strong> De overeenkomst is specifiek van kracht voor de duur van de pilotfase (2025-2026).</li>
-							  <Li><strong>Archivering: <br> </strong>De getekende versie van dit document is gearchiveerd door de afdeling Juridische Zaken van de Hogeschool Rotterdam <br> 
+							  <li><strong>Archivering: <br> </strong>De getekende versie van dit document is gearchiveerd door de afdeling Juridische Zaken van de Hogeschool Rotterdam <br> 
 								  en ingezien door privacy officer Sam Wubben. <strong>Contact:</strong> <a href="mailto:privacy@hr.nl">privacy@hr.nl</a>
+							  </li>
 							</ul><br>
 					  </div>
             </section>
