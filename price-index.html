@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Token Economics Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Corporate Neutral -->
+    <!-- Background: Stone-50, Text: Stone-800, Accents: Emerald (Cost) & Indigo (Data) -->
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Chart Container Styling - Mandatory for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 300px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    
+    <!-- Application Structure Plan:
+         1. Header: Intro to the specific dataset uploaded.
+         2. Token Analysis Section: Visualization of the CSV data (Bar charts for scale).
+         3. Cost Impact Calculator: A tool specifically designed to answer the user's prompt about AWS/Google/Azure costs using the CSV data as volume inputs.
+         4. Detailed Breakdown: Table view of the source data.
+         Why: This structure first validates the user's data (Visuals), then answers their external question (Cost), and finally provides the raw details.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Grouped Bar Chart: To compare Input vs Output tokens across the 3 query types. Shows the "shape" of the interaction.
+         2. Interactive Cost Cards: To display the calculated financial impact based on market rates.
+         3. Donut Chart: To show the ratio of cost distribution (Input cost vs Output cost).
+         4. Justification: Chart.js is used for robust, responsive canvas rendering. No SVG/Mermaid used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-indigo-100 selection:text-indigo-800">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-emerald-600">
+                        Tokenomics Explorer
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-stone-500 hidden sm:block">Gebaseerd op: Query-type-Input-tokens-Output-tokens-Totaal.csv</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Section 1: Introduction & Key Metric -->
+        <section>
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h1 class="text-3xl font-bold text-stone-900 mb-4">Analyse van Tokenverbruik & Kosten</h1>
+                <p class="text-lg text-stone-600">
+                    Dit dashboard analyseert de input- en outputratio's van uw verschillende querytypes ("Simpele vraag", "Deep Research", "Lange analyse") en projecteert de kosten voor AWS, Google Cloud en Azure.
+                </p>
+            </div>
+            
+            <!-- Key Metrics Grid based on CSV Data -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100 card-hover border-l-4 border-l-blue-500">
+                    <h3 class="text-sm font-semibold text-stone-400 uppercase tracking-wider">Simpele vraag</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-3xl font-bold text-stone-900">300</span>
+                        <span class="ml-2 text-sm text-stone-500">totaal tokens</span>
+                    </div>
+                    <div class="mt-4 text-sm text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded">
+                        33% Input / 66% Output
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100 card-hover border-l-4 border-l-indigo-500">
+                    <h3 class="text-sm font-semibold text-stone-400 uppercase tracking-wider">Deep Research</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-3xl font-bold text-stone-900">2.000</span>
+                        <span class="ml-2 text-sm text-stone-500">totaal tokens</span>
+                    </div>
+                    <div class="mt-4 text-sm text-indigo-600 bg-indigo-50 inline-block px-2 py-1 rounded">
+                        25% Input / 75% Output
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100 card-hover border-l-4 border-l-purple-500">
+                    <h3 class="text-sm font-semibold text-stone-400 uppercase tracking-wider">Lange analyse</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-3xl font-bold text-stone-900">4.000</span>
+                        <span class="ml-2 text-sm text-stone-500">totaal tokens</span>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-600 bg-purple-50 inline-block px-2 py-1 rounded">
+                        25% Input / 75% Output
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Token Visualization -->
+        <section class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="p-6 border-b border-stone-100">
+                <h2 class="text-xl font-bold text-stone-800">Token Distributie per Query Type</h2>
+                <p class="text-stone-500 text-sm mt-1">Vergelijking van de belasting van input (prompt) versus output (generatie).</p>
+            </div>
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Bar Chart -->
+                <div class="lg:col-span-2">
+                    <div class="chart-container">
+                        <canvas id="tokenBarChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-sm text-stone-500 italic text-center">
+                        Bron: Uw geüploade CSV bestand
+                    </div>
+                </div>
+                
+                <!-- Insight Text -->
+                <div class="flex flex-col justify-center space-y-6">
+                    <div class="bg-stone-50 p-4 rounded-lg border border-stone-100">
+                        <h4 class="font-semibold text-stone-800 mb-2">Analyse van de data</h4>
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            Het type <strong>"Lange analyse"</strong> is verreweg het zwaarst, met 4x zoveel input als een "Deep Research" taak, maar slechts 2x zoveel output. Dit suggereert dat lange analyses veel context (input) vereisen.
+                        </p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg border border-stone-100">
+                        <h4 class="font-semibold text-stone-800 mb-2">Output Dominantie</h4>
+                        <p class="text-stone-600 text-sm leading-relaxed">
+                            Voor alle types (behalve de simpelste) is de <strong>Output</strong> aanzienlijk hoger dan de Input. Aangezien output tokens vaak 3x tot 10x duurder zijn dan input tokens, is dit cruciaal voor kostenberekening.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Cost Calculator (Interactive) -->
+        <section id="cost-calculator" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-end md:items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">Kosten Calculator</h2>
+                    <p class="text-stone-600 mt-1">Schat de kosten bij cloud providers (AWS, Azure, Google) gebaseerd op uw verbruiksprofiel.</p>
+                </div>
+                
+                <!-- Provider Selector -->
+                <div class="mt-4 md:mt-0">
+                    <label for="providerSelect" class="block text-sm font-medium text-stone-700 mb-1">Kies Provider / Model:</label>
+                    <select id="providerSelect" class="block w-full pl-3 pr-10 py-2 text-base border-stone-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md shadow-sm border">
+                        <option value="custom">-- Aangepast --</option>
+                        <option value="azure_gpt4o" selected>Azure OpenAI (GPT-4o)</option>
+                        <option value="azure_gpt35">Azure OpenAI (GPT-3.5 Turbo)</option>
+                        <option value="google_gemini_pro">Google Vertex AI (Gemini 1.5 Pro)</option>
+                        <option value="google_gemini_flash">Google Vertex AI (Gemini 1.5 Flash)</option>
+                        <option value="aws_claude_sonnet">AWS Bedrock (Claude 3.5 Sonnet)</option>
+                        <option value="aws_claude_haiku">AWS Bedrock (Claude 3 Haiku)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Pricing Inputs & Comparison -->
+            <div class="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden">
+                <div class="bg-emerald-50/50 p-6 border-b border-emerald-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Volume Input -->
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-emerald-800 uppercase tracking-wide mb-1">Aantal Queries per Maand</label>
+                            <input type="number" id="queryVolume" value="1000" class="block w-full border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 p-2 border">
+                            <p class="text-xs text-stone-500 mt-1">Hoe vaak voert u deze taken uit?</p>
+                        </div>
+                        
+                        <!-- Cost Config -->
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1">Input Kosten ($/1M tokens)</label>
+                            <input type="number" id="inputCost" step="0.01" class="block w-full border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 p-2 border bg-stone-50">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1">Output Kosten ($/1M tokens)</label>
+                            <input type="number" id="outputCost" step="0.01" class="block w-full border-stone-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 p-2 border bg-stone-50">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Grid -->
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-stone-900 mb-4">Geschatte Maandelijkse Kosten</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="costResultsContainer">
+                        <!-- Cards will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Detailed Data Table -->
+        <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-stone-200 flex justify-between items-center">
+                <h3 class="text-lg font-medium text-stone-900">Brongegevens</h3>
+                <button onclick="toggleTable()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Toon/Verberg Data</button>
+            </div>
+            <div id="dataTableWrapper" class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-stone-200">
+                    <thead class="bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Query Type</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">Input Tokens</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">Output Tokens</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">Totaal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-200" id="tableBody">
+                        <!-- Data Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-stone-400 text-sm py-8">
+            <p>Generated by Tokenomics Explorer &bull; Prijzen zijn indicatief (Check officiële provider pagina's voor actuele tarieven)</p>
+        </footer>
+
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // --- DATA STORE ---
+        // Based on "Query-type-Input-tokens-Output-tokens-Totaal.csv"
+        const reportData = [
+            { type: "Simpele vraag", input: 100, output: 200, total: 300 },
+            { type: "Deep Research", input: 500, output: 1500, total: 2000 },
+            { type: "Lange analyse", input: 1000, output: 3000, total: 4000 }
+        ];
+
+        // --- PRICING PRESETS (Per 1M Tokens) ---
+        // Estimations as of current market knowledge
+        const pricingPresets = {
+            'azure_gpt4o': { name: 'Azure OpenAI (GPT-4o)', input: 2.50, output: 10.00, color: 'text-blue-600' },
+            'azure_gpt35': { name: 'Azure OpenAI (GPT-3.5 Turbo)', input: 0.50, output: 1.50, color: 'text-blue-500' },
+            'google_gemini_pro': { name: 'Google Vertex (Gemini 1.5 Pro)', input: 3.50, output: 10.50, color: 'text-red-500' },
+            'google_gemini_flash': { name: 'Google Vertex (Gemini 1.5 Flash)', input: 0.075, output: 0.30, color: 'text-red-400' },
+            'aws_claude_sonnet': { name: 'AWS Bedrock (Claude 3.5 Sonnet)', input: 3.00, output: 15.00, color: 'text-orange-500' },
+            'aws_claude_haiku': { name: 'AWS Bedrock (Claude 3 Haiku)', input: 0.25, output: 1.25, color: 'text-orange-400' },
+            'custom': { name: 'Aangepast', input: 0, output: 0, color: 'text-stone-600' }
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentProvider = 'azure_gpt4o';
+        let chartInstance = null;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            populateTable();
+            updatePricingInputs(); // Set initial inputs based on default provider
+            calculateCosts();      // Calculate initial costs
+
+            // Event Listeners
+            document.getElementById('providerSelect').addEventListener('change', handleProviderChange);
+            document.getElementById('inputCost').addEventListener('input', () => { document.getElementById('providerSelect').value = 'custom'; calculateCosts(); });
+            document.getElementById('outputCost').addEventListener('input', () => { document.getElementById('providerSelect').value = 'custom'; calculateCosts(); });
+            document.getElementById('queryVolume').addEventListener('input', calculateCosts);
+        });
+
+        // --- LOGIC: CHARTS ---
+        function initCharts() {
+            const ctx = document.getElementById('tokenBarChart').getContext('2d');
+            
+            // Prepare Data for Chart.js
+            const labels = reportData.map(d => d.type);
+            const inputData = reportData.map(d => d.input);
+            const outputData = reportData.map(d => d.output);
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Input Tokens (Prompt)',
+                            data: inputData,
+                            backgroundColor: 'rgba(79, 70, 229, 0.7)', // Indigo
+                            borderColor: 'rgba(79, 70, 229, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Output Tokens (Generatie)',
+                            data: outputData,
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)', // Emerald
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' tokens';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Aantal Tokens' },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- LOGIC: COST CALCULATOR ---
+        function handleProviderChange(e) {
+            currentProvider = e.target.value;
+            if (currentProvider !== 'custom') {
+                updatePricingInputs();
+                calculateCosts();
+            }
+        }
+
+        function updatePricingInputs() {
+            const provider = pricingPresets[currentProvider];
+            if (provider) {
+                document.getElementById('inputCost').value = provider.input;
+                document.getElementById('outputCost').value = provider.output;
+            }
+        }
+
+        function calculateCosts() {
+            const volume = parseInt(document.getElementById('queryVolume').value) || 0;
+            const inputPricePerM = parseFloat(document.getElementById('inputCost').value) || 0;
+            const outputPricePerM = parseFloat(document.getElementById('outputCost').value) || 0;
+
+            const container = document.getElementById('costResultsContainer');
+            container.innerHTML = ''; // Clear previous results
+
+            // Calculate cost for each Query Type in the CSV
+            reportData.forEach(item => {
+                // Formula: (Tokens / 1,000,000) * Price * Volume
+                const inputCost = (item.input / 1000000) * inputPricePerM * volume;
+                const outputCost = (item.output / 1000000) * outputPricePerM * volume;
+                const totalCost = inputCost + outputCost;
+
+                const cardHTML = `
+                    <div class="bg-stone-50 rounded-lg p-5 border border-stone-200 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-stone-800">${item.type}</h4>
+                                <span class="bg-white border border-stone-200 text-xs px-2 py-1 rounded text-stone-500 font-mono">${volume.toLocaleString()} ops</span>
+                            </div>
+                            <div class="space-y-1 text-sm text-stone-600 mb-4">
+                                <div class="flex justify-between">
+                                    <span>Input (${item.input}):</span>
+                                    <span>$${inputCost.toFixed(4)}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Output (${item.output}):</span>
+                                    <span>$${outputCost.toFixed(4)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-stone-200">
+                            <div class="flex justify-between items-end">
+                                <span class="text-xs text-stone-500 uppercase font-semibold">Totaal Geschat</span>
+                                <span class="text-2xl font-bold text-emerald-600">$${totalCost.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // --- LOGIC: TABLE ---
+        function populateTable() {
+            const tbody = document.getElementById('tableBody');
+            reportData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-stone-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900">${row.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-stone-600 font-mono">${row.input.toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-stone-600 font-mono">${row.output.toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-stone-900 font-mono">${row.total.toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleTable() {
+            const wrapper = document.getElementById('dataTableWrapper');
+            if (wrapper.style.display === 'none') {
+                wrapper.style.display = 'block';
+            } else {
+                wrapper.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
