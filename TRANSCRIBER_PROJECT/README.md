@@ -518,6 +518,13 @@ class WillmaAudioDownloader(Component):
 
 **Output wire:** `audio_packet` (Audio Packet Data)
 
+**Example — SURF Research Drive password-protected share link:**
+
+- Share link (from the UI): `https://hr.data.surf.nl/s/7Gz8JCzZDfCy42D`
+- Paste as download URL: `https://hr.data.surf.nl/s/7Gz8JCzZDfCy42D/download?path=/ECO_LARS_INTERVIEW.mp4`
+
+![SURF Research Drive share link example](images/surf_share_link_example.png)
+
 ---
 
 ### Component 3 — Audio Preprocessor (Pure Python / Stdlib-only)
