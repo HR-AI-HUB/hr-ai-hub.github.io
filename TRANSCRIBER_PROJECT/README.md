@@ -3,7 +3,7 @@
 > **Platform:** [SURF AI-HUB (WiLLMa)](https://hr-ai-hub.github.io/) · [SURF Research Cloud](https://www.surf.nl/en/surf-research-cloud-collaborative-research-environment) · [Langflow 1.9.3](https://langflow.org/) · Docker · Ubuntu 22.04  
 > **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)  
 > **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` (current) · `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb` (V06 baseline)  
-> **Ready-to-import flow:** `URL PREPRO TRANSCR  + TIME + DIARIZATION.json`
+> **Ready-to-import flow:** Download the Langflow JSON from [HR-AI-HUB GitHub](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/LANGFLOW_WHISPER_JSON/URL%20NextCLOUD-AUDVIs-PREPRO%2BTRANSCR%2BTIME%2BDIAR-BETA.json)
 
 ---
 
@@ -19,7 +19,7 @@
 8. [Step 5 — Build the flow from scratch (component by component)](#step-5--build-the-flow-from-scratch-component-by-component)
 9. [Configuration reference](#configuration-reference)
 10. [How two-speaker diarization works](#how-two-speaker-diarization-works)
-11. [Supported audio formats](#supported-audio-formats)
+11. [Supported media formats and URL types](#supported-audio-formats)
 12. [Troubleshooting](#troubleshooting)
 13. [Security notes](#security-notes)
 14. [License](#license)
@@ -298,12 +298,15 @@ docker exec langflow ffmpeg -version
 
 If you want to skip manual component assembly, import the pre-wired flow JSON directly:
 
-1. Copy `URL PREPRO TRANSCR  + TIME + DIARIZATION.json` to a location accessible from your browser.
+1. **Download the flow JSON** from GitHub:
+   [URL NextCLOUD-AUDVIs-PREPRO+TRANSCR+TIME+DIAR-BETA.json](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/LANGFLOW_WHISPER_JSON/URL%20NextCLOUD-AUDVIs-PREPRO%2BTRANSCR%2BTIME%2BDIAR-BETA.json)
+   Click **Raw** (or the download icon) on that page to download the `.json` file to your computer.
 2. In Langflow, click **My Flows → Import** (the upload icon, top-right of the flows list).
-3. Select the JSON file and confirm.
+3. Select the downloaded JSON file and confirm.
 4. Open the imported flow. You will see all 5 components already connected.
 5. Click the **3. WILLMA Whisper Diarized Transcriber** component, navigate to the **WILLMA API Key** field (padlock icon), and enter your API key.
-6. Click **Playground** (top-right) and paste an audio URL to test.
+6. If you use password-protected SURF Research Drive share links, enter the password in the **Share Link Password** field of the **1. WILLMA Audio Downloader** component.
+7. Click **Playground** (top-right) and paste an audio or video URL to test.
 
 ---
 
@@ -1238,12 +1241,54 @@ The `segments_json` output exposes each segment's `start`, `end`, `text`, `speak
 
 ## Supported audio formats
 
+### Accepted media types
+
+Paste any of the following into the Langflow Chat Playground:
+
+#### Video files
+| Extension | Notes |
+|-----------|-------|
+| `.mp4` | Zoom recordings, phone captures, screen recordings — `moov`-at-end handled via `/tmp` temp file |
+| `.mkv` | Matroska container |
+| `.mov` | QuickTime — common on macOS/iOS |
+| `.avi` | Legacy Windows video |
+| `.webm` | Browser screen recordings, Google Meet exports |
+| `.m4v` | iTunes-style MP4 variant |
+| `.mpg` / `.mpeg` | MPEG-1/2 video |
+
+> **V07 requirement:** Video extraction uses `ffmpeg`. Install it in the Docker container — see [Step 2f](#2f-install-ffmpeg-for-video-support-v07). Without ffmpeg the video bytes are forwarded unchanged to WILLMA Whisper (which handles common containers natively).
+
+#### Audio files
+| Extension | DSP treatment |
+|-----------|---------------|
+| `.wav` (16-bit PCM) | Full DSP pipeline: resample → 90 Hz highpass → DRC → peak normalize |
+| `.wav` (other bit-depths) | ⏩ Passthrough — no DSP |
+| `.mp3` | ⏩ Passthrough — Whisper handles natively |
+| `.m4a` | ⏩ Passthrough — Whisper handles natively |
+| `.flac` | ⏩ Passthrough — Whisper handles natively |
+| `.ogg` | ⏩ Passthrough — Whisper handles natively |
+| `.aac` | ⏩ Passthrough — Whisper handles natively |
+| `.opus` | ⏩ Passthrough — Whisper handles natively |
+
+### Accepted URL types
+
+| URL pattern | How it is handled |
+|-------------|-------------------|
+| Direct download link (any extension above) | Streamed directly with `requests.get` |
+| GitHub web viewer URL (`/blob/`) | Auto-rewritten to `raw.githubusercontent.com` |
+| Nextcloud / ownCloud file viewer (`/apps/files/files/{id}`) | Auto-rewritten to `/index.php/f/{id}?download` |
+| SURF Research Drive public share (`/s/{token}`) | Appended `/download`; no password needed |
+| SURF Research Drive public share with password (`/s/{token}`) | Cookie-based 3-step auth — enter password in **Share Link Password** field |
+| SURF Research Drive share + subfolder path (`/s/{token}/download?path=/file.mp4`) | Supported — path query string is preserved |
+
+### Processing pipeline summary
+
 | Format | Preprocessor action | Passed to Whisper |
 |--------|-------------------|-------------------|
-| **MP4, MKV, MOV, AVI, WEBM, M4V, MPG, MPEG** *(V07+)* | **ffmpeg audio extraction** → 16 kHz mono WAV → full DSP chain | ✅ |
+| **Video** (MP4, MKV, MOV, AVI, WEBM, M4V, MPG, MPEG) *(V07+)* | **ffmpeg audio extraction** → 16 kHz mono WAV → full DSP chain | ✅ |
 | 16-bit PCM WAV | Full DSP pipeline (resample, filter, DRC, normalize) | ✅ |
 | WAV with other bit-depth | ⏩ Passthrough (no DSP) | ✅ |
-| MP3, M4A, FLAC, OGG | ⏩ Passthrough (no DSP) | ✅ (Whisper handles natively) |
+| MP3, M4A, FLAC, OGG, AAC, OPUS | ⏩ Passthrough (no DSP) | ✅ (Whisper handles natively) |
 
 The DSP chain processes **16-bit PCM WAV** files (or WAV extracted by ffmpeg from a video container). All other formats are forwarded unchanged — Whisper large-v3 handles them natively server-side.
 
