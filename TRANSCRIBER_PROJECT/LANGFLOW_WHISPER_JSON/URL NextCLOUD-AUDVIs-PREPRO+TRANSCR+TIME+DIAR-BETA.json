@@ -1,0 +1,1349 @@
+{
+  "data": {
+    "edges": [
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {
+            "dataType": "ChatInput",
+            "id": "ChatInput-2CtTJ",
+            "name": "message",
+            "output_types": [
+              "Message"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "chat_message",
+            "id": "CustomComponent-T3xeC",
+            "inputTypes": [
+              "Message"
+            ],
+            "type": "str"
+          }
+        },
+        "id": "xy-edge__ChatInput-2CtTJ{œdataTypeœ:œChatInputœ,œidœ:œChatInput-2CtTJœ,œnameœ:œmessageœ,œoutput_typesœ:[œMessageœ]}-CustomComponent-T3xeC{œfieldNameœ:œchat_messageœ,œidœ:œCustomComponent-T3xeCœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}",
+        "selected": false,
+        "source": "ChatInput-2CtTJ",
+        "sourceHandle": "{œdataTypeœ:œChatInputœ,œidœ:œChatInput-2CtTJœ,œnameœ:œmessageœ,œoutput_typesœ:[œMessageœ]}",
+        "target": "CustomComponent-T3xeC",
+        "targetHandle": "{œfieldNameœ:œchat_messageœ,œidœ:œCustomComponent-T3xeCœ,œinputTypesœ:[œMessageœ],œtypeœ:œstrœ}"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {
+            "dataType": "WillmaAudioDownloader",
+            "id": "CustomComponent-T3xeC",
+            "name": "audio_packet",
+            "output_types": [
+              "JSON"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "incoming_packet",
+            "id": "CustomComponent-bqGww",
+            "inputTypes": [
+              "Data",
+              "JSON"
+            ],
+            "type": "other"
+          }
+        },
+        "id": "xy-edge__CustomComponent-T3xeC{œdataTypeœ:œWillmaAudioDownloaderœ,œidœ:œCustomComponent-T3xeCœ,œnameœ:œaudio_packetœ,œoutput_typesœ:[œJSONœ]}-CustomComponent-bqGww{œfieldNameœ:œincoming_packetœ,œidœ:œCustomComponent-bqGwwœ,œinputTypesœ:[œDataœ,œJSONœ],œtypeœ:œotherœ}",
+        "selected": false,
+        "source": "CustomComponent-T3xeC",
+        "sourceHandle": "{œdataTypeœ:œWillmaAudioDownloaderœ,œidœ:œCustomComponent-T3xeCœ,œnameœ:œaudio_packetœ,œoutput_typesœ:[œJSONœ]}",
+        "target": "CustomComponent-bqGww",
+        "targetHandle": "{œfieldNameœ:œincoming_packetœ,œidœ:œCustomComponent-bqGwwœ,œinputTypesœ:[œDataœ,œJSONœ],œtypeœ:œotherœ}"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {
+            "dataType": "AudioPreprocessorComponent",
+            "id": "CustomComponent-bqGww",
+            "name": "cleaned_packet",
+            "output_types": [
+              "JSON"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "incoming_packet",
+            "id": "CustomComponent-LEeRe",
+            "inputTypes": [
+              "Data",
+              "JSON"
+            ],
+            "type": "other"
+          }
+        },
+        "id": "xy-edge__CustomComponent-bqGww{œdataTypeœ:œAudioPreprocessorComponentœ,œidœ:œCustomComponent-bqGwwœ,œnameœ:œcleaned_packetœ,œoutput_typesœ:[œJSONœ]}-CustomComponent-LEeRe{œfieldNameœ:œincoming_packetœ,œidœ:œCustomComponent-LEeReœ,œinputTypesœ:[œDataœ,œJSONœ],œtypeœ:œotherœ}",
+        "selected": false,
+        "source": "CustomComponent-bqGww",
+        "sourceHandle": "{œdataTypeœ:œAudioPreprocessorComponentœ,œidœ:œCustomComponent-bqGwwœ,œnameœ:œcleaned_packetœ,œoutput_typesœ:[œJSONœ]}",
+        "target": "CustomComponent-LEeRe",
+        "targetHandle": "{œfieldNameœ:œincoming_packetœ,œidœ:œCustomComponent-LEeReœ,œinputTypesœ:[œDataœ,œJSONœ],œtypeœ:œotherœ}"
+      },
+      {
+        "animated": false,
+        "className": "",
+        "data": {
+          "sourceHandle": {
+            "dataType": "WillmaWhisperTranscriber",
+            "id": "CustomComponent-LEeRe",
+            "name": "transcript_message",
+            "output_types": [
+              "Message"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "ChatOutput-bEY1i",
+            "inputTypes": [
+              "Data",
+              "JSON",
+              "DataFrame",
+              "Table",
+              "Message"
+            ],
+            "type": "other"
+          }
+        },
+        "id": "xy-edge__CustomComponent-LEeRe{œdataTypeœ:œWillmaWhisperTranscriberœ,œidœ:œCustomComponent-LEeReœ,œnameœ:œtranscript_messageœ,œoutput_typesœ:[œMessageœ]}-ChatOutput-bEY1i{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-bEY1iœ,œinputTypesœ:[œDataœ,œJSONœ,œDataFrameœ,œTableœ,œMessageœ],œtypeœ:œotherœ}",
+        "selected": false,
+        "source": "CustomComponent-LEeRe",
+        "sourceHandle": "{œdataTypeœ:œWillmaWhisperTranscriberœ,œidœ:œCustomComponent-LEeReœ,œnameœ:œtranscript_messageœ,œoutput_typesœ:[œMessageœ]}",
+        "target": "ChatOutput-bEY1i",
+        "targetHandle": "{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-bEY1iœ,œinputTypesœ:[œDataœ,œJSONœ,œDataFrameœ,œTableœ,œMessageœ],œtypeœ:œotherœ}"
+      }
+    ],
+    "nodes": [
+      {
+        "data": {
+          "id": "ChatOutput-bEY1i",
+          "node": {
+            "base_classes": [
+              "Message"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Display a chat message in the Playground.",
+            "display_name": "Chat Output",
+            "documentation": "https://docs.langflow.org/chat-input-and-output",
+            "edited": false,
+            "field_order": [
+              "input_value",
+              "should_store_message",
+              "sender",
+              "sender_name",
+              "session_id",
+              "context_id",
+              "data_template",
+              "clean_data"
+            ],
+            "frozen": false,
+            "icon": "MessagesSquare",
+            "legacy": false,
+            "lf_version": "1.9.3",
+            "metadata": {
+              "code_hash": "84009527d08c",
+              "dependencies": {
+                "dependencies": [
+                  {
+                    "name": "orjson",
+                    "version": "3.11.8"
+                  },
+                  {
+                    "name": "fastapi",
+                    "version": "0.136.1"
+                  },
+                  {
+                    "name": "lfx",
+                    "version": "0.4.3"
+                  }
+                ],
+                "total_dependencies": 3
+              },
+              "module": "lfx.components.input_output.chat_output.ChatOutput"
+            },
+            "minimized": true,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Output Message",
+                "group_outputs": false,
+                "method": "message_response",
+                "name": "message",
+                "selected": "Message",
+                "tool_mode": true,
+                "types": [
+                  "Message"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "clean_data": {
+                "_input_type": "BoolInput",
+                "advanced": true,
+                "display_name": "Basic Clean Data",
+                "dynamic": false,
+                "info": "Whether to clean data before converting to string.",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "clean_data",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "bool",
+                "value": true
+              },
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "from collections.abc import Generator\nfrom typing import Any\n\nimport orjson\nfrom fastapi.encoders import jsonable_encoder\n\nfrom lfx.base.io.chat import ChatComponent\nfrom lfx.helpers.data import safe_convert\nfrom lfx.inputs.inputs import BoolInput, DropdownInput, HandleInput, MessageTextInput\nfrom lfx.schema.data import Data\nfrom lfx.schema.dataframe import DataFrame\nfrom lfx.schema.message import Message\nfrom lfx.schema.properties import Source\nfrom lfx.template.field.base import Output\nfrom lfx.utils.constants import (\n    MESSAGE_SENDER_AI,\n    MESSAGE_SENDER_NAME_AI,\n    MESSAGE_SENDER_USER,\n)\n\n\nclass ChatOutput(ChatComponent):\n    display_name = \"Chat Output\"\n    description = \"Display a chat message in the Playground.\"\n    documentation: str = \"https://docs.langflow.org/chat-input-and-output\"\n    icon = \"MessagesSquare\"\n    name = \"ChatOutput\"\n    minimized = True\n\n    inputs = [\n        HandleInput(\n            name=\"input_value\",\n            display_name=\"Inputs\",\n            info=\"Message to be passed as output.\",\n            input_types=[\"Data\", \"JSON\", \"DataFrame\", \"Table\", \"Message\"],\n            required=True,\n        ),\n        BoolInput(\n            name=\"should_store_message\",\n            display_name=\"Store Messages\",\n            info=\"Store the message in the history.\",\n            value=True,\n            advanced=True,\n        ),\n        DropdownInput(\n            name=\"sender\",\n            display_name=\"Sender Type\",\n            options=[MESSAGE_SENDER_AI, MESSAGE_SENDER_USER],\n            value=MESSAGE_SENDER_AI,\n            advanced=True,\n            info=\"Type of sender.\",\n        ),\n        MessageTextInput(\n            name=\"sender_name\",\n            display_name=\"Sender Name\",\n            info=\"Name of the sender.\",\n            value=MESSAGE_SENDER_NAME_AI,\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"session_id\",\n            display_name=\"Session ID\",\n            info=\"The session ID of the chat. If empty, the current session ID parameter will be used.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"context_id\",\n            display_name=\"Context ID\",\n            info=\"The context ID of the chat. Adds an extra layer to the local memory.\",\n            value=\"\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"data_template\",\n            display_name=\"Data Template\",\n            value=\"{text}\",\n            advanced=True,\n            info=\"Template to convert Data to Text. If left empty, it will be dynamically set to the Data's text key.\",\n        ),\n        BoolInput(\n            name=\"clean_data\",\n            display_name=\"Basic Clean Data\",\n            value=True,\n            advanced=True,\n            info=\"Whether to clean data before converting to string.\",\n        ),\n    ]\n    outputs = [\n        Output(\n            display_name=\"Output Message\",\n            name=\"message\",\n            method=\"message_response\",\n        ),\n    ]\n\n    def _build_source(self, id_: str | None, display_name: str | None, source: str | None) -> Source:\n        source_dict = {}\n        if id_:\n            source_dict[\"id\"] = id_\n        if display_name:\n            source_dict[\"display_name\"] = display_name\n        if source:\n            # Handle case where source is a ChatOpenAI object\n            if hasattr(source, \"model_name\"):\n                source_dict[\"source\"] = source.model_name\n            elif hasattr(source, \"model\"):\n                source_dict[\"source\"] = str(source.model)\n            else:\n                source_dict[\"source\"] = str(source)\n        return Source(**source_dict)\n\n    async def message_response(self) -> Message:\n        # First convert the input to string if needed\n        text = self.convert_to_string()\n\n        # Get source properties\n        source, _, display_name, source_id = self.get_properties_from_source_component()\n\n        # Create or use existing Message object\n        if isinstance(self.input_value, Message) and not self.is_connected_to_chat_input():\n            message = self.input_value\n            # Update message properties\n            message.text = text\n            # Preserve existing session_id from the incoming message if it exists\n            existing_session_id = message.session_id\n        else:\n            message = Message(text=text)\n            existing_session_id = None\n\n        # Set message properties\n        message.sender = self.sender\n        message.sender_name = self.sender_name\n        # Preserve session_id from incoming message, or use component/graph session_id\n        message.session_id = (\n            self.session_id or existing_session_id or (self.graph.session_id if hasattr(self, \"graph\") else None) or \"\"\n        )\n        message.context_id = self.context_id\n        message.flow_id = self.graph.flow_id if hasattr(self, \"graph\") else None\n        message.properties.source = self._build_source(source_id, display_name, source)\n\n        # Store message if needed\n        if message.session_id and self.should_store_message:\n            stored_message = await self.send_message(message)\n            self.message.value = stored_message\n            message = stored_message\n\n        # Set accumulated token usage from all upstream LLM vertices.\n        # This must happen AFTER send_message() because streaming captures\n        # usage from chunks and would overwrite accumulated totals.\n        if hasattr(self, \"_vertex\") and self._vertex is not None:\n            accumulated_usage = self._vertex._accumulate_upstream_token_usage()  # noqa: SLF001\n            if accumulated_usage:\n                message.properties.usage = accumulated_usage\n                if self.should_store_message and message.get_id():\n                    message = await self._update_stored_message(message)\n                    await self._send_message_event(message, id_=message.get_id())\n\n        self.status = message\n        return message\n\n    def _serialize_data(self, data: Data) -> str:\n        \"\"\"Serialize Data object to JSON string.\"\"\"\n        # Convert data.data to JSON-serializable format\n        serializable_data = jsonable_encoder(data.data)\n        # Serialize with orjson, enabling pretty printing with indentation\n        json_bytes = orjson.dumps(serializable_data, option=orjson.OPT_INDENT_2)\n        # Convert bytes to string and wrap in Markdown code blocks\n        return \"```json\\n\" + json_bytes.decode(\"utf-8\") + \"\\n```\"\n\n    def _validate_input(self) -> None:\n        \"\"\"Validate the input data and raise ValueError if invalid.\"\"\"\n        if self.input_value is None:\n            msg = \"Input data cannot be None\"\n            raise ValueError(msg)\n        if isinstance(self.input_value, list) and not all(\n            isinstance(item, Message | Data | DataFrame | str) for item in self.input_value\n        ):\n            invalid_types = [\n                type(item).__name__\n                for item in self.input_value\n                if not isinstance(item, Message | Data | DataFrame | str)\n            ]\n            msg = f\"Expected Data or DataFrame or Message or str, got {invalid_types}\"\n            raise TypeError(msg)\n        if not isinstance(\n            self.input_value,\n            Message | Data | DataFrame | str | list | Generator | type(None),\n        ):\n            type_name = type(self.input_value).__name__\n            msg = f\"Expected Data or DataFrame or Message or str, Generator or None, got {type_name}\"\n            raise TypeError(msg)\n\n    def convert_to_string(self) -> str | Generator[Any, None, None]:\n        \"\"\"Convert input data to string with proper error handling.\"\"\"\n        self._validate_input()\n        if isinstance(self.input_value, list):\n            clean_data: bool = getattr(self, \"clean_data\", False)\n            return \"\\n\".join([safe_convert(item, clean_data=clean_data) for item in self.input_value])\n        if isinstance(self.input_value, Generator):\n            return self.input_value\n        return safe_convert(self.input_value)\n"
+              },
+              "context_id": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Context ID",
+                "dynamic": false,
+                "info": "The context ID of the chat. Adds an extra layer to the local memory.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "context_id",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "data_template": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Data Template",
+                "dynamic": false,
+                "info": "Template to convert Data to Text. If left empty, it will be dynamically set to the Data's text key.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "data_template",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": "{text}"
+              },
+              "input_value": {
+                "_input_type": "HandleInput",
+                "advanced": false,
+                "display_name": "Inputs",
+                "dynamic": false,
+                "info": "Message to be passed as output.",
+                "input_types": [
+                  "Data",
+                  "JSON",
+                  "DataFrame",
+                  "Table",
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "input_value",
+                "override_skip": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "other",
+                "value": ""
+              },
+              "sender": {
+                "_input_type": "DropdownInput",
+                "advanced": true,
+                "combobox": false,
+                "dialog_inputs": {},
+                "display_name": "Sender Type",
+                "dynamic": false,
+                "external_options": {},
+                "info": "Type of sender.",
+                "name": "sender",
+                "options": [
+                  "Machine",
+                  "User"
+                ],
+                "options_metadata": [],
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "toggle": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Sender Name",
+                "dynamic": false,
+                "info": "Name of the sender.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "sender_name",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": "AI"
+              },
+              "session_id": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Session ID",
+                "dynamic": false,
+                "info": "The session ID of the chat. If empty, the current session ID parameter will be used.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "session_id",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "should_store_message": {
+                "_input_type": "BoolInput",
+                "advanced": true,
+                "display_name": "Store Messages",
+                "dynamic": false,
+                "info": "Store the message in the history.",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "should_store_message",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "bool",
+                "value": true
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": false,
+          "type": "ChatOutput"
+        },
+        "id": "ChatOutput-bEY1i",
+        "measured": {
+          "height": 51,
+          "width": 192
+        },
+        "position": {
+          "x": 1484.2449103208005,
+          "y": 884.5353677598375
+        },
+        "selected": false,
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "ChatInput-2CtTJ",
+          "node": {
+            "base_classes": [
+              "Message"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Get chat inputs from the Playground.",
+            "display_name": "Chat Input",
+            "documentation": "https://docs.langflow.org/chat-input-and-output",
+            "edited": false,
+            "field_order": [
+              "input_value",
+              "should_store_message",
+              "sender",
+              "sender_name",
+              "session_id",
+              "context_id",
+              "files"
+            ],
+            "frozen": false,
+            "icon": "MessagesSquare",
+            "legacy": false,
+            "lf_version": "1.9.3",
+            "metadata": {
+              "code_hash": "7a26c54d89ed",
+              "dependencies": {
+                "dependencies": [
+                  {
+                    "name": "lfx",
+                    "version": "0.4.3"
+                  }
+                ],
+                "total_dependencies": 1
+              },
+              "module": "lfx.components.input_output.chat.ChatInput"
+            },
+            "minimized": true,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Chat Message",
+                "group_outputs": false,
+                "method": "message_response",
+                "name": "message",
+                "selected": "Message",
+                "tool_mode": true,
+                "types": [
+                  "Message"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "from lfx.base.data.utils import IMG_FILE_TYPES, TEXT_FILE_TYPES\nfrom lfx.base.io.chat import ChatComponent\nfrom lfx.inputs.inputs import BoolInput\nfrom lfx.io import (\n    DropdownInput,\n    FileInput,\n    MessageTextInput,\n    MultilineInput,\n    Output,\n)\nfrom lfx.schema.message import Message\nfrom lfx.utils.constants import (\n    MESSAGE_SENDER_AI,\n    MESSAGE_SENDER_NAME_USER,\n    MESSAGE_SENDER_USER,\n)\n\n\nclass ChatInput(ChatComponent):\n    display_name = \"Chat Input\"\n    description = \"Get chat inputs from the Playground.\"\n    documentation: str = \"https://docs.langflow.org/chat-input-and-output\"\n    icon = \"MessagesSquare\"\n    name = \"ChatInput\"\n    minimized = True\n\n    inputs = [\n        MultilineInput(\n            name=\"input_value\",\n            display_name=\"Input Text\",\n            value=\"\",\n            info=\"Message to be passed as input.\",\n            input_types=[],\n        ),\n        BoolInput(\n            name=\"should_store_message\",\n            display_name=\"Store Messages\",\n            info=\"Store the message in the history.\",\n            value=True,\n            advanced=True,\n        ),\n        DropdownInput(\n            name=\"sender\",\n            display_name=\"Sender Type\",\n            options=[MESSAGE_SENDER_AI, MESSAGE_SENDER_USER],\n            value=MESSAGE_SENDER_USER,\n            info=\"Type of sender.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"sender_name\",\n            display_name=\"Sender Name\",\n            info=\"Name of the sender.\",\n            value=MESSAGE_SENDER_NAME_USER,\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"session_id\",\n            display_name=\"Session ID\",\n            info=\"The session ID of the chat. If empty, the current session ID parameter will be used.\",\n            advanced=True,\n        ),\n        MessageTextInput(\n            name=\"context_id\",\n            display_name=\"Context ID\",\n            info=\"The context ID of the chat. Adds an extra layer to the local memory.\",\n            value=\"\",\n            advanced=True,\n        ),\n        FileInput(\n            name=\"files\",\n            display_name=\"Files\",\n            file_types=TEXT_FILE_TYPES + IMG_FILE_TYPES,\n            info=\"Files to be sent with the message.\",\n            advanced=True,\n            is_list=True,\n            temp_file=True,\n        ),\n    ]\n    outputs = [\n        Output(display_name=\"Chat Message\", name=\"message\", method=\"message_response\"),\n    ]\n\n    async def message_response(self) -> Message:\n        # Ensure files is a list and filter out empty/None values\n        files = self.files if self.files else []\n        if files and not isinstance(files, list):\n            files = [files]\n        # Filter out None/empty values\n        files = [f for f in files if f is not None and f != \"\"]\n\n        session_id = self.session_id or self.graph.session_id or \"\"\n        message = await Message.create(\n            text=self.input_value,\n            sender=self.sender,\n            sender_name=self.sender_name,\n            session_id=session_id,\n            context_id=self.context_id,\n            files=files,\n        )\n        if session_id and isinstance(message, Message) and self.should_store_message:\n            stored_message = await self.send_message(\n                message,\n            )\n            self.message.value = stored_message\n            message = stored_message\n\n        self.status = message\n        return message\n"
+              },
+              "context_id": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Context ID",
+                "dynamic": false,
+                "info": "The context ID of the chat. Adds an extra layer to the local memory.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "context_id",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "files": {
+                "_input_type": "FileInput",
+                "advanced": true,
+                "display_name": "Files",
+                "dynamic": false,
+                "fileTypes": [
+                  "csv",
+                  "json",
+                  "pdf",
+                  "txt",
+                  "md",
+                  "mdx",
+                  "yaml",
+                  "yml",
+                  "xml",
+                  "html",
+                  "htm",
+                  "docx",
+                  "py",
+                  "sh",
+                  "sql",
+                  "js",
+                  "ts",
+                  "tsx",
+                  "jpg",
+                  "jpeg",
+                  "png",
+                  "bmp",
+                  "image"
+                ],
+                "file_path": "",
+                "info": "Files to be sent with the message.",
+                "list": true,
+                "list_add_label": "Add More",
+                "name": "files",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "temp_file": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "file",
+                "value": ""
+              },
+              "input_value": {
+                "_input_type": "MultilineInput",
+                "advanced": false,
+                "ai_enabled": false,
+                "copy_field": false,
+                "display_name": "Input Text",
+                "dynamic": false,
+                "info": "Message to be passed as input.",
+                "input_types": [],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "multiline": true,
+                "name": "input_value",
+                "override_skip": false,
+                "password": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "_input_type": "DropdownInput",
+                "advanced": true,
+                "combobox": false,
+                "dialog_inputs": {},
+                "display_name": "Sender Type",
+                "dynamic": false,
+                "external_options": {},
+                "info": "Type of sender.",
+                "name": "sender",
+                "options": [
+                  "Machine",
+                  "User"
+                ],
+                "options_metadata": [],
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "toggle": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Sender Name",
+                "dynamic": false,
+                "info": "Name of the sender.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "sender_name",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": "User"
+              },
+              "session_id": {
+                "_input_type": "MessageTextInput",
+                "advanced": true,
+                "display_name": "Session ID",
+                "dynamic": false,
+                "info": "The session ID of the chat. If empty, the current session ID parameter will be used.",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "session_id",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "should_store_message": {
+                "_input_type": "BoolInput",
+                "advanced": true,
+                "display_name": "Store Messages",
+                "dynamic": false,
+                "info": "Store the message in the history.",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "should_store_message",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "bool",
+                "value": true
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": false,
+          "type": "ChatInput"
+        },
+        "id": "ChatInput-2CtTJ",
+        "measured": {
+          "height": 51,
+          "width": 192
+        },
+        "position": {
+          "x": -33.67795641787802,
+          "y": 401.73007337280035
+        },
+        "selected": false,
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "CustomComponent-bqGww",
+          "node": {
+            "base_classes": [
+              "JSON"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Extracts audio from video containers (MP4/MKV/MOV/AVI/WEBM) via ffmpeg, then applies 16kHz resampling, Highpass Filtering, DRC, and Peak Normalization in memory.",
+            "display_name": "2. Audio Preprocessor",
+            "documentation": "",
+            "edited": true,
+            "field_order": [
+              "incoming_packet",
+              "target_sample_rate",
+              "highpass_cutoff_hz",
+              "enable_drc",
+              "peak_normalize"
+            ],
+            "frozen": false,
+            "legacy": false,
+            "lf_version": "1.9.3",
+            "metadata": {
+              "code_hash": "288ea8a2a7c5",
+              "dependencies": {
+                "dependencies": [
+                  {
+                    "name": "langflow",
+                    "version": "1.9.3"
+                  }
+                ],
+                "total_dependencies": 1
+              },
+              "module": "custom_components.2_audio_preprocessor"
+            },
+            "minimized": false,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Cleaned Audio Packet",
+                "group_outputs": false,
+                "hidden": null,
+                "loop_types": null,
+                "method": "preprocess_audio",
+                "name": "cleaned_packet",
+                "options": null,
+                "required_inputs": null,
+                "selected": "JSON",
+                "tool_mode": true,
+                "types": [
+                  "JSON"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "import io\r\nimport os\r\nimport tempfile\r\nimport wave\r\nimport struct\r\nimport math\r\nimport subprocess\r\nfrom langflow.custom import Component\r\nfrom langflow.inputs import DataInput, IntInput, FloatInput, BoolInput\r\nfrom langflow.io import Output\r\nfrom langflow.schema import Data\r\n\r\nclass AudioPreprocessorComponent(Component):\r\n    display_name = \"2. Audio Preprocessor\"\r\n    description = \"Extracts audio from video containers (MP4/MKV/MOV/AVI/WEBM) via ffmpeg, then applies 16kHz resampling, Highpass Filtering, DRC, and Peak Normalization in memory.\"\r\n\r\n    VIDEO_EXTENSIONS = (\".mp4\", \".mkv\", \".avi\", \".mov\", \".webm\", \".m4v\", \".mpg\", \".mpeg\")\r\n\r\n    inputs = [\r\n        DataInput(\r\n            name=\"incoming_packet\",\r\n            display_name=\"Raw Audio/Video Packet Data\",\r\n            required=True\r\n        ),\r\n        IntInput(\r\n            name=\"target_sample_rate\",\r\n            display_name=\"Target Sample Rate (Hz)\",\r\n            value=16000\r\n        ),\r\n        FloatInput(\r\n            name=\"highpass_cutoff_hz\",\r\n            display_name=\"Highpass Cutoff (Hz)\",\r\n            value=90.0\r\n        ),\r\n        BoolInput(\r\n            name=\"enable_drc\",\r\n            display_name=\"Enable Dynamic Range Control\",\r\n            value=True\r\n        ),\r\n        FloatInput(\r\n            name=\"peak_normalize\",\r\n            display_name=\"Peak Normalization Target\",\r\n            value=0.98\r\n        )\r\n    ]\r\n\r\n    outputs = [\r\n        Output(name=\"cleaned_packet\", display_name=\"Cleaned Audio Packet\", method=\"preprocess_audio\")\r\n    ]\r\n\r\n    def _extract_audio_from_video(self, video_bytes: bytes, filename: str = \"video.mp4\") -> bytes:\r\n        \"\"\"Extract audio track from a video container via a /tmp temp file.\r\n\r\n        Writes video_bytes to a named temp file, runs ffmpeg against it, reads\r\n        the output WAV back into memory, then deletes both temp files.\r\n\r\n        Using a real file (instead of stdin pipe) gives ffmpeg full random-access\r\n        seeking — required for MP4 files whose moov atom is at the end (Zoom\r\n        recordings, phone captures, screen recordings).  The cache:pipe approach\r\n        fails for these files inside Docker containers.\r\n\r\n        Raises RuntimeError if ffmpeg exits with a non-zero return code.\r\n        \"\"\"\r\n        ext = filename.rsplit(\".\", 1)[-1].lower() if \".\" in filename else \"mp4\"\r\n        with tempfile.NamedTemporaryFile(suffix=f\".{ext}\", delete=False, dir=\"/tmp\") as f_in:\r\n            f_in.write(video_bytes)\r\n            tmp_in = f_in.name\r\n        tmp_out = tmp_in + \".wav\"\r\n        try:\r\n            cmd = [\r\n                \"ffmpeg\", \"-y\",\r\n                \"-i\", tmp_in,\r\n                \"-vn\",                                    # drop video stream\r\n                \"-ac\", \"1\",                               # force mono\r\n                \"-ar\", str(self.target_sample_rate),      # resample to target rate\r\n                \"-sample_fmt\", \"s16\",                     # 16-bit signed PCM\r\n                \"-f\", \"wav\",\r\n                tmp_out\r\n            ]\r\n            result = subprocess.run(cmd, capture_output=True, timeout=300)\r\n            if result.returncode != 0:\r\n                error_msg = result.stderr.decode(\"utf-8\", errors=\"replace\")\r\n                raise RuntimeError(f\"ffmpeg audio extraction failed: {error_msg[-500:]}\")\r\n            with open(tmp_out, \"rb\") as f_out:\r\n                return f_out.read()\r\n        finally:\r\n            for p in (tmp_in, tmp_out):\r\n                try:\r\n                    os.unlink(p)\r\n                except OSError:\r\n                    pass\r\n\r\n    def _resample_linear(self, data, orig_sr, target_sr):\r\n        if orig_sr == target_sr or len(data) == 0:\r\n            return data\r\n        ratio = float(orig_sr) / float(target_sr)\r\n        target_length = int(len(data) / ratio)\r\n        resampled = [0.0] * target_length\r\n        for i in range(target_length):\r\n            orig_idx = i * ratio\r\n            idx_low = int(math.floor(orig_idx))\r\n            idx_high = min(idx_low + 1, len(data) - 1)\r\n            weight = orig_idx - idx_low\r\n            resampled[i] = (1.0 - weight) * data[idx_low] + weight * data[idx_high]\r\n        return resampled\r\n\r\n    def _apply_highpass(self, data, sample_rate, cutoff):\r\n        if len(data) == 0 or cutoff <= 0:\r\n            return data\r\n        rc = 1.0 / (2.0 * math.pi * cutoff)\r\n        dt = 1.0 / sample_rate\r\n        alpha = rc / (rc + dt)\r\n        filtered = [0.0] * len(data)\r\n        filtered[0] = data[0]\r\n        for i in range(1, len(data)):\r\n            filtered[i] = alpha * (filtered[i-1] + data[i] - data[i-1])\r\n        return filtered\r\n\r\n    def _apply_drc(self, data):\r\n        boosted = []\r\n        for sample in data:\r\n            sign = 1.0 if sample >= 0 else -1.0\r\n            boosted.append(sign * math.pow(abs(sample), 0.88))\r\n        return boosted\r\n\r\n    def preprocess_audio(self) -> Data:\r\n        packet = self.incoming_packet.data if self.incoming_packet else {}\r\n        raw_bytes = packet.get(\"bytes\")\r\n        filename = packet.get(\"filename\", \"audio.wav\")\r\n\r\n        if not raw_bytes or len(raw_bytes) == 0:\r\n            return Data(text=\"EMPTY_PACKET\", data={\"bytes\": None})\r\n\r\n        # Step 0: Extract audio track from video containers (MP4, MKV, MOV, AVI, WEBM, etc.)\r\n        name_lower = filename.lower()\r\n        if any(name_lower.endswith(ext) for ext in self.VIDEO_EXTENSIONS):\r\n            try:\r\n                raw_bytes = self._extract_audio_from_video(raw_bytes, filename)\r\n                # Rename to .wav so the DSP chain picks it up\r\n                filename = filename.rsplit(\".\", 1)[0] + \".wav\"\r\n            except Exception:\r\n                return self.incoming_packet  # ffmpeg unavailable or failed — passthrough to Transcriber\r\n\r\n        # Process as WAV if extension matches, otherwise fallback pass-through (e.g. MP3, FLAC)\r\n        if not filename.lower().endswith(\".wav\"):\r\n            return self.incoming_packet\r\n\r\n        try:\r\n            # Decode PCM_16 bytes to Float Mono array\r\n            with wave.open(io.BytesIO(raw_bytes), 'rb') as wav_in:\r\n                orig_sr = wav_in.getframerate()\r\n                channels = wav_in.getnchannels()\r\n                sampwidth = wav_in.getsampwidth()\r\n                n_frames = wav_in.getnframes()\r\n                raw_frames = wav_in.readframes(n_frames)\r\n\r\n                if sampwidth != 2:\r\n                    return self.incoming_packet  # Dynamic pass-through if not 16-bit\r\n\r\n                fmt = f\"<{n_frames * channels}h\"\r\n                integer_samples = struct.unpack(fmt, raw_frames)\r\n                float_samples = [s / 32768.0 for s in integer_samples]\r\n\r\n            # Downmix Stereo/Surround to Mono channel layout\r\n            if channels > 1:\r\n                mono = []\r\n                for i in range(0, len(float_samples), channels):\r\n                    mono.append(sum(float_samples[i:i+channels]) / channels)\r\n                float_samples = mono\r\n\r\n            # Execute DSP chain\r\n            float_samples = self._resample_linear(float_samples, orig_sr, self.target_sample_rate)\r\n            float_samples = self._apply_highpass(float_samples, self.target_sample_rate, self.highpass_cutoff_hz)\r\n\r\n            if self.enable_drc:\r\n                float_samples = self._apply_drc(float_samples)\r\n\r\n            peak = max(abs(s) for s in float_samples) if float_samples else 0.0\r\n            if peak > 0:\r\n                float_samples = [(s / peak) * self.peak_normalize for s in float_samples]\r\n\r\n            # Re-encode clean Float array back into standard PCM_16 WAV bytes\r\n            out_buffer = io.BytesIO()\r\n            with wave.open(out_buffer, 'wb') as wav_out:\r\n                wav_out.setnchannels(1)\r\n                wav_out.setsampwidth(2)\r\n                wav_out.setframerate(self.target_sample_rate)\r\n                int_frames = [int(max(-32768, min(32767, s * 32767))) for s in float_samples]\r\n                wav_out.writeframes(struct.pack(f\"<{len(int_frames)}h\", *int_frames))\r\n\r\n            processed_bytes = out_buffer.getvalue()\r\n            return Data(\r\n                text=filename,\r\n                data={\r\n                    \"bytes\": processed_bytes,\r\n                    \"filename\": filename,\r\n                    \"size_bytes\": len(processed_bytes)\r\n                }\r\n            )\r\n        except Exception:\r\n            return self.incoming_packet  # Resilient fallback in case header tracking breaks"
+              },
+              "enable_drc": {
+                "_input_type": "BoolInput",
+                "advanced": false,
+                "display_name": "Enable Dynamic Range Control",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "enable_drc",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "bool",
+                "value": true
+              },
+              "highpass_cutoff_hz": {
+                "_input_type": "FloatInput",
+                "advanced": false,
+                "display_name": "Highpass Cutoff (Hz)",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "highpass_cutoff_hz",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "float",
+                "value": 90
+              },
+              "incoming_packet": {
+                "_input_type": "JSONInput",
+                "advanced": false,
+                "display_name": "Raw Audio/Video Packet Data",
+                "dynamic": false,
+                "info": "",
+                "input_types": [
+                  "Data",
+                  "JSON"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "incoming_packet",
+                "override_skip": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "other",
+                "value": ""
+              },
+              "peak_normalize": {
+                "_input_type": "FloatInput",
+                "advanced": false,
+                "display_name": "Peak Normalization Target",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "peak_normalize",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "float",
+                "value": 0.98
+              },
+              "target_sample_rate": {
+                "_input_type": "IntInput",
+                "advanced": false,
+                "display_name": "Target Sample Rate (Hz)",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "target_sample_rate",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "int",
+                "value": 16000
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": true,
+          "type": "AudioPreprocessorComponent"
+        },
+        "dragging": false,
+        "id": "CustomComponent-bqGww",
+        "measured": {
+          "height": 503,
+          "width": 320
+        },
+        "position": {
+          "x": 637.2923891260214,
+          "y": 568.4623902527126
+        },
+        "selected": false,
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "CustomComponent-T3xeC",
+          "node": {
+            "base_classes": [
+              "JSON"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Downloads an audio URL directly from Chat Input into an in-memory Data packet stream.",
+            "display_name": "1. WILLMA Audio Downloader",
+            "documentation": "",
+            "edited": true,
+            "field_order": [
+              "chat_message",
+              "share_password"
+            ],
+            "frozen": false,
+            "legacy": false,
+            "lf_version": "1.9.3",
+            "metadata": {
+              "code_hash": "7e23e7c1d381",
+              "dependencies": {
+                "dependencies": [
+                  {
+                    "name": "requests",
+                    "version": "2.33.1"
+                  },
+                  {
+                    "name": "langflow",
+                    "version": "1.9.3"
+                  }
+                ],
+                "total_dependencies": 2
+              },
+              "module": "custom_components.1_willma_audio_downloader"
+            },
+            "minimized": false,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Audio Packet Data",
+                "group_outputs": false,
+                "hidden": null,
+                "loop_types": null,
+                "method": "download_to_memory",
+                "name": "audio_packet",
+                "options": null,
+                "required_inputs": null,
+                "selected": "JSON",
+                "tool_mode": true,
+                "types": [
+                  "JSON"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "chat_message": {
+                "_input_type": "MessageInput",
+                "advanced": false,
+                "display_name": "Chat Input Message",
+                "dynamic": false,
+                "info": "",
+                "input_types": [
+                  "Message"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "chat_message",
+                "override_skip": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "import re\r\nimport requests\r\nimport os\r\nfrom urllib.parse import urlparse, parse_qs\r\nfrom langflow.custom import Component\r\nfrom langflow.inputs import MessageInput, SecretStrInput\r\nfrom langflow.io import Output\r\nfrom langflow.schema import Data\r\n\r\nclass WillmaAudioDownloader(Component):\r\n    display_name = \"1. WILLMA Audio Downloader\"\r\n    description = \"Downloads an audio URL directly from Chat Input into an in-memory Data packet stream.\"\r\n    \r\n    inputs = [\r\n        MessageInput(\r\n            name=\"chat_message\",\r\n            display_name=\"Chat Input Message\",\r\n            required=True\r\n        ),\r\n        SecretStrInput(\r\n            name=\"share_password\",\r\n            display_name=\"Share Link Password (optional)\",\r\n            value=\"\",\r\n            info=\"Password for password-protected Nextcloud / SURF Research Drive share links. Leave empty for public (no-password) shares.\"\r\n        )\r\n    ]\r\n    \r\n    outputs = [\r\n        Output(name=\"audio_packet\", display_name=\"Audio Packet Data\", method=\"download_to_memory\")\r\n    ]\r\n\r\n    def _authenticated_session_download(self, url_target, nc_share_token, pwd, parsed_url):\r\n        \"\"\"Download a file from a password-protected Nextcloud/ownCloud public share.\r\n\r\n        Mirrors exactly what a browser does:\r\n          1. GET /s/{token}  →  extract CSRF requesttoken from HTML\r\n          2. POST /s/{token}/authenticate/downloadshare  →  server sets session cookie\r\n          3. GET the original download URL  →  session cookie is sent automatically\r\n\r\n        This works for all Nextcloud/ownCloud versions, including SURF Research Drive\r\n        (ownCloud-based).  HTTP Basic Auth on /s/{token}/download is NOT honoured by\r\n        ownCloud/Nextcloud for password-protected public shares — cookie auth is required.\r\n        \"\"\"\r\n        session = requests.Session()\r\n        base = f\"{parsed_url.scheme}://{parsed_url.netloc}\"\r\n\r\n        # Step 1 — load the share landing page to get the CSRF requesttoken\r\n        request_token = \"\"\r\n        try:\r\n            page_resp = session.get(\r\n                f\"{base}/s/{nc_share_token}\", timeout=30, allow_redirects=True\r\n            )\r\n            m = re.search(r'data-requesttoken=\"([^\"]+)\"', page_resp.text)\r\n            if m:\r\n                request_token = m.group(1)\r\n        except Exception:\r\n            pass\r\n\r\n        # Step 2 — POST the password to the authenticate endpoint.\r\n        # Try the Nextcloud path first, then the ownCloud / generic fallbacks.\r\n        post_data = {\"password\": pwd}\r\n        if request_token:\r\n            post_data[\"requesttoken\"] = request_token\r\n        auth_headers = {\"X-Requested-With\": \"XMLHttpRequest\"}\r\n\r\n        for auth_url in [\r\n            f\"{base}/s/{nc_share_token}/authenticate/downloadshare\",   # Nextcloud\r\n            f\"{base}/index.php/s/{nc_share_token}/authenticate\",        # ownCloud\r\n            f\"{base}/s/{nc_share_token}/authenticate\",                  # generic\r\n        ]:\r\n            try:\r\n                session.post(\r\n                    auth_url, data=post_data, headers=auth_headers,\r\n                    timeout=30, allow_redirects=True\r\n                )\r\n                break   # first POST that doesn't throw sets the session cookie\r\n            except Exception:\r\n                continue\r\n\r\n        # Step 3 — GET the download URL; the session cookie is sent automatically\r\n        return session.get(url_target, timeout=120, allow_redirects=True)\r\n\r\n    def download_to_memory(self) -> Data:\r\n        message_obj = self.chat_message\r\n        url_target = \"\"\r\n        nc_share_token = None\r\n\r\n        if message_obj and hasattr(message_obj, \"text\") and message_obj.text:\r\n            url_target = str(message_obj.text).strip()\r\n            \r\n        if not url_target or not url_target.startswith((\"http://\", \"https://\")):\r\n            return Data(text=\"INVALID_URL\", data={\"bytes\": None, \"filename\": \"audio.mp3\"})\r\n\r\n        # --- URL rewriting ---\r\n\r\n        # GitHub: rewrite web URLs to raw content\r\n        if \"github.com\" in url_target and \"/blob/\" in url_target:\r\n            url_target = url_target.replace(\"github.com\", \"raw.githubusercontent.com\").replace(\"/blob/\", \"/\")\r\n        elif \"github.com\" in url_target and \"/raw/\" in url_target:\r\n            url_target = url_target.replace(\"github.com\", \"raw.githubusercontent.com\").replace(\"/raw/\", \"/\")\r\n\r\n        # Nextcloud / SURF Research Drive — file viewer URL\r\n        # /apps/files/files/{id}?dir=... → /index.php/f/{id}?download\r\n        nc_viewer = re.search(r'/apps/files/files/(\\d+)', url_target)\r\n        if nc_viewer:\r\n            base = url_target[:url_target.index('/apps/files/files/')]\r\n            url_target = f\"{base}/index.php/f/{nc_viewer.group(1)}?download\"\r\n\r\n        # Nextcloud / ownCloud — public share link.\r\n        # Capture share token; append /download if not already present.\r\n        # ?path= query params are preserved when /download is already in the path.\r\n        else:\r\n            nc_share_match = re.search(r'/s/([A-Za-z0-9_-]+)', url_target.split('?')[0])\r\n            if nc_share_match:\r\n                nc_share_token = nc_share_match.group(1)\r\n                share_base = url_target.split('?')[0].rstrip('/')\r\n                if not share_base.endswith('/download'):\r\n                    url_target = share_base + \"/download\"\r\n\r\n        # Resolve password — handle both plain str and Pydantic SecretStr from Langflow\r\n        pwd = getattr(self, \"share_password\", \"\") or \"\"\r\n        if hasattr(pwd, \"get_secret_value\"):\r\n            pwd = pwd.get_secret_value()\r\n        pwd = str(pwd).strip() if pwd else \"\"\r\n\r\n        try:\r\n            if nc_share_token and pwd:\r\n                # Cookie-based session auth — the only reliable method for\r\n                # password-protected public shares on Nextcloud / ownCloud / SURF Research Drive.\r\n                parsed = urlparse(url_target)\r\n                response = self._authenticated_session_download(\r\n                    url_target, nc_share_token, pwd, parsed\r\n                )\r\n            else:\r\n                response = requests.get(url_target, timeout=120, allow_redirects=True)\r\n\r\n            response.raise_for_status()\r\n\r\n            # HTML response → still on the password-entry page (wrong/missing password)\r\n            # or an internal login-required page.\r\n            content_type = response.headers.get(\"Content-Type\", \"\").lower()\r\n            if \"text/html\" in content_type:\r\n                return Data(text=\"AUTH_REQUIRED\", data={\"bytes\": None, \"filename\": \"audio.mp3\"})\r\n\r\n            audio_bytes = response.content\r\n\r\n            # Prefer Content-Disposition filename (reliable for Nextcloud downloads)\r\n            filename = \"\"\r\n            content_disp = response.headers.get(\"Content-Disposition\", \"\")\r\n            if content_disp:\r\n                cd_match = re.search(\r\n                    r\"filename\\*?=(?:UTF-8'')?[\\\"']?([^\\\"';\\r\\n]+)[\\\"']?\",\r\n                    content_disp, re.IGNORECASE\r\n                )\r\n                if cd_match:\r\n                    filename = cd_match.group(1).strip().strip(\"\\\"'\")\r\n\r\n            # Fall back to URL path basename\r\n            if not filename:\r\n                clean_url_path = url_target.split(\"?\")[0]\r\n                filename = os.path.basename(clean_url_path) or \"audio.wav\"\r\n\r\n            return Data(\r\n                text=filename,\r\n                data={\r\n                    \"bytes\": audio_bytes,\r\n                    \"filename\": filename,\r\n                    \"size_bytes\": len(audio_bytes)\r\n                }\r\n            )\r\n        except requests.exceptions.HTTPError as http_err:\r\n            status = http_err.response.status_code if http_err.response is not None else 0\r\n            if status in (401, 403):\r\n                return Data(text=\"AUTH_REQUIRED\", data={\"bytes\": None, \"filename\": \"audio.mp3\"})\r\n            return Data(text=\"DOWNLOAD_FAILED\", data={\"bytes\": None, \"filename\": \"audio.mp3\"})\r\n        except Exception:\r\n            return Data(text=\"DOWNLOAD_FAILED\", data={\"bytes\": None, \"filename\": \"audio.mp3\"})\r\n"
+              },
+              "share_password": {
+                "_input_type": "SecretStrInput",
+                "advanced": false,
+                "display_name": "Share Link Password (optional)",
+                "dynamic": false,
+                "info": "Password for password-protected Nextcloud / SURF Research Drive share links. Leave empty for public (no-password) shares.",
+                "input_types": [],
+                "load_from_db": false,
+                "name": "share_password",
+                "override_skip": false,
+                "password": true,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              }
+            },
+            "tool_mode": false
+          },
+          "showNode": true,
+          "type": "WillmaAudioDownloader"
+        },
+        "dragging": false,
+        "id": "CustomComponent-T3xeC",
+        "measured": {
+          "height": 304,
+          "width": 320
+        },
+        "position": {
+          "x": 221.5247585799848,
+          "y": 441.2071513263766
+        },
+        "selected": false,
+        "type": "genericNode"
+      },
+      {
+        "data": {
+          "id": "CustomComponent-LEeRe",
+          "node": {
+            "base_classes": [
+              "list",
+              "Message"
+            ],
+            "beta": false,
+            "conditional_paths": [],
+            "custom_fields": {},
+            "description": "Transcribes and diarizes audio stream segments into timestamped two-speaker dialogue scripts.",
+            "display_name": "3. WILLMA Whisper Diarized Transcriber",
+            "documentation": "",
+            "edited": true,
+            "field_order": [
+              "incoming_packet",
+              "base_url",
+              "api_key",
+              "language",
+              "chunk_seconds",
+              "min_overlap_seconds",
+              "pause_threshold"
+            ],
+            "frozen": false,
+            "legacy": false,
+            "lf_version": "1.9.3",
+            "metadata": {
+              "code_hash": "cde8f8eb1c6f",
+              "dependencies": {
+                "dependencies": [
+                  {
+                    "name": "requests",
+                    "version": "2.33.1"
+                  },
+                  {
+                    "name": "langflow",
+                    "version": "1.9.3"
+                  }
+                ],
+                "total_dependencies": 2
+              },
+              "module": "custom_components.3_willma_whisper_diarized_transcriber"
+            },
+            "minimized": false,
+            "output_types": [],
+            "outputs": [
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Diarized Transcript",
+                "group_outputs": false,
+                "hidden": null,
+                "loop_types": null,
+                "method": "get_chat_message",
+                "name": "transcript_message",
+                "options": null,
+                "required_inputs": null,
+                "selected": "Message",
+                "tool_mode": true,
+                "types": [
+                  "Message"
+                ],
+                "value": "__UNDEFINED__"
+              },
+              {
+                "allows_loop": false,
+                "cache": true,
+                "display_name": "Structured Segments List",
+                "group_outputs": false,
+                "hidden": null,
+                "loop_types": null,
+                "method": "get_segments",
+                "name": "segments_json",
+                "options": null,
+                "required_inputs": null,
+                "tool_mode": true,
+                "types": [
+                  "list"
+                ],
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "pinned": false,
+            "template": {
+              "_type": "Component",
+              "api_key": {
+                "_input_type": "SecretStrInput",
+                "advanced": false,
+                "display_name": "WILLMA API Key",
+                "dynamic": false,
+                "info": "",
+                "input_types": [],
+                "load_from_db": false,
+                "name": "api_key",
+                "override_skip": false,
+                "password": true,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": ""
+              },
+              "base_url": {
+                "_input_type": "StrInput",
+                "advanced": false,
+                "display_name": "WILLMA Base URL",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "base_url",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": "https://willma.surf.nl/api/v0"
+              },
+              "chunk_seconds": {
+                "_input_type": "IntInput",
+                "advanced": false,
+                "display_name": "Processing Window Size (s)",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "chunk_seconds",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "int",
+                "value": 30
+              },
+              "code": {
+                "advanced": true,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "import io\r\nimport wave\r\nimport requests\r\nfrom langflow.custom import Component\r\nfrom langflow.inputs import DataInput, StrInput, SecretStrInput, IntInput, FloatInput\r\nfrom langflow.io import Output\r\nfrom langflow.schema.message import Message\r\n\r\nclass WillmaWhisperTranscriber(Component):\r\n    display_name = \"3. WILLMA Whisper Diarized Transcriber\"\r\n    description = \"Transcribes and diarizes audio stream segments into timestamped two-speaker dialogue scripts.\"\r\n\r\n    inputs = [\r\n        DataInput(\r\n            name=\"incoming_packet\",\r\n            display_name=\"Audio Packet Data\",\r\n            required=True\r\n        ),\r\n        StrInput(\r\n            name=\"base_url\",\r\n            display_name=\"WILLMA Base URL\",\r\n            value=\"https://willma.surf.nl/api/v0\"\r\n        ),\r\n        SecretStrInput(\r\n            name=\"api_key\",\r\n            display_name=\"WILLMA API Key\",\r\n            required=True\r\n        ),\r\n        StrInput(\r\n            name=\"language\",\r\n            display_name=\"Language Code\",\r\n            value=\"nl\"\r\n        ),\r\n        IntInput(\r\n            name=\"chunk_seconds\",\r\n            display_name=\"Processing Window Size (s)\",\r\n            value=30\r\n        ),\r\n        FloatInput(\r\n            name=\"min_overlap_seconds\",\r\n            display_name=\"Minimum Speaker Overlap (s)\",\r\n            value=0.15\r\n        ),\r\n        FloatInput(\r\n            name=\"pause_threshold\",\r\n            display_name=\"Diarization Turn Pause Gap (s)\",\r\n            value=1.2\r\n        )\r\n    ]\r\n\r\n    outputs = [\r\n        Output(name=\"transcript_message\", display_name=\"Diarized Transcript\", method=\"get_chat_message\"),\r\n        Output(name=\"segments_json\", display_name=\"Structured Segments List\", method=\"get_segments\")\r\n    ]\r\n\r\n    _MIME_MAP = {\r\n        \"mp4\": \"video/mp4\", \"mkv\": \"video/x-matroska\", \"avi\": \"video/x-msvideo\",\r\n        \"mov\": \"video/quicktime\", \"webm\": \"video/webm\", \"m4v\": \"video/mp4\",\r\n        \"mp3\": \"audio/mpeg\", \"m4a\": \"audio/mp4\", \"flac\": \"audio/flac\",\r\n        \"ogg\": \"audio/ogg\", \"aac\": \"audio/aac\", \"opus\": \"audio/opus\",\r\n        \"wav\": \"audio/wav\",\r\n    }\r\n\r\n    def _fetch_model_name(self) -> str:\r\n        headers = {\"X-API-KEY\": self.api_key, \"Content-Type\": \"application/json\"}\r\n        resp = requests.get(f\"{self.base_url}/sequences\", headers=headers, timeout=45)\r\n        resp.raise_for_status()\r\n        catalog = resp.json()\r\n        preferred = [\"whisper-large-v3\", \"faster-whisper-large-v3\", \"whisper-large\", \"whisper-medium\"]\r\n        for frag in preferred:\r\n            for item in catalog:\r\n                if frag in str(item.get(\"name\", \"\")).lower():\r\n                    return item.get(\"name\")\r\n        for item in catalog:\r\n            if \"whisper\" in str(item.get(\"name\", \"\")).lower():\r\n                return item.get(\"name\")\r\n        return \"whisper-large-v3\"\r\n\r\n    def _overlap_seconds(self, start_a, end_a, start_b, end_b):\r\n        return max(0.0, min(end_a, end_b) - max(start_a, start_b))\r\n\r\n    def _build_turns_from_stt(self, segments, pause_threshold):\r\n        turns = []\r\n        if not segments:\r\n            return turns\r\n        sorted_segs = sorted(segments, key=lambda x: (float(x.get(\"start\", 0)), float(x.get(\"end\", 0))))\r\n        current = {\r\n            \"start\": float(sorted_segs[0].get(\"start\", 0)),\r\n            \"end\": float(sorted_segs[0].get(\"end\", 0)),\r\n            \"text\": (sorted_segs[0].get(\"text\") or \"\").strip(),\r\n        }\r\n        for seg in sorted_segs[1:]:\r\n            seg_start = float(seg.get(\"start\", 0))\r\n            seg_end = float(seg.get(\"end\", 0))\r\n            seg_text = (seg.get(\"text\") or \"\").strip()\r\n            gap = seg_start - current[\"end\"]\r\n            if gap >= pause_threshold:\r\n                turns.append(current)\r\n                current = {\"start\": seg_start, \"end\": seg_end, \"text\": seg_text}\r\n            else:\r\n                current[\"end\"] = max(current[\"end\"], seg_end)\r\n                if seg_text:\r\n                    current[\"text\"] = (current[\"text\"] + \" \" + seg_text).strip()\r\n        turns.append(current)\r\n        return turns\r\n\r\n    def _alternative_diarization_from_stt(self, segments, pause_threshold, start_with=\"001\"):\r\n        turns = self._build_turns_from_stt(segments, pause_threshold)\r\n        speaker_cycle = [\"002\", \"001\"] if start_with == \"002\" else [\"001\", \"002\"]\r\n        diarization = []\r\n        for index, turn in enumerate(turns):\r\n            diarization.append({\r\n                \"start\": round(float(turn[\"start\"]), 3),\r\n                \"end\": round(float(turn[\"end\"]), 3),\r\n                \"speaker\": speaker_cycle[index % 2]\r\n            })\r\n        return diarization\r\n\r\n    def _force_two_speaker_labels(self, segments):\r\n        counts = {}\r\n        for seg in segments:\r\n            raw = seg.get(\"speaker\")\r\n            if raw in (None, \"\", \"UNKNOWN\"):\r\n                continue\r\n            counts[str(raw).strip()] = counts.get(str(raw).strip(), 0) + 1\r\n        top_speakers = [item[0] for item in sorted(counts.items(), key=lambda x: x[1], reverse=True)[:2]]\r\n\r\n        spk_map = {}\r\n        if len(top_speakers) >= 1: spk_map[top_speakers[0]] = \"001\"\r\n        if len(top_speakers) >= 2: spk_map[top_speakers[1]] = \"002\"\r\n\r\n        forced = []\r\n        for seg in segments:\r\n            updated = dict(seg)\r\n            raw = updated.get(\"speaker\")\r\n            if raw in (None, \"\", \"UNKNOWN\"):\r\n                updated[\"speaker\"] = \"UNKNOWN\"\r\n            else:\r\n                k = str(raw).strip()\r\n                updated[\"speaker\"] = k if k in (\"001\", \"002\") else spk_map.get(k, \"UNKNOWN\")\r\n            forced.append(updated)\r\n        return forced\r\n\r\n    def _assign_unknown_by_neighbors(self, segments):\r\n        if not segments:\r\n            return segments\r\n        count = len(segments)\r\n        for index, seg in enumerate(segments):\r\n            if seg.get(\"speaker\") != \"UNKNOWN\":\r\n                continue\r\n            prev_spk, next_spk = None, None\r\n            for left in range(index - 1, -1, -1):\r\n                if segments[left].get(\"speaker\") and segments[left].get(\"speaker\") != \"UNKNOWN\":\r\n                    prev_spk = segments[left].get(\"speaker\")\r\n                    break\r\n            for right in range(index + 1, count):\r\n                if segments[right].get(\"speaker\") and segments[right].get(\"speaker\") != \"UNKNOWN\":\r\n                    next_spk = segments[right].get(\"speaker\")\r\n                    break\r\n            if prev_spk and prev_spk == next_spk:\r\n                seg[\"speaker\"] = prev_spk\r\n        return segments\r\n\r\n    def _merge_speaker_segments(self, segments, max_gap=1.0):\r\n        merged = []\r\n        sorted_segs = sorted(segments, key=lambda x: (float(x.get(\"start\", 0)), float(x.get(\"end\", 0))))\r\n        for seg in sorted_segs:\r\n            text = seg.get(\"text\", \"\").strip()\r\n            if not text:\r\n                continue\r\n            if not merged:\r\n                merged.append(dict(seg))\r\n                continue\r\n            prev = merged[-1]\r\n            same_speaker = prev.get(\"speaker\") == seg.get(\"speaker\")\r\n            gap = float(seg.get(\"start\", 0)) - float(prev.get(\"end\", 0))\r\n            if same_speaker and gap <= max_gap:\r\n                prev[\"end\"] = max(prev[\"end\"], seg.get(\"end\", prev[\"end\"]))\r\n                prev[\"text\"] = (prev.get(\"text\").strip() + \" \" + text).strip()\r\n            else:\r\n                merged.append(dict(seg))\r\n        return merged\r\n\r\n    def _assign_speakers(self, stt_segments, diar_diarization, diar_source, chunk_offset=0.0):\r\n        \"\"\"Map each STT segment to a speaker via time-overlap matching, then offset timestamps.\"\"\"\r\n        result = []\r\n        for seg in stt_segments:\r\n            local_start = float(seg.get(\"start\", 0))\r\n            local_end = float(seg.get(\"end\", 0))\r\n            best_speaker = None\r\n            best_overlap = 0.0\r\n            for diar_seg in diar_diarization:\r\n                d_start = float(diar_seg.get(\"start\", 0))\r\n                d_end = float(diar_seg.get(\"end\", 0))\r\n                overlap = self._overlap_seconds(local_start, local_end, d_start, d_end)\r\n                if overlap > best_overlap:\r\n                    best_overlap = overlap\r\n                    best_speaker = diar_seg.get(\"speaker\") or diar_seg.get(\"label\") or diar_seg.get(\"id\")\r\n            out = dict(seg)\r\n            out[\"start\"] = round(local_start + chunk_offset, 3)\r\n            out[\"end\"] = round(local_end + chunk_offset, 3)\r\n            if diar_source == \"stt_turn_fallback\":\r\n                out[\"speaker\"] = best_speaker or \"UNKNOWN\"\r\n            else:\r\n                out[\"speaker\"] = best_speaker if best_overlap >= self.min_overlap_seconds else \"UNKNOWN\"\r\n            out[\"speaker_source\"] = diar_source\r\n            out[\"speaker_overlap\"] = round(best_overlap, 3)\r\n            result.append(out)\r\n        return result\r\n\r\n    def process_audio_pipeline(self):\r\n        if hasattr(self, \"_cached_result\"):\r\n            return self._cached_result\r\n\r\n        packet = self.incoming_packet.data if self.incoming_packet else {}\r\n        audio_bytes = packet.get(\"bytes\")\r\n        filename = packet.get(\"filename\", \"audio.wav\")\r\n\r\n        if not audio_bytes or len(audio_bytes) == 0:\r\n            # Surface specific error codes from the downloader as actionable messages\r\n            packet_status = getattr(self.incoming_packet, \"text\", \"\") or \"\"\r\n            if packet_status == \"AUTH_REQUIRED\":\r\n                return (\r\n                    \"Download blocked — authentication required.\\n\\n\"\r\n                    \"The URL you pasted is an internal link (requires a SURF login), a folder share, \"\r\n                    \"or a password-protected share link.\\n\\n\"\r\n                    \"How to fix this:\\n\\n\"\r\n                    \"  Option A — Share the file directly (no password):\\n\"\r\n                    \"    1. In SURF Research Drive, right-click the AUDIO FILE (not the folder)\\n\"\r\n                    \"    2. Share → New share link → no password → Copy link\\n\"\r\n                    \"    3. Paste that link here (e.g. https://hr.data.surf.nl/s/AbCdEfGh)\\n\\n\"\r\n                    \"  Option B — File within a shared folder (no password):\\n\"\r\n                    \"    Append the filename to the folder download URL:\\n\"\r\n                    \"    https://hr.data.surf.nl/s/<sharetoken>/download?path=/filename.mp4\\n\\n\"\r\n                    \"  Option C — Password-protected share link:\\n\"\r\n                    \"    Enter the share password in the 'Share Link Password' field\\n\"\r\n                    \"    of the WILLMA Audio Downloader component (Advanced settings).\",\r\n                    []\r\n                )\r\n            return \"No input audio data detected.\", []\r\n\r\n        stt_model_name = self._fetch_model_name()\r\n        diar_model_name = \"pyannote/speaker-diarization-3.1\"\r\n        headers = {\"X-API-KEY\": self.api_key, \"Accept\": \"application/json\"}\r\n\r\n        all_aligned_segments = []\r\n\r\n        # --- Probe: is this a valid WAV container? ---\r\n        # If ffmpeg is unavailable in the container, the preprocessor passes through raw\r\n        # video bytes (MP4/MKV/etc.). Detect this and route to the direct-send path so\r\n        # WILLMA Whisper handles the container natively — no chunking needed.\r\n        is_wav = False\r\n        try:\r\n            with wave.open(io.BytesIO(audio_bytes), 'rb') as _probe:\r\n                _probe.getnframes()\r\n            is_wav = True\r\n        except Exception:\r\n            is_wav = False\r\n\r\n        if is_wav:\r\n            # ── WAV path: chunked processing ──────────────────────────────────────────\r\n            fallback_starts_with = \"001\"\r\n            try:\r\n                with wave.open(io.BytesIO(audio_bytes), 'rb') as wav_in:\r\n                    params = wav_in.getparams()\r\n                    sr = wav_in.getframerate()\r\n                    total_frames = wav_in.getnframes()\r\n\r\n                frames_per_chunk = int(self.chunk_seconds * sr)\r\n                frames_read = 0\r\n                chunk_index = 0\r\n\r\n                while frames_read < total_frames:\r\n                    to_read = min(frames_per_chunk, total_frames - frames_read)\r\n\r\n                    with wave.open(io.BytesIO(audio_bytes), 'rb') as wav_src:\r\n                        wav_src.setpos(frames_read)\r\n                        chunk_raw_frames = wav_src.readframes(to_read)\r\n\r\n                    chunk_buffer = io.BytesIO()\r\n                    with wave.open(chunk_buffer, 'wb') as wav_dst:\r\n                        wav_dst.setparams(params)\r\n                        wav_dst.writeframes(chunk_raw_frames)\r\n\r\n                    chunk_payload_bytes = chunk_buffer.getvalue()\r\n                    chunk_offset_seconds = frames_read / sr\r\n                    chunk_filename = f\"chunk_{chunk_index:03d}.wav\"\r\n\r\n                    stt_data = {\r\n                        \"model\": stt_model_name, \"language\": self.language,\r\n                        \"stream\": \"false\", \"response_format\": \"verbose_json\",\r\n                        \"timestamp_granularities[]\": \"segment\"\r\n                    }\r\n                    stt_files = {\"file\": (chunk_filename, chunk_payload_bytes, \"audio/wav\")}\r\n                    stt_resp = requests.post(f\"{self.base_url}/audio/transcriptions\", headers=headers, files=stt_files, data=stt_data, timeout=240)\r\n                    stt_resp.raise_for_status()\r\n                    chunk_stt_segments = stt_resp.json().get(\"segments\", []) or []\r\n\r\n                    diar_diarization = []\r\n                    diar_source = \"api\"\r\n                    try:\r\n                        diar_files = {\"file\": (chunk_filename, chunk_payload_bytes, \"audio/wav\")}\r\n                        diar_resp = requests.post(f\"{self.base_url}/audio/custom-diarization\", headers=headers, files=diar_files, data={\"model\": diar_model_name}, timeout=240)\r\n                        if diar_resp.status_code < 400:\r\n                            diar_diarization = diar_resp.json().get(\"diarization\", []) or []\r\n                        else:\r\n                            diar_source = \"fallback\"\r\n                    except Exception:\r\n                        diar_source = \"fallback\"\r\n\r\n                    if diar_source == \"fallback\" or not diar_diarization:\r\n                        diar_diarization = self._alternative_diarization_from_stt(chunk_stt_segments, self.pause_threshold, start_with=fallback_starts_with)\r\n                        diar_source = \"stt_turn_fallback\"\r\n                        if diar_diarization:\r\n                            fallback_starts_with = \"002\" if diar_diarization[-1].get(\"speaker\") == \"001\" else \"001\"\r\n\r\n                    all_aligned_segments.extend(\r\n                        self._assign_speakers(chunk_stt_segments, diar_diarization, diar_source, chunk_offset=chunk_offset_seconds)\r\n                    )\r\n                    frames_read += to_read\r\n                    chunk_index += 1\r\n\r\n            except Exception as e:\r\n                return f\"Pipeline processing failed: {str(e)}\", []\r\n\r\n        else:\r\n            # ── Direct path: non-WAV / video passthrough ──────────────────────────────\r\n            # ffmpeg was unavailable in the container — send the original bytes straight\r\n            # to WILLMA Whisper. The API handles MP4/MKV/MOV/AVI/WEBM/MP3/M4A natively.\r\n            try:\r\n                ext = filename.rsplit(\".\", 1)[-1].lower() if \".\" in filename else \"bin\"\r\n                mime_type = self._MIME_MAP.get(ext, \"application/octet-stream\")\r\n\r\n                stt_data = {\r\n                    \"model\": stt_model_name, \"language\": self.language,\r\n                    \"stream\": \"false\", \"response_format\": \"verbose_json\",\r\n                    \"timestamp_granularities[]\": \"segment\"\r\n                }\r\n                stt_files = {\"file\": (filename, audio_bytes, mime_type)}\r\n                stt_resp = requests.post(f\"{self.base_url}/audio/transcriptions\", headers=headers, files=stt_files, data=stt_data, timeout=600)\r\n                stt_resp.raise_for_status()\r\n                stt_segments = stt_resp.json().get(\"segments\", []) or []\r\n\r\n                diar_diarization = []\r\n                diar_source = \"api\"\r\n                try:\r\n                    diar_files = {\"file\": (filename, audio_bytes, mime_type)}\r\n                    diar_resp = requests.post(f\"{self.base_url}/audio/custom-diarization\", headers=headers, files=diar_files, data={\"model\": diar_model_name}, timeout=600)\r\n                    if diar_resp.status_code < 400:\r\n                        diar_diarization = diar_resp.json().get(\"diarization\", []) or []\r\n                    else:\r\n                        diar_source = \"fallback\"\r\n                except Exception:\r\n                    diar_source = \"fallback\"\r\n\r\n                if diar_source == \"fallback\" or not diar_diarization:\r\n                    diar_diarization = self._alternative_diarization_from_stt(stt_segments, self.pause_threshold, start_with=\"001\")\r\n                    diar_source = \"stt_turn_fallback\"\r\n\r\n                all_aligned_segments.extend(\r\n                    self._assign_speakers(stt_segments, diar_diarization, diar_source, chunk_offset=0.0)\r\n                )\r\n\r\n            except Exception as e:\r\n                return f\"Pipeline processing failed: {str(e)}\", []\r\n\r\n        # ── Post-processing (shared by both paths) ────────────────────────────────────\r\n        finalized = self._force_two_speaker_labels(all_aligned_segments)\r\n        finalized = self._assign_unknown_by_neighbors(finalized)\r\n        merged_conversation = self._merge_speaker_segments(finalized)\r\n\r\n        string_script_blocks = []\r\n        for segment in merged_conversation:\r\n            start_min = f\"{int(segment['start'] // 60)}m:{int(segment['start'] % 60):02d}s\"\r\n            speaker_tag = f\"Speaker {segment['speaker']}\" if segment['speaker'] != \"UNKNOWN\" else \"Unknown Speaker\"\r\n            string_script_blocks.append(f\"[{start_min}] {speaker_tag}:\\n\\\"{segment['text'].strip()}\\\"\")\r\n\r\n        finalized_transcript_string = \"\\n\\n\".join(string_script_blocks)\r\n\r\n        self._cached_result = (finalized_transcript_string, merged_conversation)\r\n        return self._cached_result\r\n\r\n    def get_chat_message(self) -> Message:\r\n        text_script, _ = self.process_audio_pipeline()\r\n        return Message(text=text_script or \"Transcription returned empty.\")\r\n\r\n    def get_segments(self) -> list:\r\n        _, raw_segments_list = self.process_audio_pipeline()\r\n        return raw_segments_list\r\n"
+              },
+              "incoming_packet": {
+                "_input_type": "JSONInput",
+                "advanced": false,
+                "display_name": "Audio Packet Data",
+                "dynamic": false,
+                "info": "",
+                "input_types": [
+                  "Data",
+                  "JSON"
+                ],
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "incoming_packet",
+                "override_skip": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_input": true,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "other",
+                "value": ""
+              },
+              "language": {
+                "_input_type": "StrInput",
+                "advanced": false,
+                "display_name": "Language Code",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "load_from_db": false,
+                "name": "language",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": false,
+                "type": "str",
+                "value": "nl"
+              },
+              "min_overlap_seconds": {
+                "_input_type": "FloatInput",
+                "advanced": false,
+                "display_name": "Minimum Speaker Overlap (s)",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "min_overlap_seconds",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "float",
+                "value": 0.15
+              },
+              "pause_threshold": {
+                "_input_type": "FloatInput",
+                "advanced": false,
+                "display_name": "Diarization Turn Pause Gap (s)",
+                "dynamic": false,
+                "info": "",
+                "list": false,
+                "list_add_label": "Add More",
+                "name": "pause_threshold",
+                "override_skip": false,
+                "placeholder": "",
+                "required": false,
+                "show": true,
+                "title_case": false,
+                "tool_mode": false,
+                "trace_as_metadata": true,
+                "track_in_telemetry": true,
+                "type": "float",
+                "value": 1.2
+              }
+            },
+            "tool_mode": false
+          },
+          "selected_output": "transcript_message",
+          "showNode": true,
+          "type": "WillmaWhisperTranscriber"
+        },
+        "dragging": false,
+        "id": "CustomComponent-LEeRe",
+        "measured": {
+          "height": 674,
+          "width": 320
+        },
+        "position": {
+          "x": 1041.1402728945102,
+          "y": 567.2230366522349
+        },
+        "selected": false,
+        "type": "genericNode"
+      }
+    ],
+    "viewport": {
+      "x": 116.87195601322321,
+      "y": -303.31650119158485,
+      "zoom": 0.976067419452241
+    }
+  },
+  "description": "Interactive Language Weaving.",
+  "endpoint_name": null,
+  "id": "df80fba7-968a-4bb1-9f3e-e4b0df143e98",
+  "is_component": false,
+  "last_tested_version": "1.9.3",
+  "locked": false,
+  "name": "URL NextCLOUD-AUDVIs-PREPRO+TRANSCR+TIME+DIAR-BETA",
+  "tags": []
+}
