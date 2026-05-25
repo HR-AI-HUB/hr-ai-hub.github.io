@@ -309,17 +309,11 @@ If you want to skip manual component assembly, import the pre-wired flow JSON di
 
 ## Step 5 — Build the flow from scratch (component by component)
 
-This section documents the **V06 baseline** component code. For the **V07 update** (video support + authenticated share links), replace each component's code with the corresponding cell from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`:
-
-| Component | V06 notebook cell | V07 notebook cell |
-|-----------|-------------------|-------------------|
-| 1. WILLMA Audio Downloader | cell 4 | **cell 6** |
-| 2. Audio Preprocessor | cell 7 | **cell 8** |
-| 3. WILLMA Whisper Diarized Transcriber | cell 9 | **cell 10** |
+This section provides the complete **V07** component code from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
 
 ### 5a. Create a new flow
 
-In Langflow, click **New Flow → Blank Flow**. Name it `WILLMA Whisper V06`.
+In Langflow, click **New Flow → Blank Flow**. Name it `WILLMA Whisper V07`.
 
 ---
 
@@ -339,52 +333,167 @@ In Langflow, click **New Flow → Blank Flow**. Name it `WILLMA Whisper V06`.
 2. Paste the following code and click **Check & Save**:
 
 ```python
+import re
 import requests
 import os
+from urllib.parse import urlparse, parse_qs
 from langflow.custom import Component
-from langflow.inputs import MessageInput
+from langflow.inputs import MessageInput, SecretStrInput
 from langflow.io import Output
 from langflow.schema import Data
 
 class WillmaAudioDownloader(Component):
     display_name = "1. WILLMA Audio Downloader"
     description = "Downloads an audio URL directly from Chat Input into an in-memory Data packet stream."
-
+    
     inputs = [
         MessageInput(
             name="chat_message",
             display_name="Chat Input Message",
             required=True
+        ),
+        SecretStrInput(
+            name="share_password",
+            display_name="Share Link Password (optional)",
+            value="",
+            info="Password for password-protected Nextcloud / SURF Research Drive share links. Leave empty for public (no-password) shares."
         )
     ]
-
+    
     outputs = [
         Output(name="audio_packet", display_name="Audio Packet Data", method="download_to_memory")
     ]
 
+    def _authenticated_session_download(self, url_target, nc_share_token, pwd, parsed_url):
+        """Download a file from a password-protected Nextcloud/ownCloud public share.
+
+        Mirrors exactly what a browser does:
+          1. GET /s/{token}  →  extract CSRF requesttoken from HTML
+          2. POST /s/{token}/authenticate/downloadshare  →  server sets session cookie
+          3. GET the original download URL  →  session cookie is sent automatically
+
+        This works for all Nextcloud/ownCloud versions, including SURF Research Drive
+        (ownCloud-based).  HTTP Basic Auth on /s/{token}/download is NOT honoured by
+        ownCloud/Nextcloud for password-protected public shares — cookie auth is required.
+        """
+        session = requests.Session()
+        base = f"{parsed_url.scheme}://{parsed_url.netloc}"
+
+        # Step 1 — load the share landing page to get the CSRF requesttoken
+        request_token = ""
+        try:
+            page_resp = session.get(
+                f"{base}/s/{nc_share_token}", timeout=30, allow_redirects=True
+            )
+            m = re.search(r'data-requesttoken="([^"]+)"', page_resp.text)
+            if m:
+                request_token = m.group(1)
+        except Exception:
+            pass
+
+        # Step 2 — POST the password to the authenticate endpoint.
+        # Try the Nextcloud path first, then the ownCloud / generic fallbacks.
+        post_data = {"password": pwd}
+        if request_token:
+            post_data["requesttoken"] = request_token
+        auth_headers = {"X-Requested-With": "XMLHttpRequest"}
+
+        for auth_url in [
+            f"{base}/s/{nc_share_token}/authenticate/downloadshare",   # Nextcloud
+            f"{base}/index.php/s/{nc_share_token}/authenticate",        # ownCloud
+            f"{base}/s/{nc_share_token}/authenticate",                  # generic
+        ]:
+            try:
+                session.post(
+                    auth_url, data=post_data, headers=auth_headers,
+                    timeout=30, allow_redirects=True
+                )
+                break   # first POST that doesn't throw sets the session cookie
+            except Exception:
+                continue
+
+        # Step 3 — GET the download URL; the session cookie is sent automatically
+        return session.get(url_target, timeout=120, allow_redirects=True)
+
     def download_to_memory(self) -> Data:
         message_obj = self.chat_message
         url_target = ""
+        nc_share_token = None
 
         if message_obj and hasattr(message_obj, "text") and message_obj.text:
             url_target = str(message_obj.text).strip()
-
+            
         if not url_target or not url_target.startswith(("http://", "https://")):
             return Data(text="INVALID_URL", data={"bytes": None, "filename": "audio.mp3"})
 
-        # Rewrite GitHub web URLs to raw.githubusercontent.com
+        # --- URL rewriting ---
+
+        # GitHub: rewrite web URLs to raw content
         if "github.com" in url_target and "/blob/" in url_target:
             url_target = url_target.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
         elif "github.com" in url_target and "/raw/" in url_target:
             url_target = url_target.replace("github.com", "raw.githubusercontent.com").replace("/raw/", "/")
 
+        # Nextcloud / SURF Research Drive — file viewer URL
+        # /apps/files/files/{id}?dir=... → /index.php/f/{id}?download
+        nc_viewer = re.search(r'/apps/files/files/(\d+)', url_target)
+        if nc_viewer:
+            base = url_target[:url_target.index('/apps/files/files/')]
+            url_target = f"{base}/index.php/f/{nc_viewer.group(1)}?download"
+
+        # Nextcloud / ownCloud — public share link.
+        # Capture share token; append /download if not already present.
+        # ?path= query params are preserved when /download is already in the path.
+        else:
+            nc_share_match = re.search(r'/s/([A-Za-z0-9_-]+)', url_target.split('?')[0])
+            if nc_share_match:
+                nc_share_token = nc_share_match.group(1)
+                share_base = url_target.split('?')[0].rstrip('/')
+                if not share_base.endswith('/download'):
+                    url_target = share_base + "/download"
+
+        # Resolve password — handle both plain str and Pydantic SecretStr from Langflow
+        pwd = getattr(self, "share_password", "") or ""
+        if hasattr(pwd, "get_secret_value"):
+            pwd = pwd.get_secret_value()
+        pwd = str(pwd).strip() if pwd else ""
+
         try:
-            response = requests.get(url_target, timeout=120)
+            if nc_share_token and pwd:
+                # Cookie-based session auth — the only reliable method for
+                # password-protected public shares on Nextcloud / ownCloud / SURF Research Drive.
+                parsed = urlparse(url_target)
+                response = self._authenticated_session_download(
+                    url_target, nc_share_token, pwd, parsed
+                )
+            else:
+                response = requests.get(url_target, timeout=120, allow_redirects=True)
+
             response.raise_for_status()
+
+            # HTML response → still on the password-entry page (wrong/missing password)
+            # or an internal login-required page.
+            content_type = response.headers.get("Content-Type", "").lower()
+            if "text/html" in content_type:
+                return Data(text="AUTH_REQUIRED", data={"bytes": None, "filename": "audio.mp3"})
+
             audio_bytes = response.content
 
-            clean_url_path = url_target.split("?")[0]
-            filename = os.path.basename(clean_url_path) or "audio.wav"
+            # Prefer Content-Disposition filename (reliable for Nextcloud downloads)
+            filename = ""
+            content_disp = response.headers.get("Content-Disposition", "")
+            if content_disp:
+                cd_match = re.search(
+                    r"filename\*?=(?:UTF-8'')?[\"']?([^\"';\r\n]+)[\"']?",
+                    content_disp, re.IGNORECASE
+                )
+                if cd_match:
+                    filename = cd_match.group(1).strip().strip("\"'")
+
+            # Fall back to URL path basename
+            if not filename:
+                clean_url_path = url_target.split("?")[0]
+                filename = os.path.basename(clean_url_path) or "audio.wav"
 
             return Data(
                 text=filename,
@@ -394,79 +503,648 @@ class WillmaAudioDownloader(Component):
                     "size_bytes": len(audio_bytes)
                 }
             )
+        except requests.exceptions.HTTPError as http_err:
+            status = http_err.response.status_code if http_err.response is not None else 0
+            if status in (401, 403):
+                return Data(text="AUTH_REQUIRED", data={"bytes": None, "filename": "audio.mp3"})
+            return Data(text="DOWNLOAD_FAILED", data={"bytes": None, "filename": "audio.mp3"})
         except Exception:
             return Data(text="DOWNLOAD_FAILED", data={"bytes": None, "filename": "audio.mp3"})
 ```
 
 3. **Wire:** connect Chat Input `message` → Downloader `chat_message`.
 
-**Output wire:** `audio_packet` (Audio Packet Data)
+**Inputs:** `chat_message` (URL) · `share_password` (SecretStr, optional — for password-protected SURF Research Drive shares)
 
-> **V07 update:** The V07 Audio Downloader adds a **Share Link Password** (`SecretStr`) field and cookie-based session authentication for password-protected SURF Research Drive share links. Use **cell 6** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` for the full V07 code.
+**Output wire:** `audio_packet` (Audio Packet Data)
 
 ---
 
 ### Component 3 — Audio Preprocessor (Pure Python / Stdlib-only)
 
 1. Create another **Custom Component**.
-2. Paste the full `AudioPreprocessorComponent` code from notebook cell 7 (lines 227–370).  
-   Key class signature:
+2. Paste the following code and click **Check & Save**:
 
 ```python
+import io
+import os
+import tempfile
+import wave
+import struct
+import math
+import subprocess
+from langflow.custom import Component
+from langflow.inputs import DataInput, IntInput, FloatInput, BoolInput
+from langflow.io import Output
+from langflow.schema import Data
+
 class AudioPreprocessorComponent(Component):
     display_name = "2. Audio Preprocessor"
-    description = "Cleans WAV audio: stereo→mono, resampling, high-pass filter, DRC, peak normalization."
-    # ... (see notebook cell 7 for full code)
+    description = "Extracts audio from video containers (MP4/MKV/MOV/AVI/WEBM) via ffmpeg, then applies 16kHz resampling, Highpass Filtering, DRC, and Peak Normalization in memory."
+
+    VIDEO_EXTENSIONS = (".mp4", ".mkv", ".avi", ".mov", ".webm", ".m4v", ".mpg", ".mpeg")
+
+    inputs = [
+        DataInput(
+            name="incoming_packet",
+            display_name="Raw Audio/Video Packet Data",
+            required=True
+        ),
+        IntInput(
+            name="target_sample_rate",
+            display_name="Target Sample Rate (Hz)",
+            value=16000
+        ),
+        FloatInput(
+            name="highpass_cutoff_hz",
+            display_name="Highpass Cutoff (Hz)",
+            value=90.0
+        ),
+        BoolInput(
+            name="enable_drc",
+            display_name="Enable Dynamic Range Control",
+            value=True
+        ),
+        FloatInput(
+            name="peak_normalize",
+            display_name="Peak Normalization Target",
+            value=0.98
+        )
+    ]
+
+    outputs = [
+        Output(name="cleaned_packet", display_name="Cleaned Audio Packet", method="preprocess_audio")
+    ]
+
+    def _extract_audio_from_video(self, video_bytes: bytes, filename: str = "video.mp4") -> bytes:
+        """Extract audio track from a video container via a /tmp temp file.
+
+        Writes video_bytes to a named temp file, runs ffmpeg against it, reads
+        the output WAV back into memory, then deletes both temp files.
+
+        Using a real file (instead of stdin pipe) gives ffmpeg full random-access
+        seeking — required for MP4 files whose moov atom is at the end (Zoom
+        recordings, phone captures, screen recordings).  The cache:pipe approach
+        fails for these files inside Docker containers.
+
+        Raises RuntimeError if ffmpeg exits with a non-zero return code.
+        """
+        ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else "mp4"
+        with tempfile.NamedTemporaryFile(suffix=f".{ext}", delete=False, dir="/tmp") as f_in:
+            f_in.write(video_bytes)
+            tmp_in = f_in.name
+        tmp_out = tmp_in + ".wav"
+        try:
+            cmd = [
+                "ffmpeg", "-y",
+                "-i", tmp_in,
+                "-vn",                                    # drop video stream
+                "-ac", "1",                               # force mono
+                "-ar", str(self.target_sample_rate),      # resample to target rate
+                "-sample_fmt", "s16",                     # 16-bit signed PCM
+                "-f", "wav",
+                tmp_out
+            ]
+            result = subprocess.run(cmd, capture_output=True, timeout=300)
+            if result.returncode != 0:
+                error_msg = result.stderr.decode("utf-8", errors="replace")
+                raise RuntimeError(f"ffmpeg audio extraction failed: {error_msg[-500:]}")
+            with open(tmp_out, "rb") as f_out:
+                return f_out.read()
+        finally:
+            for p in (tmp_in, tmp_out):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
+
+    def _resample_linear(self, data, orig_sr, target_sr):
+        if orig_sr == target_sr or len(data) == 0:
+            return data
+        ratio = float(orig_sr) / float(target_sr)
+        target_length = int(len(data) / ratio)
+        resampled = [0.0] * target_length
+        for i in range(target_length):
+            orig_idx = i * ratio
+            idx_low = int(math.floor(orig_idx))
+            idx_high = min(idx_low + 1, len(data) - 1)
+            weight = orig_idx - idx_low
+            resampled[i] = (1.0 - weight) * data[idx_low] + weight * data[idx_high]
+        return resampled
+
+    def _apply_highpass(self, data, sample_rate, cutoff):
+        if len(data) == 0 or cutoff <= 0:
+            return data
+        rc = 1.0 / (2.0 * math.pi * cutoff)
+        dt = 1.0 / sample_rate
+        alpha = rc / (rc + dt)
+        filtered = [0.0] * len(data)
+        filtered[0] = data[0]
+        for i in range(1, len(data)):
+            filtered[i] = alpha * (filtered[i-1] + data[i] - data[i-1])
+        return filtered
+
+    def _apply_drc(self, data):
+        boosted = []
+        for sample in data:
+            sign = 1.0 if sample >= 0 else -1.0
+            boosted.append(sign * math.pow(abs(sample), 0.88))
+        return boosted
+
+    def preprocess_audio(self) -> Data:
+        packet = self.incoming_packet.data if self.incoming_packet else {}
+        raw_bytes = packet.get("bytes")
+        filename = packet.get("filename", "audio.wav")
+
+        if not raw_bytes or len(raw_bytes) == 0:
+            return self.incoming_packet  # passthrough — preserves error codes (AUTH_REQUIRED, DOWNLOAD_FAILED, etc.)
+
+        # Step 0: Extract audio track from video containers (MP4, MKV, MOV, AVI, WEBM, etc.)
+        name_lower = filename.lower()
+        if any(name_lower.endswith(ext) for ext in self.VIDEO_EXTENSIONS):
+            try:
+                raw_bytes = self._extract_audio_from_video(raw_bytes, filename)
+                # Rename to .wav so the DSP chain picks it up
+                filename = filename.rsplit(".", 1)[0] + ".wav"
+            except Exception:
+                return self.incoming_packet  # ffmpeg unavailable or failed — passthrough to Transcriber
+
+        # Process as WAV if extension matches, otherwise fallback pass-through (e.g. MP3, FLAC)
+        if not filename.lower().endswith(".wav"):
+            return self.incoming_packet
+
+        try:
+            # Decode PCM_16 bytes to Float Mono array
+            with wave.open(io.BytesIO(raw_bytes), 'rb') as wav_in:
+                orig_sr = wav_in.getframerate()
+                channels = wav_in.getnchannels()
+                sampwidth = wav_in.getsampwidth()
+                n_frames = wav_in.getnframes()
+                raw_frames = wav_in.readframes(n_frames)
+
+                if sampwidth != 2:
+                    return self.incoming_packet  # Dynamic pass-through if not 16-bit
+
+                fmt = f"<{n_frames * channels}h"
+                integer_samples = struct.unpack(fmt, raw_frames)
+                float_samples = [s / 32768.0 for s in integer_samples]
+
+            # Downmix Stereo/Surround to Mono channel layout
+            if channels > 1:
+                mono = []
+                for i in range(0, len(float_samples), channels):
+                    mono.append(sum(float_samples[i:i+channels]) / channels)
+                float_samples = mono
+
+            # Execute DSP chain
+            float_samples = self._resample_linear(float_samples, orig_sr, self.target_sample_rate)
+            float_samples = self._apply_highpass(float_samples, self.target_sample_rate, self.highpass_cutoff_hz)
+
+            if self.enable_drc:
+                float_samples = self._apply_drc(float_samples)
+
+            peak = max(abs(s) for s in float_samples) if float_samples else 0.0
+            if peak > 0:
+                float_samples = [(s / peak) * self.peak_normalize for s in float_samples]
+
+            # Re-encode clean Float array back into standard PCM_16 WAV bytes
+            out_buffer = io.BytesIO()
+            with wave.open(out_buffer, 'wb') as wav_out:
+                wav_out.setnchannels(1)
+                wav_out.setsampwidth(2)
+                wav_out.setframerate(self.target_sample_rate)
+                int_frames = [int(max(-32768, min(32767, s * 32767))) for s in float_samples]
+                wav_out.writeframes(struct.pack(f"<{len(int_frames)}h", *int_frames))
+
+            processed_bytes = out_buffer.getvalue()
+            return Data(
+                text=filename,
+                data={
+                    "bytes": processed_bytes,
+                    "filename": filename,
+                    "size_bytes": len(processed_bytes)
+                }
+            )
+        except Exception:
+            return self.incoming_packet  # Resilient fallback in case header tracking breaks
 ```
-
-   Key parameters (all have sensible defaults):
-
-   | Input | Default | Effect |
-   |-------|---------|--------|
-   | `target_sample_rate` | 16 000 Hz | Resamples to Whisper's native rate |
-   | `highpass_cutoff_hz` | 90 Hz | Removes DC offset and low-frequency rumble |
-   | `enable_drc` | `True` | Power-law soft compression (`\|s\|^0.88`) |
-   | `peak_normalize` | 0.98 | Peak amplitude target (avoids clipping) |
 
 3. **Wire:** Downloader `audio_packet` → Preprocessor `incoming_packet`.
 
-**Output wire:** `processed_packet` (Processed Audio Data)
+**Output wire:** `cleaned_packet` (Cleaned Audio Packet)
 
-> **Why stdlib-only?** The Langflow Docker container may not have scipy or numpy available without modifying the image. The preprocessor uses only `wave`, `struct`, and `math` — zero extra dependencies.
+> **Why stdlib-only?** The Langflow Docker container may not have scipy or numpy available without modifying the image. The preprocessor uses only `wave`, `struct`, `math`, and `subprocess` — no extra pip dependencies (ffmpeg is a system binary).
 
-> **V07 update:** The V07 Preprocessor adds video audio extraction via `ffmpeg` subprocess, writing a `/tmp` temp file for full random-access seeking (required for moov-at-end MP4s). Use **cell 8** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` for the full V07 code. Requires `ffmpeg` in the Docker image (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)).
+> **Docker requirement:** `ffmpeg` must be installed in the Langflow container for video extraction. See [Step 2f](#2f-install-ffmpeg-for-video-support-v07). Without ffmpeg, video files are passed through directly to WILLMA Whisper, which handles them natively.
 
 ---
 
 ### Component 4 — WILLMA Whisper Diarized Transcriber
 
 1. Create another **Custom Component**.
-2. Paste the `WillmaWhisperTranscriber` code from notebook cell 9 (lines 404–723).  
-   Class signature:
+2. Paste the following code and click **Check & Save**:
 
 ```python
+import io
+import wave
+import requests
+from langflow.custom import Component
+from langflow.inputs import DataInput, StrInput, SecretStrInput, IntInput, FloatInput
+from langflow.io import Output
+from langflow.schema.message import Message
+
 class WillmaWhisperTranscriber(Component):
     display_name = "3. WILLMA Whisper Diarized Transcriber"
-    description = "Transcribes and diarizes audio into a timestamped two-speaker dialogue script."
+    description = "Transcribes and diarizes audio stream segments into timestamped two-speaker dialogue scripts."
+
+    inputs = [
+        DataInput(
+            name="incoming_packet",
+            display_name="Audio Packet Data",
+            required=True
+        ),
+        StrInput(
+            name="base_url",
+            display_name="WILLMA Base URL",
+            value="https://willma.surf.nl/api/v0"
+        ),
+        SecretStrInput(
+            name="api_key",
+            display_name="WILLMA API Key",
+            required=True
+        ),
+        StrInput(
+            name="language",
+            display_name="Language Code",
+            value="nl"
+        ),
+        IntInput(
+            name="chunk_seconds",
+            display_name="Processing Window Size (s)",
+            value=30
+        ),
+        FloatInput(
+            name="min_overlap_seconds",
+            display_name="Minimum Speaker Overlap (s)",
+            value=0.15
+        ),
+        FloatInput(
+            name="pause_threshold",
+            display_name="Diarization Turn Pause Gap (s)",
+            value=1.2
+        )
+    ]
+
+    outputs = [
+        Output(name="transcript_message", display_name="Diarized Transcript", method="get_chat_message"),
+        Output(name="segments_json", display_name="Structured Segments List", method="get_segments")
+    ]
+
+    _MIME_MAP = {
+        "mp4": "video/mp4", "mkv": "video/x-matroska", "avi": "video/x-msvideo",
+        "mov": "video/quicktime", "webm": "video/webm", "m4v": "video/mp4",
+        "mp3": "audio/mpeg", "m4a": "audio/mp4", "flac": "audio/flac",
+        "ogg": "audio/ogg", "aac": "audio/aac", "opus": "audio/opus",
+        "wav": "audio/wav",
+    }
+
+    def _fetch_model_name(self) -> str:
+        headers = {"X-API-KEY": self.api_key, "Content-Type": "application/json"}
+        resp = requests.get(f"{self.base_url}/sequences", headers=headers, timeout=45)
+        resp.raise_for_status()
+        catalog = resp.json()
+        preferred = ["whisper-large-v3", "faster-whisper-large-v3", "whisper-large", "whisper-medium"]
+        for frag in preferred:
+            for item in catalog:
+                if frag in str(item.get("name", "")).lower():
+                    return item.get("name")
+        for item in catalog:
+            if "whisper" in str(item.get("name", "")).lower():
+                return item.get("name")
+        return "whisper-large-v3"
+
+    def _overlap_seconds(self, start_a, end_a, start_b, end_b):
+        return max(0.0, min(end_a, end_b) - max(start_a, start_b))
+
+    def _build_turns_from_stt(self, segments, pause_threshold):
+        turns = []
+        if not segments:
+            return turns
+        sorted_segs = sorted(segments, key=lambda x: (float(x.get("start", 0)), float(x.get("end", 0))))
+        current = {
+            "start": float(sorted_segs[0].get("start", 0)),
+            "end": float(sorted_segs[0].get("end", 0)),
+            "text": (sorted_segs[0].get("text") or "").strip(),
+        }
+        for seg in sorted_segs[1:]:
+            seg_start = float(seg.get("start", 0))
+            seg_end = float(seg.get("end", 0))
+            seg_text = (seg.get("text") or "").strip()
+            gap = seg_start - current["end"]
+            if gap >= pause_threshold:
+                turns.append(current)
+                current = {"start": seg_start, "end": seg_end, "text": seg_text}
+            else:
+                current["end"] = max(current["end"], seg_end)
+                if seg_text:
+                    current["text"] = (current["text"] + " " + seg_text).strip()
+        turns.append(current)
+        return turns
+
+    def _alternative_diarization_from_stt(self, segments, pause_threshold, start_with="001"):
+        turns = self._build_turns_from_stt(segments, pause_threshold)
+        speaker_cycle = ["002", "001"] if start_with == "002" else ["001", "002"]
+        diarization = []
+        for index, turn in enumerate(turns):
+            diarization.append({
+                "start": round(float(turn["start"]), 3),
+                "end": round(float(turn["end"]), 3),
+                "speaker": speaker_cycle[index % 2]
+            })
+        return diarization
+
+    def _force_two_speaker_labels(self, segments):
+        counts = {}
+        for seg in segments:
+            raw = seg.get("speaker")
+            if raw in (None, "", "UNKNOWN"):
+                continue
+            counts[str(raw).strip()] = counts.get(str(raw).strip(), 0) + 1
+        top_speakers = [item[0] for item in sorted(counts.items(), key=lambda x: x[1], reverse=True)[:2]]
+
+        spk_map = {}
+        if len(top_speakers) >= 1: spk_map[top_speakers[0]] = "001"
+        if len(top_speakers) >= 2: spk_map[top_speakers[1]] = "002"
+
+        forced = []
+        for seg in segments:
+            updated = dict(seg)
+            raw = updated.get("speaker")
+            if raw in (None, "", "UNKNOWN"):
+                updated["speaker"] = "UNKNOWN"
+            else:
+                k = str(raw).strip()
+                updated["speaker"] = k if k in ("001", "002") else spk_map.get(k, "UNKNOWN")
+            forced.append(updated)
+        return forced
+
+    def _assign_unknown_by_neighbors(self, segments):
+        if not segments:
+            return segments
+        count = len(segments)
+        for index, seg in enumerate(segments):
+            if seg.get("speaker") != "UNKNOWN":
+                continue
+            prev_spk, next_spk = None, None
+            for left in range(index - 1, -1, -1):
+                if segments[left].get("speaker") and segments[left].get("speaker") != "UNKNOWN":
+                    prev_spk = segments[left].get("speaker")
+                    break
+            for right in range(index + 1, count):
+                if segments[right].get("speaker") and segments[right].get("speaker") != "UNKNOWN":
+                    next_spk = segments[right].get("speaker")
+                    break
+            if prev_spk and prev_spk == next_spk:
+                seg["speaker"] = prev_spk
+        return segments
+
+    def _merge_speaker_segments(self, segments, max_gap=1.0):
+        merged = []
+        sorted_segs = sorted(segments, key=lambda x: (float(x.get("start", 0)), float(x.get("end", 0))))
+        for seg in sorted_segs:
+            text = seg.get("text", "").strip()
+            if not text:
+                continue
+            if not merged:
+                merged.append(dict(seg))
+                continue
+            prev = merged[-1]
+            same_speaker = prev.get("speaker") == seg.get("speaker")
+            gap = float(seg.get("start", 0)) - float(prev.get("end", 0))
+            if same_speaker and gap <= max_gap:
+                prev["end"] = max(prev["end"], seg.get("end", prev["end"]))
+                prev["text"] = (prev.get("text").strip() + " " + text).strip()
+            else:
+                merged.append(dict(seg))
+        return merged
+
+    def _assign_speakers(self, stt_segments, diar_diarization, diar_source, chunk_offset=0.0):
+        """Map each STT segment to a speaker via time-overlap matching, then offset timestamps."""
+        result = []
+        for seg in stt_segments:
+            local_start = float(seg.get("start", 0))
+            local_end = float(seg.get("end", 0))
+            best_speaker = None
+            best_overlap = 0.0
+            for diar_seg in diar_diarization:
+                d_start = float(diar_seg.get("start", 0))
+                d_end = float(diar_seg.get("end", 0))
+                overlap = self._overlap_seconds(local_start, local_end, d_start, d_end)
+                if overlap > best_overlap:
+                    best_overlap = overlap
+                    best_speaker = diar_seg.get("speaker") or diar_seg.get("label") or diar_seg.get("id")
+            out = dict(seg)
+            out["start"] = round(local_start + chunk_offset, 3)
+            out["end"] = round(local_end + chunk_offset, 3)
+            if diar_source == "stt_turn_fallback":
+                out["speaker"] = best_speaker or "UNKNOWN"
+            else:
+                out["speaker"] = best_speaker if best_overlap >= self.min_overlap_seconds else "UNKNOWN"
+            out["speaker_source"] = diar_source
+            out["speaker_overlap"] = round(best_overlap, 3)
+            result.append(out)
+        return result
+
+    def process_audio_pipeline(self):
+        if hasattr(self, "_cached_result"):
+            return self._cached_result
+
+        packet = self.incoming_packet.data if self.incoming_packet else {}
+        audio_bytes = packet.get("bytes")
+        filename = packet.get("filename", "audio.wav")
+
+        if not audio_bytes or len(audio_bytes) == 0:
+            # Surface specific error codes from the downloader as actionable messages
+            packet_status = getattr(self.incoming_packet, "text", "") or ""
+            if packet_status == "AUTH_REQUIRED":
+                return (
+                    "Download blocked — authentication required.\n\n"
+                    "The URL you pasted is an internal link (requires a SURF login), a folder share, "
+                    "or a password-protected share link.\n\n"
+                    "How to fix this:\n\n"
+                    "  Option A — Share the file directly (no password):\n"
+                    "    1. In SURF Research Drive, right-click the AUDIO FILE (not the folder)\n"
+                    "    2. Share → New share link → no password → Copy link\n"
+                    "    3. Paste that link here (e.g. https://hr.data.surf.nl/s/AbCdEfGh)\n\n"
+                    "  Option B — File within a shared folder (no password):\n"
+                    "    Append the filename to the folder download URL:\n"
+                    "    https://hr.data.surf.nl/s/<sharetoken>/download?path=/filename.mp4\n\n"
+                    "  Option C — Password-protected share link:\n"
+                    "    Enter the share password in the 'Share Link Password' field\n"
+                    "    of the WILLMA Audio Downloader component.",
+                    []
+                )
+            return "No input audio data detected.", []
+
+        stt_model_name = self._fetch_model_name()
+        diar_model_name = "pyannote/speaker-diarization-3.1"
+        headers = {"X-API-KEY": self.api_key, "Accept": "application/json"}
+
+        all_aligned_segments = []
+
+        # --- Probe: is this a valid WAV container? ---
+        # If ffmpeg is unavailable in the container, the preprocessor passes through raw
+        # video bytes (MP4/MKV/etc.). Detect this and route to the direct-send path so
+        # WILLMA Whisper handles the container natively — no chunking needed.
+        is_wav = False
+        try:
+            with wave.open(io.BytesIO(audio_bytes), 'rb') as _probe:
+                _probe.getnframes()
+            is_wav = True
+        except Exception:
+            is_wav = False
+
+        if is_wav:
+            # ── WAV path: chunked processing ──────────────────────────────────────────
+            fallback_starts_with = "001"
+            try:
+                with wave.open(io.BytesIO(audio_bytes), 'rb') as wav_in:
+                    params = wav_in.getparams()
+                    sr = wav_in.getframerate()
+                    total_frames = wav_in.getnframes()
+
+                frames_per_chunk = int(self.chunk_seconds * sr)
+                frames_read = 0
+                chunk_index = 0
+
+                while frames_read < total_frames:
+                    to_read = min(frames_per_chunk, total_frames - frames_read)
+
+                    with wave.open(io.BytesIO(audio_bytes), 'rb') as wav_src:
+                        wav_src.setpos(frames_read)
+                        chunk_raw_frames = wav_src.readframes(to_read)
+
+                    chunk_buffer = io.BytesIO()
+                    with wave.open(chunk_buffer, 'wb') as wav_dst:
+                        wav_dst.setparams(params)
+                        wav_dst.writeframes(chunk_raw_frames)
+
+                    chunk_payload_bytes = chunk_buffer.getvalue()
+                    chunk_offset_seconds = frames_read / sr
+                    chunk_filename = f"chunk_{chunk_index:03d}.wav"
+
+                    stt_data = {
+                        "model": stt_model_name, "language": self.language,
+                        "stream": "false", "response_format": "verbose_json",
+                        "timestamp_granularities[]": "segment"
+                    }
+                    stt_files = {"file": (chunk_filename, chunk_payload_bytes, "audio/wav")}
+                    stt_resp = requests.post(f"{self.base_url}/audio/transcriptions", headers=headers, files=stt_files, data=stt_data, timeout=240)
+                    stt_resp.raise_for_status()
+                    chunk_stt_segments = stt_resp.json().get("segments", []) or []
+
+                    diar_diarization = []
+                    diar_source = "api"
+                    try:
+                        diar_files = {"file": (chunk_filename, chunk_payload_bytes, "audio/wav")}
+                        diar_resp = requests.post(f"{self.base_url}/audio/custom-diarization", headers=headers, files=diar_files, data={"model": diar_model_name}, timeout=240)
+                        if diar_resp.status_code < 400:
+                            diar_diarization = diar_resp.json().get("diarization", []) or []
+                        else:
+                            diar_source = "fallback"
+                    except Exception:
+                        diar_source = "fallback"
+
+                    if diar_source == "fallback" or not diar_diarization:
+                        diar_diarization = self._alternative_diarization_from_stt(chunk_stt_segments, self.pause_threshold, start_with=fallback_starts_with)
+                        diar_source = "stt_turn_fallback"
+                        if diar_diarization:
+                            fallback_starts_with = "002" if diar_diarization[-1].get("speaker") == "001" else "001"
+
+                    all_aligned_segments.extend(
+                        self._assign_speakers(chunk_stt_segments, diar_diarization, diar_source, chunk_offset=chunk_offset_seconds)
+                    )
+                    frames_read += to_read
+                    chunk_index += 1
+
+            except Exception as e:
+                return f"Pipeline processing failed: {str(e)}", []
+
+        else:
+            # ── Direct path: non-WAV / video passthrough ──────────────────────────────
+            # ffmpeg was unavailable in the container — send the original bytes straight
+            # to WILLMA Whisper. The API handles MP4/MKV/MOV/AVI/WEBM/MP3/M4A natively.
+            try:
+                ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else "bin"
+                mime_type = self._MIME_MAP.get(ext, "application/octet-stream")
+
+                stt_data = {
+                    "model": stt_model_name, "language": self.language,
+                    "stream": "false", "response_format": "verbose_json",
+                    "timestamp_granularities[]": "segment"
+                }
+                stt_files = {"file": (filename, audio_bytes, mime_type)}
+                stt_resp = requests.post(f"{self.base_url}/audio/transcriptions", headers=headers, files=stt_files, data=stt_data, timeout=600)
+                stt_resp.raise_for_status()
+                stt_segments = stt_resp.json().get("segments", []) or []
+
+                diar_diarization = []
+                diar_source = "api"
+                try:
+                    diar_files = {"file": (filename, audio_bytes, mime_type)}
+                    diar_resp = requests.post(f"{self.base_url}/audio/custom-diarization", headers=headers, files=diar_files, data={"model": diar_model_name}, timeout=600)
+                    if diar_resp.status_code < 400:
+                        diar_diarization = diar_resp.json().get("diarization", []) or []
+                    else:
+                        diar_source = "fallback"
+                except Exception:
+                    diar_source = "fallback"
+
+                if diar_source == "fallback" or not diar_diarization:
+                    diar_diarization = self._alternative_diarization_from_stt(stt_segments, self.pause_threshold, start_with="001")
+                    diar_source = "stt_turn_fallback"
+
+                all_aligned_segments.extend(
+                    self._assign_speakers(stt_segments, diar_diarization, diar_source, chunk_offset=0.0)
+                )
+
+            except Exception as e:
+                return f"Pipeline processing failed: {str(e)}", []
+
+        # ── Post-processing (shared by both paths) ────────────────────────────────────
+        finalized = self._force_two_speaker_labels(all_aligned_segments)
+        finalized = self._assign_unknown_by_neighbors(finalized)
+        merged_conversation = self._merge_speaker_segments(finalized)
+
+        string_script_blocks = []
+        for segment in merged_conversation:
+            start_min = f"{int(segment['start'] // 60)}m:{int(segment['start'] % 60):02d}s"
+            speaker_tag = f"Speaker {segment['speaker']}" if segment['speaker'] != "UNKNOWN" else "Unknown Speaker"
+            string_script_blocks.append(f"[{start_min}] {speaker_tag}:\n\"{segment['text'].strip()}\"")
+
+        finalized_transcript_string = "\n\n".join(string_script_blocks)
+
+        self._cached_result = (finalized_transcript_string, merged_conversation)
+        return self._cached_result
+
+    def get_chat_message(self) -> Message:
+        text_script, _ = self.process_audio_pipeline()
+        return Message(text=text_script or "Transcription returned empty.")
+
+    def get_segments(self) -> list:
+        _, raw_segments_list = self.process_audio_pipeline()
+        return raw_segments_list
 ```
 
-   **Required configuration:**
+3. **Wire:** Preprocessor `cleaned_packet` → Transcriber `incoming_packet`.
 
-   | Input | Type | Action required |
-   |-------|------|----------------|
-   | `api_key` | SecretStr | **Paste your WILLMA API key here** |
-   | `base_url` | Str | Default: `https://willma.surf.nl/api/v0` |
-   | `language` | Str | Default: `nl` (Dutch). Change to `en`, `de`, etc. as needed |
+**Required configuration:**
 
-   **Tunable parameters:**
-
-   | Parameter | Default | Notes |
-   |-----------|---------|-------|
-   | `chunk_seconds` | 30 s | STT + diarization window size per API call |
-   | `min_overlap_seconds` | 0.15 s | Minimum speaker-segment overlap to assign a speaker label |
-   | `pause_threshold` | 1.2 s | Pause gap used by the STT-turn fallback diarizer |
-
-3. **Wire:** Preprocessor `processed_packet` → Transcriber `incoming_packet`.
+| Input | Type | Action required |
+|-------|------|----------------|
+| `api_key` | SecretStr | **Paste your WILLMA API key here** |
+| `base_url` | Str | Default: `https://willma.surf.nl/api/v0` |
+| `language` | Str | Default: `nl` (Dutch). Change to `en`, `de`, etc. as needed |
 
 **Output wires:**
 - `transcript_message` — dialogue script as a `Message`
