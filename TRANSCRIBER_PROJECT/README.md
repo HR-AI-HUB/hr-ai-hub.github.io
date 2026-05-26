@@ -102,6 +102,8 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 | Docker + Docker Compose | Installed on the VM (scripts below handle this) |
 | Audio / video files accessible by encrypted https URL | Public links, like e.g. GitHub raw file URLs as well as Private, password protected, Share links from SURF RESEARCH DRIVE |
 
+<img align="left" width="150" height="250" src="https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/FIGs/SURF_RESREARCH_DRIVE_EXTERNALSHARE_LINK.png">
+
 > **NEN-ISO/IEC 27001 compliance:** Participation in the SURF AI-HUB pilot is only permitted when the applicable information-security framework satisfies [NEN-ISO/IEC 27001](https://www.forumstandaardisatie.nl/open-standaarden/nen-isoiec-27001). SURF holds ISO 27001 certification for all its services.
 
 ---
