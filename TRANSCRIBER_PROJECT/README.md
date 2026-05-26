@@ -120,8 +120,11 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 
 | Research Drive <br> Next Cloud| output | to-do |
 |-------------|-------|----------|
-| click on + sign  | produces password | copy + save password |
-| click on + 'copy to clipboard' icon  <img width="100" alt="image" src="https://github.com/user-attachments/assets/7d209885-c6c6-4d4a-97d3-aaf7e00b8d3a" /> | produces url: https://hr.data.surf.nl/s/E6WT93EcrJFAifE  | copy + save URL |
+| click on + sign  | produces password | past password into component 1: Willma audio downloader |
+| click on + 'copy to clipboard' icon  <img width="100" alt="image" src="https://github.com/user-attachments/assets/7d209885-c6c6-4d4a-97d3-aaf7e00b8d3a" /> | produces url: https://hr.data.surf.nl/s/E6WT93EcrJFAifE  | paste URL in Playground user input window |
+| copy \<*FILENAME*\> :<br> Ape&nbsp;and&nbsp;Super-Ape&nbsp;&nbsp;Bij&nbsp;de&nbsp;beesten&nbsp;af&nbsp;(Bert Haanstra,&nbsp;1972)&nbsp;[4K].mp4 | concatenate with Share link: https://hr.data.surf.nl/s/E6WT93EcrJFAifE>/download?path=/ \<FILENAME\>  | past in Shareable Playground  User input window |
+
+
 
 
 > **NEN-ISO/IEC 27001 compliance:** Participation in the SURF AI-HUB pilot is only permitted when the applicable information-security framework satisfies [NEN-ISO/IEC 27001](https://www.forumstandaardisatie.nl/open-standaarden/nen-isoiec-27001). SURF holds ISO 27001 certification for all its services.
