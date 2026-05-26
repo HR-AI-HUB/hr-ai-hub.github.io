@@ -2,7 +2,7 @@
 
 > **Platform:** [SURF AI-HUB (WiLLMa)](https://hr-ai-hub.github.io/) · [SURF Research Cloud](https://www.surf.nl/en/surf-research-cloud-collaborative-research-environment) · [Langflow 1.9.3](https://langflow.org/) · Docker · Ubuntu 22.04  
 > **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)  
-> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` (current) · `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb` (V06 baseline)  
+> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` (current)  
 > **Ready-to-import flow:** Download the Langflow JSON from [HR-AI-HUB GitHub](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/LANGFLOW_WHISPER_JSON/URL%20NextCLOUD-AUDVIs-PREPRO%2BTRANSCR%2BTIME%2BDIAR-BETA.json)
 
 ---
