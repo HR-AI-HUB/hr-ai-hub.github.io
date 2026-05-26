@@ -79,7 +79,21 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
      (dialogue script displayed in Playground)
 ```
 
+#### Grapical interfacing overview of the **"TRANSCRIBER" flow from the  Langflow GUI
+
+<img align="center"     width="800"     src="./FIGs/TRANSCRIBER_LANGFLOW_FLOW.png"> **FLOW COMPONENTS** 
+
+<img align="left"     width="300"     src="./FIGs/TRANSCRIBER_LANGFLOW_PLAYGROUND.png"> **PLAYGROUND: USER input (URL) + SYSTEM output (text)** 
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+---
+
 ### Component summary
+
+
+
+
 
 | # | Component | Technology | Key role |
 |---|-----------|-----------|----------|
@@ -103,12 +117,14 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 | Audio / video files accessible by encrypted https URL | Public links, like e.g. GitHub raw file URLs as well as Private, password protected, Share links from SURF RESEARCH DRIVE |
 
 
+#### How to create a password protected (private) Shared link with Research Drive / Next Cloud applicatie
+
 <img align="left"     width="300"     src="./FIGs/STAP1_klik-op-PLUS-TEKEN.png">
 <img align="left"     width="300"     src="./FIGs/COPY_PASSWORD.png">
 <img align="center"   width="300"      src="./FIGs/SURF_RESREARCH_DRIVE_EXTERNALSHARE_LINK.png">
 
 
-| Requirement | output | to-do |
+| Research Drive <br> Next Cloud| output | to-do |
 |-------------|-------|----------|
 | click on + sign  | produces password | copy + save password |
 | click on + 'copy to clipboard' icon  <img width="100" alt="image" src="https://github.com/user-attachments/assets/7d209885-c6c6-4d4a-97d3-aaf7e00b8d3a" /> | produces url: https://hr.data.surf.nl/s/E6WT93EcrJFAifE  | copy + save URL |
