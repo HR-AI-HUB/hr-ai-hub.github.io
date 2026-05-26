@@ -76,7 +76,7 @@ Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Ready-to-import f
 
 ## What this tool does
 
-This Langflow flow accepts a **public audio or video file URL** (pasted into the Langflow Chat Playground), downloads the file into memory, optionally extracts audio from video containers via `ffmpeg`, cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
+This Langflow flow accepts a **private (SURF Research Drive)  or public audio or video file via encrypted https URL** (pasted into the Langflow Chat Playground), downloads the file into memory, optionally extracts audio from video containers via `ffmpeg`, cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
 
 The output is a readable timestamped **dialogue script** rendered directly in the Chat Playground:
 
