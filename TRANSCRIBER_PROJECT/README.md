@@ -79,21 +79,15 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
      (dialogue script displayed in Playground)
 ```
 
-#### Grapical interfacing overview of the **"TRANSCRIBER" flow from the  Langflow GUI
+#### Grapical interfacing overview of the **"TRANSCRIBER" flow from the  Langflow GUI**
 
-<img align="center"     width="800"     src="./FIGs/TRANSCRIBER_LANGFLOW_FLOW.png"> **FLOW COMPONENTS** 
+<img align="center"     width="800"     src="./FIGs/TRANSCRIBER_LANGFLOW_FLOW.png"> *FLOW COMPONENTS*
 
-<img align="left"     width="300"     src="./FIGs/TRANSCRIBER_LANGFLOW_PLAYGROUND.png"> **PLAYGROUND: USER input (URL) + SYSTEM output (text)** 
+<img align="left"     width="300"     src="./FIGs/TRANSCRIBER_LANGFLOW_PLAYGROUND.png"> *PLAYGROUND: USER input (URL) + SYSTEM output (text)*
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
----
-
 ### Component summary
-
-
-
-
 
 | # | Component | Technology | Key role |
 |---|-----------|-----------|----------|
