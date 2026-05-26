@@ -1,8 +1,10 @@
 # Whisper v3 Two-Speaker Diarized Transcription with SURF AI-HUB + Langflow
 
 > **Platform:** [SURF AI-HUB (WiLLMa)](https://hr-ai-hub.github.io/) · [SURF Research Cloud](https://www.surf.nl/en/surf-research-cloud-collaborative-research-environment) · [Langflow 1.9.3](https://langflow.org/) · Docker · Ubuntu 22.04  
-> **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)  
-> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` (current)  
+> **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)
+> 
+> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` [current](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/Jupyter_Notebooks/LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb)
+> 
 > **Ready-to-import flow:** Download the Langflow JSON from [HR-AI-HUB GitHub](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/LANGFLOW_WHISPER_JSON/URL%20NextCLOUD-AUDVIs-PREPRO%2BTRANSCR%2BTIME%2BDIAR-BETA.json)
 
 ---
@@ -29,7 +31,9 @@
 
 ## What this tool does
 
-This Langflow flow accepts a **private (SURF Research Drive)  or public audio or video file via encrypted https URL** (pasted into the Langflow Chat Playground), downloads the file into memory, optionally extracts audio from video containers via `ffmpeg`, cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
+The here described Langflow flow accepts a **private (SURF Research Drive)  or public audio or video file via encrypted https URL** (pasted into the Langflow Chat Playground).
+
+It downloads the audio file into memory, or alternativly, it extracts audio from video containers via `ffmpeg`, <br> cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
 
 The output is a readable timestamped **dialogue script** rendered directly in the Chat Playground:
 
@@ -96,7 +100,7 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 | Ubuntu 22.04 VM on SRC | Public IP, DNS A-record, ports 80 / 443 / 8080 open |
 | WILLMA API key | Request via [SURF Servicedesk](https://servicedesk.surf.nl) (login via SURF/SRAM required) |
 | Docker + Docker Compose | Installed on the VM (scripts below handle this) |
-| Audio files accessible by URL | Public HTTP/HTTPS links, or GitHub raw file URLs |
+| Audio / video files accessible by encrypted https URL | Public links, like e.g. GitHub raw file URLs as well as Private, password protected, Share links from SURF RESEARCH DRIVE |
 
 > **NEN-ISO/IEC 27001 compliance:** Participation in the SURF AI-HUB pilot is only permitted when the applicable information-security framework satisfies [NEN-ISO/IEC 27001](https://www.forumstandaardisatie.nl/open-standaarden/nen-isoiec-27001). SURF holds ISO 27001 certification for all its services.
 
