@@ -59,7 +59,7 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 
 ```
 [Chat Input]
-     │  (audio URL as text)
+     │  (audio or video encrypted https URL as text)
      ▼
 [1. WILLMA Audio Downloader]
      │  (raw audio bytes in RAM)
