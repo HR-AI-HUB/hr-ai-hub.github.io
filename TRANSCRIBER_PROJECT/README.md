@@ -27,53 +27,6 @@
 
 ---
 
-## Changelog
-
-### V07 — Video Support + Authenticated Share Links *(current)*
-
-Based on `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
-
-#### What changed
-
-| Area | Change |
-|------|--------|
-| **Video file support** | Component 2 (Audio Preprocessor) detects video containers (`.mp4` `.mkv` `.mov` `.avi` `.webm` `.m4v` `.mpg` `.mpeg`) by file extension and calls `ffmpeg` to extract the audio track before the DSP chain runs |
-| **ffmpeg temp-file strategy** | Video bytes are written to a named `/tmp` temp file; ffmpeg reads from disk (not stdin pipe), which is required for moov-at-end MP4s (Zoom recordings, phone captures, screen recordings) |
-| **Resilient ffmpeg fallback** | If `ffmpeg` is not installed or exits non-zero, the original bytes are forwarded unchanged — the flow never breaks |
-| **Password-protected share links** | Component 1 (Audio Downloader) accepts a new **Share Link Password** (`SecretStr`) field for password-protected Nextcloud / ownCloud / SURF Research Drive public share links |
-| **Cookie-based session auth** | Replaces HTTP Basic Auth (which ownCloud/Nextcloud ignores for public shares); mirrors browser flow: GET share page → extract CSRF `requesttoken` from HTML → POST password to `/authenticate/downloadshare` → session cookie → GET download URL |
-| **Nextcloud file viewer URL rewriting** | `/apps/files/files/{id}?dir=...` viewer URLs are rewritten to `/index.php/f/{id}?download` |
-| **`AUTH_REQUIRED` error code** | Downloader returns `AUTH_REQUIRED` when the server returns HTML (wrong/missing password or login-gated link); HTTP 401/403 also maps to `AUTH_REQUIRED`; the Preprocessor propagates the code unchanged |
-| **Content-Disposition filename** | Downloader prefers the `Content-Disposition: attachment; filename=...` response header over the URL path basename |
-| **Actionable transcriber message** | Transcriber surfaces a detailed Option A/B/C guide when it receives `AUTH_REQUIRED` instead of audio bytes |
-| **Non-WAV direct path in transcriber** | Transcriber probes received bytes as a WAV container; if not valid WAV, bytes are sent to WILLMA Whisper as-is without chunking (handles ffmpeg-unavailable passthrough and native non-WAV formats) |
-| **Docker: `ffmpeg` required for video** | `RUN apt-get update && apt-get install -y ffmpeg` must be added to the Dockerfile and the image rebuilt (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) |
-
-#### Component cells in the V07 notebook
-
-| Component | V06 notebook | V07 notebook |
-|-----------|-------------|-------------|
-| 1. WILLMA Audio Downloader | cell 4 | **cell 6** |
-| 2. Audio Preprocessor | cell 7 | **cell 8** |
-| 3. WILLMA Whisper Diarized Transcriber | cell 9 | **cell 10** |
-
-#### Migration from V06 → V07
-
-1. Add `ffmpeg` to the Dockerfile (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) and rebuild: `docker compose up -d --build`
-2. In Langflow, open the flow and update **1. WILLMA Audio Downloader** with **cell 6** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
-3. Update **2. Audio Preprocessor** with **cell 8**.
-4. Update **3. WILLMA Whisper Diarized Transcriber** with **cell 10**.
-5. If you use password-protected SURF Research Drive share links, enter the share password in the new **Share Link Password** field of the Audio Downloader component.
-
----
-
-### V06 — Stable Baseline *(prior version)*
-
-Two-speaker diarization, WAV/MP3 audio support, public URL downloads, pure-Python DSP.  
-Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Ready-to-import flow: `URL PREPRO TRANSCR  + TIME + DIARIZATION.json`.
-
----
-
 ## What this tool does
 
 This Langflow flow accepts a **private (SURF Research Drive)  or public audio or video file via encrypted https URL** (pasted into the Langflow Chat Playground), downloads the file into memory, optionally extracts audio from video containers via `ffmpeg`, cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
@@ -1368,3 +1321,52 @@ This project is released under the [Creative Commons BY-ND 4.0](https://creative
 | `/audio/custom-diarization` | POST | pyannote/speaker-diarization-3.1 speaker timeline |
 
 All requests use header `X-API-KEY: <your-api-key>` and base URL `https://willma.surf.nl/api/v0`.
+
+---
+
+## Changelog
+
+### V07 — Video Support + Authenticated Share Links *(current)*
+
+Based on `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
+
+#### What changed
+
+| Area | Change |
+|------|--------|
+| **Video file support** | Component 2 (Audio Preprocessor) detects video containers (`.mp4` `.mkv` `.mov` `.avi` `.webm` `.m4v` `.mpg` `.mpeg`) by file extension and calls `ffmpeg` to extract the audio track before the DSP chain runs |
+| **ffmpeg temp-file strategy** | Video bytes are written to a named `/tmp` temp file; ffmpeg reads from disk (not stdin pipe), which is required for moov-at-end MP4s (Zoom recordings, phone captures, screen recordings) |
+| **Resilient ffmpeg fallback** | If `ffmpeg` is not installed or exits non-zero, the original bytes are forwarded unchanged — the flow never breaks |
+| **Password-protected share links** | Component 1 (Audio Downloader) accepts a new **Share Link Password** (`SecretStr`) field for password-protected Nextcloud / ownCloud / SURF Research Drive public share links |
+| **Cookie-based session auth** | Replaces HTTP Basic Auth (which ownCloud/Nextcloud ignores for public shares); mirrors browser flow: GET share page → extract CSRF `requesttoken` from HTML → POST password to `/authenticate/downloadshare` → session cookie → GET download URL |
+| **Nextcloud file viewer URL rewriting** | `/apps/files/files/{id}?dir=...` viewer URLs are rewritten to `/index.php/f/{id}?download` |
+| **`AUTH_REQUIRED` error code** | Downloader returns `AUTH_REQUIRED` when the server returns HTML (wrong/missing password or login-gated link); HTTP 401/403 also maps to `AUTH_REQUIRED`; the Preprocessor propagates the code unchanged |
+| **Content-Disposition filename** | Downloader prefers the `Content-Disposition: attachment; filename=...` response header over the URL path basename |
+| **Actionable transcriber message** | Transcriber surfaces a detailed Option A/B/C guide when it receives `AUTH_REQUIRED` instead of audio bytes |
+| **Non-WAV direct path in transcriber** | Transcriber probes received bytes as a WAV container; if not valid WAV, bytes are sent to WILLMA Whisper as-is without chunking (handles ffmpeg-unavailable passthrough and native non-WAV formats) |
+| **Docker: `ffmpeg` required for video** | `RUN apt-get update && apt-get install -y ffmpeg` must be added to the Dockerfile and the image rebuilt (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) |
+
+#### Component cells in the V07 notebook
+
+| Component | V06 notebook | V07 notebook |
+|-----------|-------------|-------------|
+| 1. WILLMA Audio Downloader | cell 4 | **cell 6** |
+| 2. Audio Preprocessor | cell 7 | **cell 8** |
+| 3. WILLMA Whisper Diarized Transcriber | cell 9 | **cell 10** |
+
+#### Migration from V06 → V07
+
+1. Add `ffmpeg` to the Dockerfile (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) and rebuild: `docker compose up -d --build`
+2. In Langflow, open the flow and update **1. WILLMA Audio Downloader** with **cell 6** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
+3. Update **2. Audio Preprocessor** with **cell 8**.
+4. Update **3. WILLMA Whisper Diarized Transcriber** with **cell 10**.
+5. If you use password-protected SURF Research Drive share links, enter the share password in the new **Share Link Password** field of the Audio Downloader component.
+
+---
+
+### V06 — Stable Baseline *(prior version)*
+
+Two-speaker diarization, WAV/MP3 audio support, public URL downloads, pure-Python DSP.  
+Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Ready-to-import flow: `URL PREPRO TRANSCR  + TIME + DIARIZATION.json`.
+
+---
