@@ -27,6 +27,7 @@
    - [6.4 FLOW03 Debugging Chronicle](#s6-4)
 7. [Assembling and Executing the UbiOps Pipeline](#s7)
 8. [Deployment Package Version History](#s8)
+9. [AI Accountability & Transparency](#s9)
 
 ---
 
@@ -990,6 +991,38 @@ for filename in epd_files:
 - The Azure OpenAI key is bound to the `llmfoundrys` Cognitive Services resource and rotated per Azure AI Foundry portal guidance.
 - EPD PDF files never leave SURF Research Drive permanently — they are fetched into the UbiOps container's `/tmp` ephemeral storage only during request execution and are discarded when the container recycles.
 
+<a id="s9"></a>
+
 ---
 
-*README V09 — Generated 31 May 2026 with GitHub Copilot DataAnalysisExpert | Claude Sonnet 4.6 High*
+## ⚖️ 9. AI Accountability & Transparency
+
+This document was produced with the assistance of advanced generative AI tools (see table below). An initial draft was authored by a human, subsequently revised with AI support; the final text was reviewed by the author for accuracy, relevance, and compliance with applicable legal and ethical norms. The use of these tools was conducted in accordance with the legal requirements and ethical principles set out below.
+
+- **GDPR Art. 12**: Transparency obligations regarding the processing of personal data.
+- **GDPR Art. 5**: Principles of purpose limitation and data minimisation.
+- **EU AI Act Art. 13**: Transparency requirements for high-risk AI systems, including explainability of how systems operate.
+- **EU AI Act Art. 50**: General transparency requirements for relevant AI systems, such as labelling AI-generated content.
+
+### Notes on Legal References
+
+**GDPR (General Data Protection Regulation)**
+
+- *Article 12*: Requires that information about data processing is provided in a clear, transparent, and accessible manner.
+- *Article 5*: Establishes core principles including purpose limitation and data minimisation.
+
+**EU AI Act (Regulation on Artificial Intelligence)**
+
+- *Article 13*: Transparency obligations for providers and deployers of high-risk AI systems, including explanations of how the system functions.
+- *Article 50*: General transparency requirements for certain AI systems, including obligations to label or disclose AI-generated output.
+
+### Generative AI Tools Used in This Project
+
+| Tool | Role | Provider |
+|---|---|---|
+| **GitHub Copilot — DataAnalysisExpert** (Claude Sonnet 4.6 High and AZURE FOUNDERY GPT-5.4 High) | Pipeline design, SDK code generation, debugging, deployment orchestration, README authoring | Microsoft / Anthropic |
+| **Azure OpenAI** (`gpt-5.3-chat` on `llmfoundrys`) | FLOW03 runtime — GA-assisted EHR synthesis | Microsoft / OpenAI |
+
+> **Scope note:** The AI tools listed above were used exclusively for software engineering tasks (code generation, debugging, documentation) and for clinical text synthesis within the controlled UbiOps pipeline. No personal health data was shared with any external AI service; EPD files are fetched into ephemeral container storage only and are never persisted outside the SURF Research Drive.
+
+---
