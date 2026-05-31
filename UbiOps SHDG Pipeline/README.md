@@ -1,36 +1,37 @@
-# 🚀 Generative Agent-Assisted Synthetic Health Data Generation (SHDG) on UbiOps
+# Generative Agent-Assisted Synthetic Health Data Generation (SHDG) on UbiOps
 
 > **Version:** V09 — 31 May 2026  
 > **Author note:** This revision documents the complete end-to-end pipeline build as executed on 31 May 2026, including all debugging, corrections, and the role of **GitHub Copilot (DataAnalysisExpert | Claude Sonnet 4.6 High)** in orchestrating the deployment.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [Project Summary](#1-project-summary)
-2. [GA-Assisted SHDG Workflow Overview](#2-ga-assisted-shdg-workflow-overview)
-3. [Data Warehouse: Raw Clinical EHR Input (SURF Research Drive)](#3-data-warehouse)
-   - [3.1 Dataset Location](#31-dataset-location)
-   - [3.2 Option A: Web Browser Download](#32-option-a-web-browser-download)
-   - [3.3 Option B: rclone Virtual Mount on Windows](#33-option-b-rclone-virtual-mount-on-windows)
-   - [3.4 Option C: HTTP Download inside the UbiOps Container](#34-option-c-http-download-inside-the-ubiops-container)
-   - [3.5 Role in the SHDG Pipeline](#35-role-in-the-shdg-pipeline)
-4. [UbiOps Migration Guide & Python Source Code](#4-ubiops-migration-guide--python-source-code)
-   - [4-A FLOW01+02 — Ingestion & Privacy Masking](#a-migrate-flow01--flow02-ingestion--privacy-masking)
-   - [4-B FLOW03 — GA-Assisted Synthesis (Azure OpenAI)](#b-migrate-flow03-ga-assisted-synthesis)
-   - [4-C FLOW04 — Evaluator Framework](#c-migrate-flow04-evaluator-framework)
-5. [Step-by-Step: Recreating Each Flow in UbiOps](#5-step-by-step-recreating-each-flow-in-ubiops)
-6. [Pipeline Build via GitHub Copilot (DataAnalysisExpert)](#6-pipeline-build-via-github-copilot-dataanalysisexpert)
-   - [6.1 Tool & Session Context](#61-tool--session-context)
-   - [6.2 Pipeline YAML Specifications](#62-pipeline-yaml-specifications)
-   - [6.3 Pipeline Creation via Python SDK](#63-pipeline-creation-via-python-sdk)
-   - [6.4 FLOW03 Debugging Chronicle](#64-flow03-debugging-chronicle)
-7. [Assembling and Executing the UbiOps Pipeline](#7-assembling-and-executing-the-ubiops-pipeline)
-8. [Deployment Package Version History](#8-deployment-package-version-history)
+1. [Project Summary](#s1)
+2. [GA-Assisted SHDG Workflow Overview](#s2)
+3. [Data Warehouse: Raw Clinical EHR Input (SURF Research Drive)](#s3)
+   - [3.1 Dataset Location](#s3-1)
+   - [3.2 Option A: Web Browser Download (manual fallback)](#s3-2)
+   - [3.3 Option B: rclone Virtual Mount on Windows (local development)](#s3-3)
+   - [3.4 Option C: HTTP Download inside the UbiOps Container (production)](#s3-4)
+   - [3.5 Role in the SHDG Pipeline](#s3-5)
+4. [UbiOps Migration Guide & Python Source Code](#s4)
+   - [4-A FLOW01+02 — Ingestion & Privacy Masking](#s4a)
+   - [4-B FLOW03 — GA-Assisted Synthesis (Azure OpenAI)](#s4b)
+   - [4-C FLOW04 — Evaluator Framework](#s4c)
+5. [Step-by-Step: Recreating Each Flow in UbiOps](#s5)
+6. [Pipeline Build via GitHub Copilot (DataAnalysisExpert)](#s6)
+   - [6.1 Tool & Session Context](#s6-1)
+   - [6.2 Pipeline YAML Specifications](#s6-2)
+   - [6.3 Pipeline Creation via Python SDK](#s6-3)
+   - [6.4 FLOW03 Debugging Chronicle](#s6-4)
+7. [Assembling and Executing the UbiOps Pipeline](#s7)
+8. [Deployment Package Version History](#s8)
 
 ---
 
-## 📖 1. Project Summary
+<a id="s1"></a>
+## 1. Project Summary
 
 This project is an enterprise-scale MLOps adaptation of the research repository: **[Privacy-, Linguistic-, and Information-Preserving Synthesis of Clinical Documentation through Generative Agents](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/Generative_Agent_based_Data-Synthesis)**.
 
@@ -40,7 +41,8 @@ The original prototype source for the ingestion and anonymization stage is also 
 
 ---
 
-## 🔄 2. GA-Assisted SHDG Workflow Overview
+<a id="s2"></a>
+## 2. GA-Assisted SHDG Workflow Overview
 
 Based directly on the project's **[GA-assisted SHDG Workflow State Diagram](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/Generative_Agent_based_Data-Synthesis#ga-assisted-shdg-workflow-click-to-view-statediagram)**, the methodology operates in four distinct, sequential computational stages.
 
@@ -68,8 +70,10 @@ graph TD
 
 ---
 
+<a id="s3"></a>
 ## 💾 3. Data Warehouse
 
+<a id="s3-1"></a>
 ### 3.1 Dataset Location
 
 | Property | Value |
@@ -85,6 +89,7 @@ graph TD
 
 ---
 
+<a id="s3-2"></a>
 ### 3.2 Option A: Web Browser Download (manual fallback)
 
 1. Open [https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG](https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG) in your browser.
@@ -94,6 +99,7 @@ graph TD
 
 ---
 
+<a id="s3-3"></a>
 ### 3.3 Option B: rclone Virtual Mount on Windows (local development)
 
 > **Reference:** [HR-DataLab-Healthcare/RESEARCH_SUPPORT — RCLONE guide](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/RCLONE)
@@ -150,6 +156,7 @@ with pdfplumber.open(r"X:\EPDAfdruk_897_59037.pdf") as pdf:
 
 ---
 
+<a id="s3-4"></a>
 ### 3.4 Option C: HTTP Download inside the UbiOps Container (production)
 
 > **Lesson learned (May 2026):** `curl | bash` (exit 4), `apt-get install rclone` (exit 100), and bundled rclone binary (exit 1 on PROPFIND) all fail inside UbiOps containers. The `requests.get()` approach below works because it is a single direct HTTP GET with Basic auth.
@@ -165,7 +172,7 @@ requests>=2.28.0
 
 | Key | Value | Secret? |
 |---|---|---|
-| `SURF_SHARE_TOKEN` | `AYp3KSd6EqMjNkG` | No |
+| `SURF_SHARE_TOKEN` | `<token — retrieve from project password manager>` | No |
 | `SURF_SHARE_PASSWORD` | `<share password>` | **Yes** |
 
 #### C.3 How the HTTP download works
@@ -180,6 +187,7 @@ requests.get(
 
 ---
 
+<a id="s3-5"></a>
 ### 3.5 Role in the SHDG Pipeline
 
 ```mermaid
@@ -198,8 +206,10 @@ graph LR
 
 ---
 
+<a id="s4"></a>
 ## 🛠 4. UbiOps Migration Guide & Python Source Code
 
+<a id="s4a"></a>
 ### A. Migrate `FLOW01 + FLOW02` (Ingestion & Privacy Masking)
 
 > **Working package:** `flow01-02-v1-rev12.zip` — verified, built successfully, completed live request on 31 May 2026.
@@ -404,6 +414,7 @@ class Deployment:
 
 ---
 
+<a id="s4b"></a>
 ### B. Migrate `FLOW03` (GA-Assisted Synthesis)
 
 > **⚠️ V09 Breaking Change:** FLOW03 has been migrated from the direct OpenAI API to **Azure OpenAI** (`gpt-5.3-chat` on `llmfoundrys.cognitiveservices.azure.com`). The environment variable name has changed from `OPENAI_API_KEY` to `AZURE_OPENAI_API_KEY`. See §8 for the full version history of the bugs fixed.
@@ -477,6 +488,7 @@ class Deployment:
 
 ---
 
+<a id="s4c"></a>
 ### C. Migrate `FLOW04` (Evaluator Framework)
 
 > **Working package:** `flow04-evaluator-v1.zip` — verified, available, and returned correct metrics.
@@ -518,6 +530,7 @@ class Deployment:
 
 ---
 
+<a id="s5"></a>
 ## 🖱️ 5. Step-by-Step: Recreating Each Flow in UbiOps
 
 > **Reference materials** (from UbiOps product specialist Dene van Venrooij, 22 May 2026):
@@ -562,7 +575,7 @@ Compress-Archive -Path deployment.py, requirements.txt -DestinationPath flow04-e
 | 2 | Create deployment | **Name:** `flow01-02-ingest-anonymize` · Input: `epd_filename` (String) · Output: `anonymized_markdown` (File) |
 | 3 | Create version `v1` | Python 3.10 · CPU · Max instances `1` |
 | 4 | Upload package | `flow01-02-v1-rev13.zip` |
-| 5 | Set env vars | `SURF_SHARE_TOKEN` = `AYp3KSd6EqMjNkG` · `SURF_SHARE_PASSWORD` = `<secret>` |
+| 5 | Set env vars | `SURF_SHARE_TOKEN` = `<token>` · `SURF_SHARE_PASSWORD` = `<secret>` |
 | 6 | Test | Input `epd_filename` = `EPDAfdruk_897_59037.pdf` → expect `anonymized_output.md` |
 
 ### FLOW03 — GA-Assisted Synthesis (Azure OpenAI)
@@ -617,8 +630,10 @@ graph LR
 
 ---
 
+<a id="s6"></a>
 ## 🤖 6. Pipeline Build via GitHub Copilot (DataAnalysisExpert)
 
+<a id="s6-1"></a>
 ### 6.1 Tool & Session Context
 
 The complete `shdg-pipeline` was designed, debugged, and deployed in a single working session on **31 May 2026** using:
@@ -629,8 +644,8 @@ The complete `shdg-pipeline` was designed, debugged, and deployed in a single wo
 | **Model** | **Claude Sonnet 4.6 High** |
 | **VS Code workspace** | `D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\AI_LLM\OVERVIEW_LLMs_2026` |
 | **UbiOps project** | `shdg-project` |
-| **Service user** | `ebaba031-a076-4c17-8cb9-cc31c736956d.shdg-project@serviceuser.ubiops.com` |
-| **Auth token** | `4d2d811ee8299a62545772b441ac3ecf8219a7d8` |
+| **Service user** | `<service-user-uuid>@serviceuser.ubiops.com` |
+| **Auth token** | `<REDACTED — store in environment variable or password manager>` |
 
 **Capabilities exercised by the agent in this session:**
 
@@ -647,6 +662,7 @@ The complete `shdg-pipeline` was designed, debugged, and deployed in a single wo
 
 ---
 
+<a id="s6-2"></a>
 ### 6.2 Pipeline YAML Specifications
 
 Both YAML files are stored in `DataAnalysisExpert/` within this workspace and were used as the source of truth for the SDK calls. They can be used to recreate the pipeline from scratch.
@@ -736,6 +752,7 @@ attachments:
 
 ---
 
+<a id="s6-3"></a>
 ### 6.3 Pipeline Creation via Python SDK
 
 The pipeline was created programmatically using the UbiOps Python SDK. The key calls were:
@@ -744,7 +761,7 @@ The pipeline was created programmatically using the UbiOps Python SDK. The key c
 ```python
 import ubiops
 
-cfg = ubiops.Configuration(api_key={'Authorization': 'Token 4d2d811ee8299a62545772b441ac3ecf8219a7d8'})
+cfg = ubiops.Configuration(api_key={'Authorization': 'Token YOUR_UBIOPS_TOKEN'})
 api = ubiops.CoreApi(ubiops.ApiClient(cfg))
 
 api.pipelines_create(
@@ -868,6 +885,7 @@ api.pipeline_versions_create(
 
 ---
 
+<a id="s6-4"></a>
 ### 6.4 FLOW03 Debugging Chronicle
 
 The following table documents every revision of `flow03-ga-synthesis:v1` uploaded on 31 May 2026:
@@ -884,6 +902,7 @@ The following table documents every revision of `flow03-ga-synthesis:v1` uploade
 
 ---
 
+<a id="s7"></a>
 ## 🔗 7. Assembling and Executing the UbiOps Pipeline
 
 ### Invoke via Python SDK
@@ -931,6 +950,7 @@ for filename in epd_files:
 
 ---
 
+<a id="s8"></a>
 ## 📦 8. Deployment Package Version History
 
 ### FLOW01+02 — `flow01-02-ingest-anonymize`
@@ -966,7 +986,7 @@ for filename in epd_files:
 ## 🔒 Security Notes
 
 - All API keys (UbiOps token, Azure OpenAI key, SURF share password) are stored as **UbiOps secret environment variables** — never in source code, ZIP packages, or version control.
-- The UbiOps service user token (`4d2d811ee8299a62545772b441ac3ecf8219a7d8`) is scoped to `shdg-project` only with `pipeline-admin` + `editor` roles.
+- The UbiOps service user token is scoped to `shdg-project` only with `pipeline-admin` + `editor` roles. Store it in a password manager or CI/CD secret store — never in source files.
 - The Azure OpenAI key is bound to the `llmfoundrys` Cognitive Services resource and rotated per Azure AI Foundry portal guidance.
 - EPD PDF files never leave SURF Research Drive permanently — they are fetched into the UbiOps container's `/tmp` ephemeral storage only during request execution and are discarded when the container recycles.
 
