@@ -1,7 +1,9 @@
+<img src="assets/hogeschool_rotterdam_logo.png" alt="Hogeschool Rotterdam" width="90" align="right"/>
+
 # Generative Agent-Assisted Synthetic Health Data Generation (SHDG) on UbiOps
 
-> **Version:** V11 — 31 May 2026  
-> **Author note:** This revision consolidates the complete end-to-end pipeline build executed on 31 May 2026, including debugging outcomes, package revision status, and the documented role of GitHub Copilot in deployment orchestration.
+> **Version:** V12 — 31 May 2026  
+> **Author note:** V12 accepts all manual revisions from V11 and adds: Section 11 — HR (Hogeschool Rotterdam) Institutional IB (Informatiebeveiliging — Information Security) Guidelines with full control-domain mapping to this UbiOps project; a new subsection 11.DPIA with a complete English-language summary of the *DPIA – Datasynthese* (v0.9, November 2025) including project description, data subjects and categories, legal basis, processing steps, retention periods, risk assessment, security measures, DPO advice, and applicability mapping to the UbiOps pipeline; Hogeschool Rotterdam branding (logo in document header, Section 11 heading, and Acknowledgements); explicit first-use expansion of the HR and IB acronyms; and a full integrity pass covering TOC anchors, section numbering, citation text, and version header consistency.
 
 ---
 
@@ -45,8 +47,18 @@
 10. [AI Accountability & Transparency](#s10)
     - [Notes on Legal References](#notes-on-legal-references)
     - [Generative AI Tools Used in This Project](#generative-ai-tools-used-in-this-project)
-11. [License](#license)
-12. [Acknowledgements](#acknowledgements)
+11. [Institutional IB Guidelines — Applicability to this UbiOps Project](#s11)
+    - [Governance](#governance-go)
+    - [Risk Management](#risk-management-rm)
+    - [Secure Software Development](#secure-software-development-sd)
+    - [Data Management & Classification](#data-management--classification-dm)
+    - [Identity & Access Management](#identity--access-management-id)
+    - [Security Management](#security-management-sm)
+    - [Supplier Control](#supplier-control-sc)
+    - [Business Continuity](#business-continuity-bc)
+    - [DPIA — Data Protection Impact Assessment Summary](#dpia--data-protection-impact-assessment-summary)
+12. [License](#license)
+13. [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -1166,6 +1178,236 @@ This document was produced with the assistance of generative AI tools. An initia
 
 ---
 
+<a id="s11"></a>
+## 11. Institutional IB (Informatiebeveiliging — Information Security) Guidelines — Applicability to this UbiOps Project
+
+> **Source document:** *Richtlijnen Decentrale Informatiebeveiliging — HR (Hogeschool Rotterdam) Decentrale IB (Informatiebeveiliging) Richtlijnen v0.9* (R. Winkels, IDT/Dienst IDT, Hogeschool Rotterdam, 3 February 2026).  
+> This section provides an English-language summary of the applicable guidelines and maps their key controls to implementation decisions taken in this UbiOps migration project.
+
+The *HR (Hogeschool Rotterdam) Decentrale IB (Informatiebeveiliging) Richtlijnen* constitutes the tactical-level information security policy for Decentralised ICT and Datalabs at Hogeschool Rotterdam. It is structured against the SURF security audit normenkader (SURF audit framework) and targets **maturity level 3** of the SURFaudit maturity model. As a Datalab innovation pilot, this project falls within the scope of these guidelines.
+
+---
+
+### Governance (GO)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **GO.02** | IB policy must be communicated to staff and suppliers | Policy obligations were communicated to the UbiOps supplier contact; implementation decisions are traceable to HR IB policy |
+| **GO.03** | Annual roadmap driven by organisational and IB strategy | This pilot is positioned within the Agile IDT innovation roadmap; authorised by IDT directorate as part of the Nutanix Kubernetes/UbiOps exploration track |
+| **GO.04 — Build/Experiment** | Datalabs are explicitly permitted to experiment with software development and open source; security-by-design, privacy-by-design, and security-by-default apply | The UbiOps migration project operates under this principle; OWASP and privacy-by-default are applied to all FLOW deployments |
+| **GO.04 — AI systems** | AI architecture must balance performance, cost, and environmental impact; LSTM vs. transformer trade-offs are to be considered | `gpt-5.3-chat` (Azure OpenAI) is selected in FLOW03 for state-of-the-art clinical synthesis quality; this choice is documented in the project rationale |
+
+---
+
+### Risk Management (RM)
+
+The guidelines define three risk acceptance levels: **low** (no formal acceptance required), **medium** (director-level), **high** (College van Bestuur only). Operational risks for this project are managed via the *Informatiebeveiligingscheck* model, applying the **comply-or-explain** principle.
+
+- The use of a cloud-hosted MLOps platform (UbiOps on Nutanix Kubernetes) constitutes a medium-level operational risk; authorisation at directorate level was obtained through the Agile IDT innovation track.
+- Source EHR data (**bijzondere persoonsgegevens**) never enters the UbiOps runtime environment; only de-identified and synthetic data is processed in the pipeline. This is the primary risk-mitigation measure for residual data sovereignty risk.
+- All residual risks and deviations from baseline are documented in the Informatiebeveiligingscheck.
+
+---
+
+### Secure Software Development (SD)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **SD.01 — No secrets in code** | Credentials, API keys, private keys, and access tokens must never be committed to source code | Azure OpenAI API keys, UbiOps API tokens, and SURF Research Drive credentials are passed exclusively as UbiOps deployment environment variables — never embedded in source files |
+| **SD.01 — Synthetic data in OTA** | Personal data must not be used in development/test/acceptance environments; anonymised or synthetic datasets should be used instead | Raw clinical EHR data (SURF Research Drive) is never used in the OTA environment; only synthetic output is used for FLOW04 evaluation — in full alignment with this guideline |
+| **SD.01 — OTA/P separation** | Logical and physical separation between development-test-acceptance and production environments | UbiOps provides environment isolation; deployments are versioned and promoted to production only after validated testing (Section 8) |
+| **SD.01 — OWASP** | OWASP Secure Coding Practices, OWASP Top 10, and OWASP Top 10 for LLM Applications apply | Applied throughout FLOW03 (LLM-based synthesis); injection risks, prompt handling, and API surface hardening are addressed |
+| **SD.01 — Open source assessment** | New open source components must be assessed for malware, CVEs, documentation quality, and community support | All `requirements.txt` dependencies are version-pinned; Section 8 documents the full version history and package upgrade rationale, including the critical fix for `langchain` (FLOW03) |
+| **SD.02 — Developer access to production** | Developer access to the production environment must be minimised and logged; production accounts are identifiable by suffix/prefix | UbiOps API tokens for pipeline management are scoped to the minimum required role; production access is logged via UbiOps audit trail |
+
+---
+
+### Data Management & Classification (DM)
+
+The guidelines define a three-dimensional classification scheme: **Beschikbaarheid (B)**, **Integriteit (I)**, and **Vertrouwelijkheid (V)**, each scored 0–3.
+
+| Asset | B | I | V | Basis |
+|---|---|---|---|---|
+| Source EHR data (SURF Research Drive) | 2 | 2 | 3 | Bijzondere persoonsgegevens (health data); AVG/GDPR + WMO apply |
+| Synthetic output data | 1 | 1 | 1 | No personal data; research output, internal use |
+| UbiOps deployment configuration | 2 | 2 | 2 | Contains API keys and model configuration; access-controlled |
+| Pipeline YAML specifications | 1 | 2 | 1 | Integrity-sensitive; platform-neutral design documentation |
+
+- **DM.01 — Ownership**: The research lead (lector) is data owner for the EHR source dataset. The UbiOps system owner is accountable for deployment configuration integrity.
+- **DM.02 — Classification**: Data classifications are recorded in the Informatiebeveiligingscheck and the Research Data Management Plan.
+- **DM.03 — Security requirements**: Encryption in transit (HTTPS/TLS for all UbiOps API calls) and encryption at rest (Nutanix Kubernetes persistent storage) are applied. Key management is aligned with SM.10.
+- **DM.05 — Data exchange**: Raw EHR data is never transferred to the UbiOps runtime environment. Synthetic output is shared via HR-approved channels only.
+
+---
+
+### Identity & Access Management (ID)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **ID.01 — RBAC** | Role-based access control; rights match role and responsibilities; SSO recommended | UbiOps project-level RBAC is used throughout. The `pipeline-admin` role was explicitly assigned at project level (see Section 6.3 — 403 error resolution); this directly implements the RBAC principle |
+| **ID.02 — Administration** | Access rights requests, authorisations, and changes must be logged; end dates must be noted where relevant | UbiOps web console logs all role assignments; access requests are tracked via the IDT service portal |
+| **ID.03 — Superusers** | Superuser rights must be minimised; usage must be logged | UbiOps API tokens with pipeline-creation rights are treated as superuser equivalents; usage is logged via UbiOps audit trail; tokens are scoped to the minimum necessary permissions |
+| **ID.05 — Periodic review** | Annual formal review of user accounts for systems with V≥2 | An annual review of UbiOps project membership and API token validity is scheduled as part of the system lifecycle |
+
+---
+
+### Security Management (SM)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **SM.01 — Baselines** | SURF/HR security baselines apply to all systems | SURF security baseline configuration is applied to the Nutanix Kubernetes node hosting UbiOps; deviations are documented in the Informatiebeveiligingscheck |
+| **SM.05 — Logging** | Logging and monitoring standards apply | UbiOps provides deployment and pipeline execution logging; application-level logging is implemented within each FLOW deployment handler |
+| **SM.07 — Vulnerability management** | CVE exposure of packages must be tracked | Python package CVEs are tracked; `requirements.txt` is version-pinned (Section 8). The critical `langchain==0.1.0` CVE-risk was mitigated by removing the dependency and upgrading to `openai>=1.51.0` (Section 6.4) |
+| **SM.10 — Cryptographic key management** | API keys and tokens must be stored encrypted at rest, not in source code | Azure OpenAI API keys and UbiOps API tokens are stored as encrypted deployment environment variables in the UbiOps platform — never in source code |
+| **SM.11 — Network security** | Network segmentation, firewalls, and HTTPS enforced | UbiOps on Nutanix Kubernetes benefits from IDT-managed network segmentation; all API communication uses HTTPS/TLS |
+
+---
+
+### Supplier Control (SC)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **SC.01 — SLA** | Agreements with IT service providers must be formalised, authorised by a mandated director, and include security aspects | UbiOps is used under a formal pilot agreement; SLA terms include data handling obligations and availability expectations |
+| **SC.02 — Supplier classification** | Suppliers are classified as: Not important (L=0), Standard (L=1), Elevated (L=2), Critical (L=3) | **UbiOps is classified as Elevated (L=2)**: it processes research pipeline configurations and model outputs; it affects research continuity for a limited group; it is replaceable but not trivially |
+| **SC.03 — Exit strategy** | Exit strategies must be considered to avoid vendor lock-in | The pipeline YAML specifications (Section 6.2) serve as a vendor-neutral design record; FLOW deployments are standard Python packages deployable to alternative MLOps platforms |
+| **SC.03 — AI compliance** | An AI compliance check must be applied; HR does not assume the role of "aanbieder" for high-risk AI | Azure OpenAI (`gpt-5.3-chat`) is the AI system; Microsoft/Azure is the AI provider. HR acts as **gebruikersverantwoordelijke** (user-responsible), not aanbieder. No HR branding is placed on the AI system |
+| **SC.03 — Cloud data regulation** | Data regulations (AVG, Data Act) apply to cloud services; adequate data transfer on contract termination must be ensured | UbiOps runs on IDT-managed Nutanix Kubernetes (on-premises / HR-controlled infrastructure), satisfying data sovereignty requirements |
+
+---
+
+### Business Continuity (BC)
+
+| Control | Guideline | Application in this project |
+|---|---|---|
+| **BC.01 — BIA** | A Business Impact Analysis determines availability score and response procedures | The SHDG pipeline is classified **B=1 (Belangrijk)** — incidental unavailability is acceptable; no formal DR response procedure is required at this availability level |
+| **BC.04 — Data replication** | Data replication must match BIA KPIs | Source data replication is managed by SURF Research Drive infrastructure. Synthetic output data is replicated per the Research Data Management Plan |
+| **BC.05 — Crisis management** | Crisis response plan required for B=3 systems | Not applicable at B=1 |
+
+---
+
+### DPIA — Data Protection Impact Assessment Summary
+
+> **Source document:** *DPIA – Datasynthese: Data Protection Impact Assessment — Onderzoek naar het gebruik van patiëntgegevens voor gepersonaliseerde fysiotherapie – Synthetiseren van EPD-data als privacy veilige technologie.* Versie 0.9, 19 November 2025. Hogeschool Rotterdam, Kenniscentrum Zorginnovatie, Afdeling AI & Data Supported Healthcare.  
+> **Authors / Working group:** Drs. Mark van Velzen (lead researcher), Prof. Dr. Mark C. Scheper (lector AI & Data Supported Healthcare), Dr. Rob F. van der Willigen (Tech Lead HR Datalab Healthcare), Sven Satimin (data engineer), Sam Wubben (privacy officer, CCS).  
+> **Ethics approval:** REC-RUAS letter of approval reference 20250901, granted 7 October 2025.  
+> This subsection provides an English-language summary of the DPIA as it applies to the processing activities underlying the SHDG UbiOps migration project.
+
+#### A. Project Description and Processing Purpose
+
+The DPIA covers the use of real physiotherapy Electronic Patient Dossiers (EPDs) as example material for training generative AI models to produce **synthetic (fictitious), non-traceable datasets** for research and education. The research objective is to develop and validate a **Privacy-Enhancing Technology (PET)** that enables the generation of realistic but fully fictional patient dossiers — removing the need to work with real patient data in downstream research and education contexts.
+
+The synthetic dossiers are generated using a **multi-agent Retrieval-Augmented Generation (RAG) approach** with GPT-4.1 or higher, within a containerised Azure environment. Only synthetic output is exported from the secure container; source dossiers are destroyed after validation.
+
+**Processing goals:**
+
+| Goal | Description |
+|---|---|
+| Development of synthetic datasets | Generate privacy-safe, realistic physiotherapy dossiers for research, education, and quality improvement |
+| Validation of AI models | Assess the linguistic and information quality of generated output |
+| Education and knowledge sharing | Use synthetic dossiers in AI-in-healthcare education and training |
+
+#### B. Data Subjects and Personal Data Categories
+
+Data subjects are **patients (age groups 0–12, 12–16, and 16+)**. Personal data received by Hogeschool Rotterdam does **not** include directly identifying information (name, address, BSN, date of birth, insurance details). Physiotherapists remove all direct identifiers before transfer. The data transferred to HR consists exclusively of:
+
+- Health data (**bijzondere persoonsgegevens**): referral diagnosis, anamnesis, examination and test results, limitations, participation, treatment plan, treatment notes, progress notes, reason for end of treatment.
+
+BSN numbers are removed by the physiotherapist before transfer and are never processed by Hogeschool Rotterdam.
+
+#### C. Actors and Roles
+
+| Actor | Role |
+|---|---|
+| Hogeschool Rotterdam | Controller / Recipient (*verwerkingsverantwoordelijke*) |
+| Participating physiotherapy practices | Controller / Provider (*verwerkersverantwoordelijke / verstrekker*) |
+| Microsoft Azure (under HR licence) | Processor |
+| SURF B.V. / Research Drive | Processor |
+
+Hogeschool Rotterdam has data processing agreements (*verwerkersovereenkomsten*) with Microsoft and SURF B.V. A Data Transfer Agreement (DTA) is signed with each participating physiotherapy practice before any data exchange.
+
+#### D. Processing Steps
+
+| Step | Personal data involved | System |
+|---|---|---|
+| 1. Informed consent | Contact and signature data | Paper consent form / EPD |
+| 2. Removal of direct identifiers by physiotherapist | Name, address, BSN, DOB (removed); all health data (retained) | EPD system at practice |
+| 3. Upload to HR Research Drive (SURF) | All health data (anonymised) | SURF Research Drive |
+| 4. NER labelling and pseudonymisation | Anonymised text fields (residual privacy categories replaced by fictitious tokens; no re-identification key retained) | Azure containerised environment |
+| 5. Synthetic data generation | Fictitious personal and health data | Azure containerised environment |
+| 6. Evaluation of synthetic output | Synthetic dossiers | Azure containerised environment |
+| 7. Deletion of original source dossiers | All health data | Azure containerised environment |
+
+**Retention periods:** Original (anonymised) source dossiers are retained for a maximum of one year after completion of datasynthesis validation, then deleted. Consent forms are retained by the physiotherapist's practice for 20 years; Hogeschool Rotterdam does not hold copies.
+
+#### E. Legal Basis and Data Protection Assessment
+
+**Legal basis:** Explicit consent under **AVG Art. 6(1)(a)** and **Art. 9(2)(a)** in conjunction with **UAVG Art. 22(2)(a)**, obtained via informed consent forms (with separate versions for ages 0–12 and 12–16). The processing rests on **WGBO Art. 7:457** (duty of confidentiality with explicit patient consent as exception).
+
+**Proportionality and subsidiarity:** The processing is limited to the strictly necessary. No alternative method exists to generate and validate realistic care data without real EPD examples as a basis. Measures applied include: data minimisation, exclusion of rare conditions (reducing re-identification risk), anonymisation and pseudonymisation, and no sharing with third parties beyond the contracted processors.
+
+**Data subjects' rights:** Patients may exercise rights (access, erasure, rectification) via their physiotherapist up to the point of upload. Once data are anonymised and uploaded to HR Research Drive, they are no longer directly attributable to an individual — the right to erasure no longer applies, and this is explicitly communicated in the information letter.
+
+#### F. Risk Assessment Summary
+
+All identified risks were rated **Low** to **Medium** probability with **Low** to **High** impact. The overall residual risk is rated **Low**.
+
+| Risk | Category | Probability | Impact | Residual risk |
+|---|---|---|---|---|
+| Incomplete removal of direct identifiers by physiotherapist | Data quality / minimisation | Low | High | Low — flowchart + verification by research team |
+| Unauthorised access during transfer or storage | Security | Low | High | Low — SURF 2FA, encryption, access logging, ISO 27001 |
+| Data breach through human error (wrong upload) | Security / organisation | Medium | High | Low — individual upload folders per physiotherapist; data leak protocol |
+| Model trained on source data (data leakage into LLM weights) | Data quality | Low | High | Not applicable — RAG approach; no fine-tuning; no source data absorbed into model weights |
+| Excessive contextual data collection | Data minimisation | Low | High | Low — limited to common conditions covered by clinical guidelines |
+| Bias / hallucination in synthetic dossiers | Data quality | Low | Medium | Low (scientific quality risk only; mitigated by evaluation framework and multi-model comparison) |
+| Unauthorised re-use of source data | Purpose limitation | Low | High | Low — governance via FG/ECO approval required for any re-use |
+| Storage or transfer outside EER | Transfer / processing | Low | High | Low — SURF and Azure EU only; data processing agreements active |
+| No Data Transfer Agreement with physiotherapists | Transfer / legal | Low | Medium | Low — DTA signed before any data exchange |
+
+**Overall conclusion:** The risks to data subjects' rights and freedoms are low and acceptable in proportion to the scientific and societal value of the research. No personal data remain within Hogeschool Rotterdam after successful datasynthesis.
+
+#### G. Security Measures
+
+| Measure | Category | Detail |
+|---|---|---|
+| Encrypted transfer and storage | Security | HTTPS upload; AES-256 at rest on SURF Research Drive and Azure container |
+| 2-factor authentication (2FA) | Security | All researcher accounts; 2FA enforced for Research Drive access |
+| Folder-level access control | Security | Each physiotherapist has access only to their own upload folder; researchers hold read/write rights |
+| Audit trail and logging | Security | SURF Research Drive logs all access and operations; reviewed periodically by project lead |
+| Pseudonymisation without re-identification key | Security | PRIVACY_CATEGORY tokens replace identifiers before synthesis; no key exists for reversal |
+| Data minimisation | Data minimisation | Only necessary text fields processed; irrelevant or identifying information removed before conversion |
+| Secured workstations | Physical security | Datascience computers with disk encryption; no local data storage permitted |
+| Incident response | Organisation | Incidents reported to HR privacy team; data breach protocol active (AP notification if required) |
+| Data Transfer Agreements | Legal / organisation | DTA with physiotherapists; existing processing agreements with SURF and Microsoft Azure |
+
+#### H. DPO (Functionaris Gegevensbescherming) Advice
+
+The Data Protection Officer (FG) of Hogeschool Rotterdam reviewed the DPIA and issued a **positive advice** for the start of this research project. Key observations from the DPO review:
+
+- The DPIA contains all legally required elements for a high-risk processing assessment.
+- Multiple layers of anonymisation and pseudonymisation make it very unlikely that traceable data will appear in the final synthetic EPD dossiers.
+- The research team explicitly accounts for potential indirect traceability (residual identification risk) and has implemented appropriate safeguards.
+- The pseudonymisation applied (NER-based token replacement without a re-identification key) does not constitute pseudonymisation under AVG Art. 4(5) in the strict legal sense, but it does further reduce traceability — a distinction that is clarified in the published methodology article.
+- Information letters are available in three age-appropriate versions (0–12, 12–16, 16+) approved by the Ethics Committee.
+
+#### I. Applicability to this UbiOps Project
+
+This UbiOps migration project implements the **SHDG processing pipeline** that is the subject of the DPIA. The following mapping applies:
+
+| DPIA step | UbiOps implementation |
+|---|---|
+| Step 3 — Upload to SURF Research Drive | Source data access via SURF WebDAV (FLOW01+02, Section 3.4) |
+| Step 4 — NER / pseudonymisation | Regex-based PHI masker in `flow01-02-ingest-anonymize` (Section 4-A) |
+| Step 5 — Synthetic data generation | `flow03-ga-synthesis` using Azure OpenAI `gpt-5.3-chat` (Section 4-B) |
+| Step 6 — Evaluation | `flow04-evaluator` TF-IDF cosine similarity + privacy preservation check (Section 4-C) |
+| Encrypted transfer | HTTPS/TLS enforced for all UbiOps API calls and SURF WebDAV requests |
+| No source data persisted in model | RAG approach; Azure OpenAI API calls are stateless; no fine-tuning |
+| Secrets management | Azure OpenAI API key and SURF credentials stored as UbiOps encrypted environment variables (Section 9) |
+| Access control | UbiOps project-level RBAC; `pipeline-admin` role assignment (Section 6.3) |
+
+> **Note on scope:** The DPIA was conducted in the context of the broader datasynthesis research project at HR Datalab Healthcare. The UbiOps migration described in this README is the MLOps implementation layer of that same project. The DPIA obligations and safeguards documented above apply to this deployment in full.
+
+---
+
 ## License
 
 > This repository documentation and the included example source code snippets may be used, copied, and adapted for research, education, and implementation purposes, provided that applicable intellectual property rights, attribution requirements, confidentiality obligations, and third-party rights are respected.
@@ -1193,6 +1435,8 @@ No statement in this README should be interpreted as legal advice, as a public-d
 ---
 
 ## Acknowledgements
+
+<img src="assets/hogeschool_rotterdam_logo.png" alt="Hogeschool Rotterdam" width="60" align="right"/>
 
 This README and the associated UbiOps migration work were further informed by support and platform guidance from the UbiOps team, including **Dene van Venrooij (Product Specialist, UbiOps)**, as well as **Manon Sikkes (Software Engineer, UbiOps)** and **Lindel Pieters (UbiOps)**.
 
