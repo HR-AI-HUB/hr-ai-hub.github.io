@@ -1,33 +1,52 @@
 # Generative Agent-Assisted Synthetic Health Data Generation (SHDG) on UbiOps
 
-> **Version:** V09 — 31 May 2026  
-> **Author note:** This revision documents the complete end-to-end pipeline build as executed on 31 May 2026, including all debugging, corrections, and the role of **GitHub Copilot (DataAnalysisExpert | Claude Sonnet 4.6 High)** in orchestrating the deployment.
+> **Version:** V11 — 31 May 2026  
+> **Author note:** This revision consolidates the complete end-to-end pipeline build executed on 31 May 2026, including debugging outcomes, package revision status, and the documented role of GitHub Copilot in deployment orchestration.
 
 ---
 
 ## Table of Contents
 
 1. [Project Summary](#s1)
+    - [Available FLOW notebooks in the original SHDG repository](#available-flow-notebooks-in-the-original-shdg-repository)
 2. [GA-Assisted SHDG Workflow Overview](#s2)
 3. [Data Warehouse: Raw Clinical EHR Input (SURF Research Drive)](#s3)
-   - [3.1 Dataset Location](#s3-1)
-   - [3.2 Option A: Web Browser Download (manual fallback)](#s3-2)
-   - [3.3 Option B: rclone Virtual Mount on Windows (local development)](#s3-3)
-   - [3.4 Option C: HTTP Download inside the UbiOps Container (production)](#s3-4)
-   - [3.5 Role in the SHDG Pipeline](#s3-5)
+    - [3.1 Dataset Location](#s3-1)
+    - [3.2 Manual access pattern: Web Browser Download](#s3-2)
+    - [3.3 Local development access pattern: rclone Virtual Mount on Windows](#s3-3)
+    - [3.4 Runtime retrieval access pattern: HTTP Download inside the UbiOps Container](#s3-4)
+    - [3.5 Role in the SHDG Pipeline](#s3-5)
 4. [UbiOps Migration Guide & Python Source Code](#s4)
-   - [4-A FLOW01+02 — Ingestion & Privacy Masking](#s4a)
-   - [4-B FLOW03 — GA-Assisted Synthesis (Azure OpenAI)](#s4b)
-   - [4-C FLOW04 — Evaluator Framework](#s4c)
+    - [4-A FLOW01+02 — Ingestion & Privacy Masking](#s4a)
+    - [4-B FLOW03 — GA-Assisted Synthesis (Azure OpenAI)](#s4b)
+    - [4-C FLOW04 — Evaluator Framework](#s4c)
 5. [Step-by-Step: Recreating Each Flow in UbiOps](#s5)
-6. [Pipeline Build via GitHub Copilot (DataAnalysisExpert)](#s6)
-   - [6.1 Tool & Session Context](#s6-1)
-   - [6.2 Pipeline YAML Specifications](#s6-2)
-   - [6.3 Pipeline Creation via Python SDK](#s6-3)
-   - [6.4 FLOW03 Debugging Chronicle](#s6-4)
+    - [Prerequisites](#prerequisites)
+    - [Local environment note: `pubmed-env`](#local-environment-note-pubmed-env)
+    - [Creating and using UbiOps API tokens in the UbiOps Web App](#creating-and-using-ubiops-api-tokens-in-the-ubiops-web-app)
+    - [FLOW01+02 — Ingestion & Privacy Masking](#flow0102--ingestion--privacy-masking)
+    - [FLOW03 — GA-Assisted Synthesis (Azure OpenAI)](#flow03--ga-assisted-synthesis-azure-openai)
+    - [FLOW04 — Evaluation Framework](#flow04--evaluation-framework)
+    - [FLOW01–04 — Assembling the Pipeline](#flow0104--assembling-the-pipeline)
+6. [Pipeline Build via GitHub Copilot](#s6)
+    - [6.1 Tool & Session Context](#s6-1)
+    - [6.2 Pipeline YAML Specifications](#s6-2)
+    - [6.3 Pipeline Creation via Python SDK](#s6-3)
+    - [6.4 FLOW03 Debugging Chronicle](#s6-4)
 7. [Assembling and Executing the UbiOps Pipeline](#s7)
+    - [Invoke via Python SDK](#invoke-via-python-sdk)
+    - [Batch all 13 EPDs](#batch-all-13-epds)
 8. [Deployment Package Version History](#s8)
-9. [AI Accountability & Transparency](#s9)
+    - [FLOW01+02 — `flow01-02-ingest-anonymize`](#flow0102--flow01-02-ingest-anonymize)
+    - [FLOW03 — `flow03-ga-synthesis`](#flow03--flow03-ga-synthesis)
+    - [FLOW04 — `flow04-evaluator`](#flow04--flow04-evaluator)
+    - [Pipeline — `shdg-pipeline`](#pipeline--shdg-pipeline)
+9. [Security Notes](#s9)
+10. [AI Accountability & Transparency](#s10)
+    - [Notes on Legal References](#notes-on-legal-references)
+    - [Generative AI Tools Used in This Project](#generative-ai-tools-used-in-this-project)
+11. [License](#license)
+12. [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -38,7 +57,17 @@ This project is an enterprise-scale MLOps adaptation of the research repository:
 
 The original repository introduces a methodology for generating highly realistic Synthetic Electronic Health Records (EHRs). By utilizing Multi-Agent Large Language Models (Generative Agents), the system can ingest real clinical notes, completely strip them of Protected Health Information (PHI), and synthesize novel patient trajectories that perfectly mimic the structural, semantic, and linguistic characteristics of the original dataset. This allows researchers to share and analyze clinical data safely without violating HIPAA or GDPR regulations.
 
-The original prototype source for the ingestion and anonymization stage is also available as **[FLOW01+FLOW02.ipynb](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/blob/main/PROJECTS/Generative_Agent_based_Data-Synthesis/CODE/FLOW01%2BFLOW02.ipynb)**.
+The original prototype source is available in the repository's full SHDG pipeline notebook collection: **[Generative_Agent_based_Data-Synthesis / CODE](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/Generative_Agent_based_Data-Synthesis/CODE)**. The complete workflow is provided as Jupyter Notebooks, including the ingestion, anonymization, synthesis, and evaluation stages.
+
+### Available FLOW notebooks in the original SHDG repository
+
+| FLOW | Notebook | Purpose | Repository link |
+|---|---|---|---|
+| FLOW01 + FLOW02 | `FLOW01+FLOW02.ipynb` | Ingestion, parsing, and anonymization / pseudonymization of clinical source documents | [Open notebook](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/blob/main/PROJECTS/Generative_Agent_based_Data-Synthesis/CODE/FLOW01%2BFLOW02.ipynb) |
+| FLOW03 | `FLOW03.ipynb` | Generative-agent-based synthesis of synthetic clinical documentation | [Open CODE folder](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/Generative_Agent_based_Data-Synthesis/CODE) |
+| FLOW04 | `FLOW04.ipynb` | Evaluation of synthetic output against anonymized reference material | [Open CODE folder](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/Generative_Agent_based_Data-Synthesis/CODE) |
+
+> **Repository note:** The full SHDG pipeline is maintained in the `CODE` folder of the original research repository and is provided as a set of Jupyter Notebooks covering the end-to-end workflow.
 
 ---
 
@@ -72,7 +101,15 @@ graph TD
 ---
 
 <a id="s3"></a>
-## 💾 3. Data Warehouse
+## 3. Data Warehouse: Raw Clinical EHR Input (SURF Research Drive)
+
+This section describes the three supported **data access patterns** for the source EPD PDF files used by the SHDG workflow. Each pattern serves a different operational context:
+
+- **Manual access pattern**: for occasional human inspection, verification, or one-off local downloads.
+- **Local development access pattern**: for Windows-based development where the remote folder should behave like a mounted drive.
+- **Runtime retrieval access pattern**: for production execution in UbiOps, where files are downloaded on demand inside the container.
+
+In short: use the **manual access pattern** for ad hoc retrieval, the **local development access pattern** for scripting and notebook work on Windows, and the **runtime retrieval access pattern** for automated execution in UbiOps.
 
 <a id="s3-1"></a>
 ### 3.1 Dataset Location
@@ -84,14 +121,16 @@ graph TD
 | **Path** | `UbiOps_2026 / LR_EPDs / ORGs` |
 | **Files** | 13 × `EPDAfdruk_897_*.pdf` (80–120 KB each; 1.2 MB total) |
 | **Share link** | [https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG](https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG) *(password-protected)* |
-| **Last modified** | March 2025 |
+| **Last modified** | MAY 2026 |
 
-> ⚠️ **Privacy & Security:** These files contain real clinical records and are protected under GDPR. The share link requires a password. Do **not** commit these files to any public repository, upload them to public cloud storage, or include them in any UbiOps deployment package. They are pipeline **inputs only**.
+> **Privacy & Security:** These files contain real clinical records and are protected under GDPR. The share link requires a password. Do **not** commit these files to any public repository, upload them to public cloud storage, or include them in any UbiOps deployment package. They are pipeline **inputs only**.
 
 ---
 
 <a id="s3-2"></a>
-### 3.2 Option A: Web Browser Download (manual fallback)
+### 3.2 Manual access pattern: Web Browser Download
+
+Use this access pattern when you need the files only occasionally, for example to inspect the raw PDFs, verify file availability, or stage a small local test set without configuring mounts or automation.
 
 1. Open [https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG](https://hr.data.surf.nl/s/AYp3KSd6EqMjNkG) in your browser.
 2. Enter the share password when prompted.
@@ -101,10 +140,12 @@ graph TD
 ---
 
 <a id="s3-3"></a>
-### 3.3 Option B: rclone Virtual Mount on Windows (local development)
+### 3.3 Local development access pattern: rclone Virtual Mount on Windows
+
+Use this access pattern when developing locally on Windows and you want the SURF Research Drive content to appear as a normal drive letter. This is the most convenient setup for iterative scripting, notebook-based experimentation, and testing local parsing code against the source PDFs.
 
 > **Reference:** [HR-DataLab-Healthcare/RESEARCH_SUPPORT — RCLONE guide](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/RCLONE)
-> **Status: ✅ Verified and working** (tested 30 May 2026 on `PROMET02` / Windows 11 Education 25H2)
+> **Status:** Verified and working (tested 30 May 2026 on `PROMET02` / Windows 11 Education 25H2)
 
 Using **rclone** with **WinFsp**, the `ORGs` subfolder on SURF Research Drive is mounted directly as Windows drive letter `X:`.
 
@@ -144,7 +185,7 @@ rclone mount "RD:HR-DATALAB-HEALTHCARE (Projectfolder)/UbiOps_2026/LR_EPDs/ORGs"
 
 #### B.4 Persistent background mount
 
-Create `C:\Scripts\mount_shdg_orgs.bat` and a `.vbs` silent launcher, then add a shortcut to `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\`. See V08 §3.3-B.4 for full scripts.
+Create `C:\Scripts\mount_shdg_orgs.bat` and a `.vbs` silent launcher, then add a shortcut to `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\`.
 
 #### B.5 Using the mounted drive in Python
 
@@ -158,9 +199,11 @@ with pdfplumber.open(r"X:\EPDAfdruk_897_59037.pdf") as pdf:
 ---
 
 <a id="s3-4"></a>
-### 3.4 Option C: HTTP Download inside the UbiOps Container (production)
+### 3.4 Runtime retrieval access pattern: HTTP Download inside the UbiOps Container
 
-> **Lesson learned (May 2026):** `curl | bash` (exit 4), `apt-get install rclone` (exit 100), and bundled rclone binary (exit 1 on PROPFIND) all fail inside UbiOps containers. The `requests.get()` approach below works because it is a single direct HTTP GET with Basic auth.
+Use this access pattern for the deployed SHDG pipeline in UbiOps. In this model, the container does not rely on an interactive mount or local drive mapping. Instead, the required PDF is downloaded just-in-time during request execution, processed in temporary storage, and then discarded.
+
+> **Lesson learned:** `curl | bash`, `apt-get install rclone`, and a bundled rclone binary all failed inside UbiOps containers. The `requests.get()` approach below works because it is a single direct HTTP GET with Basic auth.
 
 #### C.1 `requirements.txt`
 
@@ -208,12 +251,14 @@ graph LR
 ---
 
 <a id="s4"></a>
-## 🛠 4. UbiOps Migration Guide & Python Source Code
+## 4. UbiOps Migration Guide & Python Source Code
 
 <a id="s4a"></a>
 ### A. Migrate `FLOW01 + FLOW02` (Ingestion & Privacy Masking)
 
-> **Working package:** `flow01-02-v1-rev12.zip` — verified, built successfully, completed live request on 31 May 2026.
+> **Working package:** `flow01-02-v1-rev12.zip`  
+> **Recommended baseline package name:** `flow01-02-v1-rev13.zip`  
+> **Note:** `rev13` is functionally identical to `rev12` and is used only for end-to-end package naming consistency.
 
 **`requirements.txt`**
 ```text
@@ -411,14 +456,14 @@ class Deployment:
         return {"anonymized_markdown": output_path}
 ```
 
-> **Working status (31 May 2026):** `flow01-02-ingest-anonymize:v1`, from `flow01-02-v1-rev12.zip`, returned valid `anonymized_output.md`.
+> **Working status:** `flow01-02-ingest-anonymize:v1` returned valid `anonymized_output.md`.
 
 ---
 
 <a id="s4b"></a>
 ### B. Migrate `FLOW03` (GA-Assisted Synthesis)
 
-> **⚠️ V09 Breaking Change:** FLOW03 has been migrated from the direct OpenAI API to **Azure OpenAI** (`gpt-5.3-chat` on `llmfoundrys.cognitiveservices.azure.com`). The environment variable name has changed from `OPENAI_API_KEY` to `AZURE_OPENAI_API_KEY`. See §8 for the full version history of the bugs fixed.
+> **V10 note:** FLOW03 uses **Azure OpenAI** (`gpt-5.3-chat` on `llmfoundrys.cognitiveservices.azure.com`). The environment variable name is `AZURE_OPENAI_API_KEY`. This supersedes the earlier direct OpenAI setup.
 
 **`requirements.txt`** *(current — `flow03-ga-synthesis-v1-rev3.zip`)*
 ```text
@@ -485,14 +530,14 @@ class Deployment:
 > - Deployment name: `gpt-5.3-chat`
 > - API version: `2024-12-01-preview`
 
-> **Working status (31 May 2026):** `flow03-ga-synthesis:v1`, rev3, initialized correctly with AzureOpenAI client. Pipeline smoke test returned `status: completed`.
+> **Working status:** `flow03-ga-synthesis:v1`, rev3, initialized correctly with `AzureOpenAI` and passed the smoke test.
 
 ---
 
 <a id="s4c"></a>
 ### C. Migrate `FLOW04` (Evaluator Framework)
 
-> **Working package:** `flow04-evaluator-v1.zip` — verified, available, and returned correct metrics.
+> **Working package:** `flow04-evaluator-v1.zip`
 
 **`requirements.txt`**
 ```text
@@ -532,7 +577,7 @@ class Deployment:
 ---
 
 <a id="s5"></a>
-## 🖱️ 5. Step-by-Step: Recreating Each Flow in UbiOps
+## 5. Step-by-Step: Recreating Each Flow in UbiOps
 
 > **Reference materials** (from UbiOps product specialist Dene van Venrooij, 22 May 2026):
 >
@@ -551,6 +596,101 @@ ubiops --version   # UbiOps CLI, version 2.30.0
 # Sign in with API token (required for Google SSO accounts)
 ubiops signin --token -p "Token YOUR_TOKEN_STRING_HERE"
 ```
+
+### Local environment note: `pubmed-env`
+
+The installed `ubiops` package (for example `ubiops==4.13.0`) is **only the Python SDK**. It does **not** include the `ubiops` command-line interface. The CLI must be installed separately as `ubiops-cli`.
+
+#### Recommended installation steps in the local `pubmed-env`
+
+```powershell
+conda activate pubmed-env
+
+# Install the Python SDK
+pip install ubiops==4.13.0
+
+# Install the separate CLI package
+pip install ubiops-cli==2.30.0
+
+# Verify Python SDK
+pip show ubiops
+
+# Verify CLI
+ubiops --version
+```
+
+#### Version discovery example
+
+```powershell
+pip index versions ubiops-cli 2>&1 | Select-Object -First 5
+```
+
+Expected result pattern:
+
+```text
+ubiops-cli (2.30.0)
+Available versions: 2.30.0, 2.29.0, 2.28.0, ...
+```
+
+#### Important distinction
+
+| Package | Purpose | Example version |
+|---|---|---|
+| `ubiops` | Python SDK for `import ubiops` in scripts and notebooks | `4.13.0` |
+| `ubiops-cli` | Command-line tool providing the `ubiops` terminal command | `2.30.0` |
+
+If `import ubiops` works but the `ubiops` command is missing, then only the SDK is installed and the CLI still needs to be added.
+
+### Creating and using UbiOps API tokens in the UbiOps Web App
+
+If your account uses **Google SSO**, the UbiOps CLI cannot sign in with email/password credentials. In that case, use an **API token** created in the UbiOps Web App.
+
+#### Create an API token
+
+1. Go to: `https://app.ubiops.com/organizations/my-organization-15sp3/projects/sustech-01/dashboard`
+2. Click **Project Admin** in the left sidebar to expand it.
+3. Click **API tokens**.
+4. Click **Create token**, give it a name such as `cli-token`, and click **Create**.
+5. **Copy the token immediately** — it is shown only once.
+
+#### Sign in via the CLI using the token
+
+```powershell
+ubiops signin --token -p "Token YOUR_UBIOPS_TOKEN"
+ubiops whoami
+ubiops --version
+```
+
+#### Optional: set the token as an environment variable
+
+This makes the same token available to both CLI and SDK workflows in the current shell session.
+
+```powershell
+$env:UBIOPS_API_TOKEN = "Token YOUR_UBIOPS_TOKEN"
+ubiops whoami
+```
+
+For a persistent user-level setting on Windows PowerShell:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("UBIOPS_API_TOKEN", "Token YOUR_UBIOPS_TOKEN", "User")
+```
+
+#### Note for the Python SDK
+
+Use the same token in SDK code:
+
+```python
+import ubiops
+
+configuration = ubiops.Configuration(
+    api_key={"Authorization": "Token YOUR_UBIOPS_TOKEN"}
+)
+api_client = ubiops.ApiClient(configuration)
+api = ubiops.CoreApi(api_client)
+```
+
+> **Security note:** Store the token in a password manager or a secure environment variable. Do not commit it to source control or embed it in notebooks or README files.
 
 **Package the deployments:**
 
@@ -632,25 +772,25 @@ graph LR
 ---
 
 <a id="s6"></a>
-## 🤖 6. Pipeline Build via GitHub Copilot (DataAnalysisExpert)
+## 6. Pipeline Build via GitHub Copilot
 
 <a id="s6-1"></a>
 ### 6.1 Tool & Session Context
 
-The complete `shdg-pipeline` was designed, debugged, and deployed in a single working session on **31 May 2026** using:
+The complete `shdg-pipeline` was designed, debugged, and deployed in a single session on **31 May 2026**.
 
 | Property | Value |
 |---|---|
-| **Tool** | GitHub Copilot — **DataAnalysisExpert** agent mode |
-| **Model** | **Claude Sonnet 4.6 High** |
+| **Tool** | GitHub Copilot |
+| **Mode** | DataAnalysisExpert |
 | **VS Code workspace** | `D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\AI_LLM\OVERVIEW_LLMs_2026` |
 | **UbiOps project** | `shdg-project` |
 | **Service user** | `<service-user-uuid>@serviceuser.ubiops.com` |
 | **Auth token** | `<REDACTED — store in environment variable or password manager>` |
 
-**Capabilities exercised by the agent in this session:**
+**Actions completed in the session:**
 
-1. Performed an integrity check against V08 README — confirmed all three deployments `available`.
+1. Performed an integrity check against the earlier README version.
 2. Authored `ubiops_pipeline_create.yaml` and `ubiops_pipeline_v1.yaml` in `DataAnalysisExpert/`.
 3. Created the `shdg-pipeline:v1` DAG entirely via the UbiOps Python SDK (no Web UI needed).
 4. Diagnosed and resolved a 403 pipeline-creation error (missing `pipeline-admin` role).
@@ -659,7 +799,7 @@ The complete `shdg-pipeline` was designed, debugged, and deployed in a single wo
 7. Migrated FLOW03 to Azure OpenAI (`gpt-5.3-chat`, `llmfoundrys` endpoint).
 8. Uploaded three successive revision packages via `api.revisions_file_upload()`.
 9. Rotated the UbiOps env var from `OPENAI_API_KEY` to `AZURE_OPENAI_API_KEY`.
-10. Conducted the end-to-end smoke test: `status: completed`, `error: None`.
+10. Completed an end-to-end smoke test.
 
 ---
 
@@ -904,7 +1044,7 @@ The following table documents every revision of `flow03-ga-synthesis:v1` uploade
 ---
 
 <a id="s7"></a>
-## 🔗 7. Assembling and Executing the UbiOps Pipeline
+## 7. Assembling and Executing the UbiOps Pipeline
 
 ### Invoke via Python SDK
 
@@ -952,7 +1092,7 @@ for filename in epd_files:
 ---
 
 <a id="s8"></a>
-## 📦 8. Deployment Package Version History
+## 8. Deployment Package Version History
 
 ### FLOW01+02 — `flow01-02-ingest-anonymize`
 
@@ -960,7 +1100,7 @@ for filename in epd_files:
 |---|---|---|
 | `flow01-02-v1-rev1.zip` … `rev11.zip` | Superseded | Earlier iterations; spacy/scispacy variants and various debugging revisions |
 | `flow01-02-v1-rev12.zip` | ✅ **Verified working** | pdfplumber + requests only; regex PHI masking; completed live test 31 May 2026 |
-| `flow01-02-v1-rev13.zip` | Recommended baseline | Identical code to rev12; renamed for end-to-end versioning consistency |
+| `flow01-02-v1-rev13.zip` | Recommended baseline | Same code as rev12; renamed for end-to-end versioning consistency |
 
 ### FLOW03 — `flow03-ga-synthesis`
 
@@ -984,20 +1124,19 @@ for filename in epd_files:
 
 ---
 
-## 🔒 Security Notes
-
-- All API keys (UbiOps token, Azure OpenAI key, SURF share password) are stored as **UbiOps secret environment variables** — never in source code, ZIP packages, or version control.
-- The UbiOps service user token is scoped to `shdg-project` only with `pipeline-admin` + `editor` roles. Store it in a password manager or CI/CD secret store — never in source files.
-- The Azure OpenAI key is bound to the `llmfoundrys` Cognitive Services resource and rotated per Azure AI Foundry portal guidance.
-- EPD PDF files never leave SURF Research Drive permanently — they are fetched into the UbiOps container's `/tmp` ephemeral storage only during request execution and are discarded when the container recycles.
-
 <a id="s9"></a>
+## 9. Security Notes
+
+- Secrets such as the UbiOps token, Azure OpenAI key, and SURF share password must be stored in secret managers or UbiOps secret environment variables.
+- Do not place secrets in source code, ZIP packages, or version control.
+- EPD PDF files are fetched into ephemeral container storage only during request execution and are not intended for persistent storage outside SURF Research Drive.
 
 ---
 
-## ⚖️ 9. AI Accountability & Transparency
+<a id="s10"></a>
+## 10. AI Accountability & Transparency
 
-This document was produced with the assistance of advanced generative AI tools (see table below). An initial draft was authored by a human, subsequently revised with AI support; the final text was reviewed by the author for accuracy, relevance, and compliance with applicable legal and ethical norms. The use of these tools was conducted in accordance with the legal requirements and ethical principles set out below.
+This document was produced with the assistance of generative AI tools. An initial draft was authored by a human, subsequently revised with AI support, and then reviewed by the author for accuracy, relevance, and compliance.
 
 - **GDPR Art. 12**: Transparency obligations regarding the processing of personal data.
 - **GDPR Art. 5**: Principles of purpose limitation and data minimisation.
@@ -1020,9 +1159,70 @@ This document was produced with the assistance of advanced generative AI tools (
 
 | Tool | Role | Provider |
 |---|---|---|
-| **GitHub Copilot — DataAnalysisExpert** (Claude Sonnet 4.6 High and AZURE FOUNDERY GPT-5.4 High) | Pipeline design, SDK code generation, debugging, deployment orchestration, README authoring | Microsoft / Anthropic |
+| **GitHub Copilot** | Pipeline design, SDK code generation, debugging, deployment orchestration, README authoring | Microsoft |
 | **Azure OpenAI** (`gpt-5.3-chat` on `llmfoundrys`) | FLOW03 runtime — GA-assisted EHR synthesis | Microsoft / OpenAI |
 
-> **Scope note:** The AI tools listed above were used exclusively for software engineering tasks (code generation, debugging, documentation) and for clinical text synthesis within the controlled UbiOps pipeline. No personal health data was shared with any external AI service; EPD files are fetched into ephemeral container storage only and are never persisted outside the SURF Research Drive.
+> **Scope note:** The listed AI tools were used for software engineering tasks and controlled clinical text synthesis within the UbiOps pipeline. No personal health data was intentionally persisted outside the controlled processing environment.
 
 ---
+
+## License
+
+> This repository documentation and the included example source code snippets may be used, copied, and adapted for research, education, and implementation purposes, provided that applicable intellectual property rights, attribution requirements, confidentiality obligations, and third-party rights are respected.
+
+- **Author:** [Rob van der Willigen - Hogeschool Rotterdam](https://www.hogeschoolrotterdam.nl/onderzoek/lectoren/zorginnovatie/medewerkers/van-der-willigen-rob/)
+
+This README does **not** place third-party materials, trademarks, datasets, platform services, screenshots, referenced documentation, or other third-party content into the public domain, and it does **not** waive rights that are owned by parties other than the author or the publishing institution.
+
+Use of this repository and its materials remains subject to applicable law, including, where relevant, European Union and national legislation on copyright and related rights, data protection, confidentiality, cybersecurity, accessibility, platform and service terms, and the regulatory obligations that may apply to AI systems and AI-generated content.
+
+Within the European context, such use should be understood in light of the broader EU digital regulatory framework, including, where relevant to the concrete use case, the GDPR, the EU AI Act, the Digital Services Act, the Digital Markets Act, the Data Act, accessibility requirements, and other applicable Union or Member State rules.
+
+> In particular, users are responsible for ensuring that their own use, reuse, deployment, publication, redistribution, or operational deployment complies with:
+
+| Compliance area | Requirement |
+|---|---|
+| Intellectual property and related rights | Applicable copyright and related-rights rules of all parties involved |
+| Contractual and confidentiality constraints | Contractual, institutional, and confidentiality restrictions attached to source materials or connected systems |
+| EU and Member State law | Applicable European Union and Member State law, including where relevant the **GDPR** and the **EU AI Act** for transparency, documentation, human oversight, and downstream deployment obligations |
+| Platform and infrastructure terms | Platform, hosting, cloud, and service-provider terms that govern connected infrastructure or referenced systems |
+| Other regulatory requirements | Other applicable digital-regulatory requirements relevant to the specific implementation, sector, and jurisdiction |
+
+No statement in this README should be interpreted as legal advice, as a public-domain dedication, as a waiver of third-party rights, or as confirmation that a specific downstream use is automatically lawful or compliant.
+
+---
+
+## Acknowledgements
+
+This README and the associated UbiOps migration work were further informed by support and platform guidance from the UbiOps team, including **Dene van Venrooij (Product Specialist, UbiOps)**, as well as **Manon Sikkes (Software Engineer, UbiOps)** and **Lindel Pieters (UbiOps)**.
+
+This work was also enabled by the **Agile IDT innovation group** within **Informatievoorziening en Digitale Transformatie (IDT)** at Hogeschool Rotterdam. Dienst IDT supports institutes and services with IT implementation, digital transformation, architecture, information management, information security, and the improvement of institutional and educational processes.
+
+Within that context, the following contributors are acknowledged as part of the Agile IDT innovation group that helped make it possible to start this pilot with the **Nutanix Kubernetes node solution in combination with UbiOps**:
+
+| Name | Role |
+|---|---|
+| **Joost Roos** | Domein lead ICT |
+| **Eric Kerkdijk** | IT-architect |
+| **Frans Verschoor** | Informatiemanager |
+| **Jeffry Sleddens** | Adviseur informatiebeveiliging |
+| **Skelo, M. (Matej)** | Technisch Information Security Officer |
+| **Wijngen, P. van (Patrick)** | Senior System Engineer, Dienst IDT |
+
+The guidance and on-boarding shared by UbiOps helped structure the practical exploration of core UbiOps concepts, including deployments, pipelines, services, API usage, and CI/CD integration.
+
+The following official UbiOps resources were explicitly shared as orientation and learning material:
+
+| Resource | URL |
+|---|---|
+| Full documentation | [https://ubiops.com/docs/](https://ubiops.com/docs/) |
+| Python client documentation | [https://ubiops.com/docs/python_client_library/](https://ubiops.com/docs/python_client_library/) |
+| CLI documentation | [https://ubiops.com/docs/ubiops_cli/](https://ubiops.com/docs/ubiops_cli/) |
+| Swagger / API reference | [https://api.ubiops.com/v2.1/swagger/](https://api.ubiops.com/v2.1/swagger/) |
+| Deployment tutorial — multiplication example | [https://ubiops.com/docs/ubiops_tutorials/ready-deployments/multiplication/multiplication/](https://ubiops.com/docs/ubiops_tutorials/ready-deployments/multiplication/multiplication/) |
+| Pipeline tutorial — haystack annotation | [https://ubiops.com/docs/ubiops_tutorials/haystack-annotation/haystack-annotation/](https://ubiops.com/docs/ubiops_tutorials/haystack-annotation/haystack-annotation/) |
+| Services tutorial — vLLM chat services | [https://ubiops.com/docs/ubiops_tutorials/vllm-chat-services/vllm-chat-services/](https://ubiops.com/docs/ubiops_tutorials/vllm-chat-services/vllm-chat-services/) |
+| CI/CD how-to | [https://ubiops.com/docs/howto/howto-deploygit-ubiops/](https://ubiops.com/docs/howto/howto-deploygit-ubiops/) |
+
+This acknowledgement is included for transparency and attribution of practical platform guidance. It should not be interpreted as formal endorsement, co-authorship, or legal approval of the full contents of this README.
+
