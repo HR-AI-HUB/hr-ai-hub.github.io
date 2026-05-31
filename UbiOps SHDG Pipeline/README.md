@@ -1287,8 +1287,10 @@ The guidelines define a three-dimensional classification scheme: **Beschikbaarhe
 
 ### DPIA — Data Protection Impact Assessment Summary
 
-> **Source document:** *DPIA – Datasynthese: Data Protection Impact Assessment — Onderzoek naar het gebruik van patiëntgegevens voor gepersonaliseerde fysiotherapie – Synthetiseren van EPD-data als privacy veilige technologie.* Versie 0.9, 19 November 2025. Hogeschool Rotterdam, Kenniscentrum Zorginnovatie, Afdeling AI & Data Supported Healthcare.  
-> **Authors / Working group:** Drs. Mark van Velzen (lead researcher), Prof. Dr. Mark C. Scheper (lector AI & Data Supported Healthcare), Dr. Rob F. van der Willigen (Tech Lead HR Datalab Healthcare), Sven Satimin (data engineer), Sam Wubben (privacy officer, CCS).  
+> **Source document:** *DPIA – Datasynthese: Data Protection Impact Assessment — Onderzoek naar het gebruik van patiëntgegevens voor gepersonaliseerde fysiotherapie – Synthetiseren van EPD-data als privacy veilige technologie.* Versie 0.9, 19 November 2025. Hogeschool Rotterdam, Kenniscentrum Zorginnovatie, Afdeling AI & Data Supported Healthcare.
+
+> **Authors / Working group:** Drs. Mark van Velzen (lead researcher), Prof. Dr. Mark C. Scheper (lector AI & Data Supported Healthcare), Rob van der Willigen (Tech Lead HR Datalab Healthcare), Sven Satimin (data engineer), Sam Wubben (privacy officer, CCS).  
+
 > **Ethics approval:** REC-RUAS letter of approval reference 20250901, granted 7 October 2025.  
 > This subsection provides an English-language summary of the DPIA as it applies to the processing activities underlying the SHDG UbiOps migration project.
 
