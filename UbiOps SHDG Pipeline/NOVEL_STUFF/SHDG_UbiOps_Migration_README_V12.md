@@ -2,9 +2,6 @@
 
 # Generative Agent-Assisted Synthetic Health Data Generation (SHDG) on UbiOps
 
-> **Version:** V12 — 2 June 2026 (updated: FLOW03 Llama-3.1-70B-Instruct on NutaNix HRO GPU)  
-> **Author note:** V12 accepts all manual revisions from V11 and adds: Section 11 — HR (Hogeschool Rotterdam) Institutional IB (Informatiebeveiliging — Information Security) Guidelines with full control-domain mapping to this UbiOps project; a new subsection 11.DPIA with a complete English-language summary of the *DPIA – Datasynthese* (v0.9, November 2025) including project description, data subjects and categories, legal basis, processing steps, retention periods, risk assessment, security measures, DPO advice, and applicability mapping to the UbiOps pipeline; Hogeschool Rotterdam branding (logo in document header, Section 11 heading, and Acknowledgements); explicit first-use expansion of the HR and IB acronyms; and a full integrity pass covering TOC anchors, section numbering, citation text, and version header consistency.
-
 ---
 
 ## Table of Contents
@@ -40,16 +37,11 @@
 7. [Assembling and Executing the UbiOps Pipeline](#s7)
     - [Invoke via Python SDK](#invoke-via-python-sdk)
     - [Batch all 13 EPDs](#batch-all-13-epds)
-8. [Deployment Package Version History](#s8)
-    - [FLOW01+02 — `flow01-02-ingest-anonymize`](#flow0102--flow01-02-ingest-anonymize)
-    - [FLOW03 — `flow03-ga-synthesis`](#flow03--flow03-ga-synthesis)
-    - [FLOW04 — `flow04-evaluator`](#flow04--flow04-evaluator)
-    - [Pipeline — `shdg-pipeline`](#pipeline--shdg-pipeline)
-9. [Security Notes](#s9)
-10. [AI Accountability & Transparency](#s10)
+8. [Security Notes](#s8)
+9. [AI Accountability & Transparency](#s9)
     - [Notes on Legal References](#notes-on-legal-references)
     - [Generative AI Tools Used in This Project](#generative-ai-tools-used-in-this-project)
-11. [Institutional IB Guidelines — Applicability to this UbiOps Project](#s11)
+10. [Institutional IB Guidelines — Applicability to this UbiOps Project](#s10)
     - [Governance](#governance-go)
     - [Risk Management](#risk-management-rm)
     - [Secure Software Development](#secure-software-development-sd)
@@ -59,8 +51,14 @@
     - [Supplier Control](#supplier-control-sc)
     - [Business Continuity](#business-continuity-bc)
     - [DPIA — Data Protection Impact Assessment Summary](#dpia--data-protection-impact-assessment-summary)
+11. [HRO Local-LLM Implementation Companion Document](#s11)
 12. [License](#license)
 13. [Acknowledgements](#acknowledgements)
+14. [Deployment Package Version History](#s14)
+    - [FLOW01+02 — `flow01-02-ingest-anonymize`](#flow0102--flow01-02-ingest-anonymize)
+    - [FLOW03 — `flow03-ga-synthesis`](#flow03--flow03-ga-synthesis)
+    - [FLOW04 — `flow04-evaluator`](#flow04--flow04-evaluator)
+    - [Pipeline — `shdg-pipeline`](#pipeline--shdg-pipeline)
 
 ---
 
@@ -549,9 +547,9 @@ class Deployment:
 ---
 
 <a id="s4d"></a>
-### D. FLOW03 — GA-Assisted Synthesis (Llama-3.1-70B-Instruct on NutaNix HRO GPU)
+### D. FLOW03 — GA-Assisted Synthesis (Nemotron-70B on NutaNix HRO GPU)
 
-> This section documents the **local-LLM alternative** to Section 4-B. Instead of calling Azure OpenAI, FLOW03 runs `meta-llama/Llama-3.1-70B-Instruct` directly on the Hogeschool Rotterdam NutaNix GPU node inside UbiOps. This keeps clinical data entirely within the HR infrastructure — no data leaves the organisation.
+> This section documents the **local-LLM alternative** to Section 4-B. Instead of calling Azure OpenAI, FLOW03 runs `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF` directly on the Hogeschool Rotterdam NutaNix GPU node inside UbiOps. This keeps clinical data entirely within the HR infrastructure — no data leaves the organisation.
 
 #### Hardware target
 
@@ -573,23 +571,23 @@ class Deployment:
 
 Contents: `deployment_llama.py` (renamed to `deployment.py`) + `requirements_llama.txt` (renamed to `requirements.txt`)
 
-**`requirements.txt`** *(v2 — Llama)*
+**`requirements.txt`** *(v2 — Nemotron)*
 ```text
 torch>=2.1.0
 transformers>=4.45.0
-accelerator>=0.26.0
+accelerate>=0.26.0
 bitsandbytes>=0.43.0
 huggingface_hub>=0.22.0
 sentencepiece>=0.2.0
 ```
 
-**`deployment.py`** *(v2 — Llama-3.1-70B-Instruct)*
+**`deployment.py`** *(v2 — `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF`)*
 ```python
 import os
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-MODEL_ID  = "meta-llama/Llama-3.1-70B-Instruct"
+MODEL_ID  = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"
 CACHE_DIR = "/tmp/hf_model_cache"
 MAX_NEW_TOKENS = 4096
 TEMPERATURE    = 0.7
@@ -665,9 +663,9 @@ class Deployment:
 
 | Key | Value | Secret? |
 |---|---|---|
-| `HUGGINGFACE_TOKEN` | HuggingFace access token (account with Llama-3.1 access granted at [huggingface.co/meta-llama](https://huggingface.co/meta-llama)) | **Yes** |
+| `HUGGINGFACE_TOKEN` | HuggingFace access token for `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF` | **Yes** |
 
-> **HuggingFace access:** `meta-llama/Llama-3.1-70B-Instruct` is a gated repository. Request access at [huggingface.co/meta-llama/Llama-3.1-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct) before deploying.
+> **HuggingFace access:** ensure the deployment runtime can authenticate against the Hugging Face repository for `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF` before deploying.
 
 #### Cold-start behaviour
 
@@ -735,7 +733,7 @@ pip install ubiops ubiops-cli
 ubiops --version   # UbiOps CLI, version 2.30.0
 
 # Sign in with API token (required for Google SSO accounts)
-ubiops signin --token -p "Token YOUR_TOKEN_STRING_HERE"
+ubiops signin --token -p "<paste token from secure source>"
 ```
 
 ### Local environment note: `pubmed-env`
@@ -797,7 +795,7 @@ If your account uses **Google SSO**, the UbiOps CLI cannot sign in with email/pa
 #### Sign in via the CLI using the token
 
 ```powershell
-ubiops signin --token -p "Token YOUR_UBIOPS_TOKEN"
+ubiops signin --token -p "<paste token from secure source>"
 ubiops status          # verify login status
 ubiops user get        # show the authenticated user
 ubiops --version
@@ -808,14 +806,14 @@ ubiops --version
 This makes the same token available to both CLI and SDK workflows in the current shell session.
 
 ```powershell
-$env:UBIOPS_API_TOKEN = "Token YOUR_UBIOPS_TOKEN"
+$env:UBIOPS_API_TOKEN = "<paste token from secure source>"
 ubiops status          # verify login status
 ```
 
 For a persistent user-level setting on Windows PowerShell:
 
 ```powershell
-[System.Environment]::SetEnvironmentVariable("UBIOPS_API_TOKEN", "Token YOUR_UBIOPS_TOKEN", "User")
+[System.Environment]::SetEnvironmentVariable("UBIOPS_API_TOKEN", "<paste token from secure source>", "User")
 ```
 
 #### Note for the Python SDK
@@ -823,10 +821,11 @@ For a persistent user-level setting on Windows PowerShell:
 Use the same token in SDK code:
 
 ```python
+import os
 import ubiops
 
 configuration = ubiops.Configuration(
-    api_key={"Authorization": "Token YOUR_UBIOPS_TOKEN"}
+    api_key={"Authorization": os.environ["UBIOPS_API_TOKEN"]}
 )
 api_client = ubiops.ApiClient(configuration)
 api = ubiops.CoreApi(api_client)
@@ -912,7 +911,7 @@ Compress-Archive -Path deployment.py, requirements.txt -DestinationPath flow04-e
 | 8 | Prepare model code | Edit `deployment.py` so `MODEL_ID = "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"` | Already applied in the current workspace |
 | 9 | Package local code | `Compress-Archive -Path ".\deployment.py", ".\requirements.txt" -DestinationPath ".\flow03-ga-synthesis-v2.zip" -Force` | Optional local artifact for audit/reuse |
 | 10 | Create / deploy v2 | `ubiops deployments deploy flow03-ga-synthesis -v v2 -dir . -deployment_py deployment.py -e ubuntu22-04-python3-10-cuda12-3-2 -inst_group "HRO - 1 GPU - 14 vCPU - 30GB RAM - 140GB Disk" -min 1 -max 1 -t 1800 -rtm metadata -rtt 604800 -desc "Nemotron-70B on HRO NutaNix GPU" -y --overwrite` | Creates the version and uploads the package in one command |
-| 11 | Add HF token secret | `ubiops environment_variables create HUGGINGFACE_TOKEN --value "hf_..." --secret -d flow03-ga-synthesis -v v2 --overwrite` | Must be typed by the operator in their own terminal |
+| 11 | Add HF token secret | `ubiops environment_variables create HUGGINGFACE_TOKEN --value "<paste token from secure source>" --secret -d flow03-ga-synthesis -v v2 --overwrite` | Must be typed by the operator in their own terminal |
 | 12 | Inspect version | `ubiops deployment_versions get v2 -d flow03-ga-synthesis -fmt json` | Shows current config and status |
 | 13 | Wait for readiness | `ubiops deployment_versions wait v2 -d flow03-ga-synthesis --stream_logs` | First startup may take a long time due to model download |
 | 14 | Confirm env vars | `ubiops environment_variables list -d flow03-ga-synthesis -v v2 -fmt json` | Should show `HUGGINGFACE_TOKEN` as secret |
@@ -958,7 +957,7 @@ ubiops deployments deploy flow03-ga-synthesis \
 
 ```powershell
 ubiops environment_variables create HUGGINGFACE_TOKEN \
-    --value "hf_..." \
+    --value "<paste token from secure source>" \
     --secret \
     -d flow03-ga-synthesis \
     -v v2 \
@@ -1199,9 +1198,10 @@ The pipeline was created programmatically using the UbiOps Python SDK. The key c
 
 **Step 1 — Create the pipeline:**
 ```python
+import os
 import ubiops
 
-cfg = ubiops.Configuration(api_key={'Authorization': 'Token YOUR_UBIOPS_TOKEN'})
+cfg = ubiops.Configuration(api_key={'Authorization': os.environ['UBIOPS_API_TOKEN']})
 api = ubiops.CoreApi(ubiops.ApiClient(cfg))
 
 api.pipelines_create(
@@ -1348,10 +1348,11 @@ The following table documents every revision of `flow03-ga-synthesis:v1` uploade
 ### Invoke via Python SDK
 
 ```python
+import os
 import ubiops
 
 api = ubiops.CoreApi(ubiops.ApiClient(
-    ubiops.Configuration(api_key={'Authorization': 'Token YOUR_UBIOPS_TOKEN'})
+    ubiops.Configuration(api_key={'Authorization': os.environ['UBIOPS_API_TOKEN']})
 ))
 
 result = api.pipeline_requests_create(
@@ -1391,41 +1392,7 @@ for filename in epd_files:
 ---
 
 <a id="s8"></a>
-## 8. Deployment Package Version History
-
-### FLOW01+02 — `flow01-02-ingest-anonymize`
-
-| Package | Status | Notes |
-|---|---|---|
-| `flow01-02-v1-rev1.zip` … `rev11.zip` | Superseded | Earlier iterations; spacy/scispacy variants and various debugging revisions |
-| `flow01-02-v1-rev12.zip` | ✅ **Verified working** | pdfplumber + requests only; regex PHI masking; completed live test 31 May 2026 |
-| `flow01-02-v1-rev13.zip` | Recommended baseline | Same code as rev12; renamed for end-to-end versioning consistency |
-
-### FLOW03 — `flow03-ga-synthesis`
-
-| Package | Status | Notes |
-|---|---|---|
-| `flow03-ga-synthesis-v1.zip` | ❌ Broken | `openai==1.12.0` + `langchain==0.1.0` → `proxies` kwarg error on httpx ≥0.28 |
-| `flow03-ga-synthesis-v1-rev2.zip` | ⚠️ Intermediate | Fixed requirements (`openai>=1.51.0`, no langchain); still using direct OpenAI API |
-| `flow03-ga-synthesis-v1-rev3.zip` | ✅ **Working (Azure OpenAI)** | `openai>=1.51.0` + `AzureOpenAI` client; `gpt-5.3-chat` on `llmfoundrys`; env var `AZURE_OPENAI_API_KEY`; smoke test passed |
-| `flow03-ga-synthesis-v2.zip` | 🆕 **Local LLM (NutaNix HRO)** | `transformers>=4.45.0` + `bitsandbytes` 4-bit NF4; `meta-llama/Llama-3.1-70B-Instruct`; `device_map="auto"`; env var `HUGGINGFACE_TOKEN`; instance `HRO - 1 GPU - 14 vCPU - 30GB RAM - 140GB Disk`; no external API calls |
-
-### FLOW04 — `flow04-evaluator`
-
-| Package | Status | Notes |
-|---|---|---|
-| `flow04-evaluator-v1.zip` | ✅ **Working** | `scikit-learn==1.4.0`; TF-IDF cosine similarity; no env vars required |
-
-### Pipeline — `shdg-pipeline`
-
-| Version | Created | Status | Notes |
-|---|---|---|---|
-| `v1` | 2026-05-31 03:16:36 UTC | ✅ **Completed smoke test** | Created via Python SDK by GitHub Copilot DataAnalysisExpert; 4 attachments; input `pipeline_input_epd_filename`; outputs `evaluation_metrics` + `synthetic_document` |
-
----
-
-<a id="s9"></a>
-## 9. Security Notes
+## 8. Security Notes
 
 - Secrets such as the UbiOps token, Azure OpenAI key, and SURF share password must be stored in secret managers or UbiOps secret environment variables.
 - Do not place secrets in source code, ZIP packages, or version control.
@@ -1433,8 +1400,8 @@ for filename in epd_files:
 
 ---
 
-<a id="s10"></a>
-## 10. AI Accountability & Transparency
+<a id="s9"></a>
+## 9. AI Accountability & Transparency
 
 This document was produced with the assistance of generative AI tools. An initial draft was authored by a human, subsequently revised with AI support, and then reviewed by the author for accuracy, relevance, and compliance.
 
@@ -1466,8 +1433,8 @@ This document was produced with the assistance of generative AI tools. An initia
 
 ---
 
-<a id="s11"></a>
-## 11. Institutional IB (Informatiebeveiliging — Information Security) Guidelines — Applicability to this UbiOps Project
+<a id="s10"></a>
+## 10. Institutional IB (Informatiebeveiliging — Information Security) Guidelines — Applicability to this UbiOps Project
 
 > **Source document:** *Richtlijnen Decentrale Informatiebeveiliging — HR (Hogeschool Rotterdam) Decentrale IB (Informatiebeveiliging) Richtlijnen v0.9* (R. Winkels, IDT/Dienst IDT, Hogeschool Rotterdam, 3 February 2026).  
 > This section provides an English-language summary of the applicable guidelines and maps their key controls to implementation decisions taken in this UbiOps migration project.
@@ -1503,9 +1470,9 @@ The guidelines define three risk acceptance levels: **low** (no formal acceptanc
 |---|---|---|
 | **SD.01 — No secrets in code** | Credentials, API keys, private keys, and access tokens must never be committed to source code | Azure OpenAI API keys, UbiOps API tokens, and SURF Research Drive credentials are passed exclusively as UbiOps deployment environment variables — never embedded in source files |
 | **SD.01 — Synthetic data in OTA** | Personal data must not be used in development/test/acceptance environments; anonymised or synthetic datasets should be used instead | Raw clinical EHR data (SURF Research Drive) is never used in the OTA environment; only synthetic output is used for FLOW04 evaluation — in full alignment with this guideline |
-| **SD.01 — OTA/P separation** | Logical and physical separation between development-test-acceptance and production environments | UbiOps provides environment isolation; deployments are versioned and promoted to production only after validated testing (Section 8) |
+| **SD.01 — OTA/P separation** | Logical and physical separation between development-test-acceptance and production environments | UbiOps provides environment isolation; deployments are versioned and promoted to production only after validated testing (Section 14) |
 | **SD.01 — OWASP** | OWASP Secure Coding Practices, OWASP Top 10, and OWASP Top 10 for LLM Applications apply | Applied throughout FLOW03 (LLM-based synthesis); injection risks, prompt handling, and API surface hardening are addressed |
-| **SD.01 — Open source assessment** | New open source components must be assessed for malware, CVEs, documentation quality, and community support | All `requirements.txt` dependencies are version-pinned; Section 8 documents the full version history and package upgrade rationale, including the critical fix for `langchain` (FLOW03) |
+| **SD.01 — Open source assessment** | New open source components must be assessed for malware, CVEs, documentation quality, and community support | All `requirements.txt` dependencies are version-pinned; Section 14 documents the full version history and package upgrade rationale, including the critical fix for `langchain` (FLOW03) |
 | **SD.02 — Developer access to production** | Developer access to the production environment must be minimised and logged; production accounts are identifiable by suffix/prefix | UbiOps API tokens for pipeline management are scoped to the minimum required role; production access is logged via UbiOps audit trail |
 
 ---
@@ -1545,7 +1512,7 @@ The guidelines define a three-dimensional classification scheme: **Beschikbaarhe
 |---|---|---|
 | **SM.01 — Baselines** | SURF/HR security baselines apply to all systems | SURF security baseline configuration is applied to the Nutanix Kubernetes node hosting UbiOps; deviations are documented in the Informatiebeveiligingscheck |
 | **SM.05 — Logging** | Logging and monitoring standards apply | UbiOps provides deployment and pipeline execution logging; application-level logging is implemented within each FLOW deployment handler |
-| **SM.07 — Vulnerability management** | CVE exposure of packages must be tracked | Python package CVEs are tracked; `requirements.txt` is version-pinned (Section 8). The critical `langchain==0.1.0` CVE-risk was mitigated by removing the dependency and upgrading to `openai>=1.51.0` (Section 6.4) |
+| **SM.07 — Vulnerability management** | CVE exposure of packages must be tracked | Python package CVEs are tracked; `requirements.txt` is version-pinned (Section 14). The critical `langchain==0.1.0` CVE-risk was mitigated by removing the dependency and upgrading to `openai>=1.51.0` (Section 6.4) |
 | **SM.10 — Cryptographic key management** | API keys and tokens must be stored encrypted at rest, not in source code | Azure OpenAI API keys and UbiOps API tokens are stored as encrypted deployment environment variables in the UbiOps platform — never in source code |
 | **SM.11 — Network security** | Network segmentation, firewalls, and HTTPS enforced | UbiOps on Nutanix Kubernetes benefits from IDT-managed network segmentation; all API communication uses HTTPS/TLS |
 
@@ -1698,6 +1665,26 @@ This UbiOps migration project implements the **SHDG processing pipeline** that i
 
 ---
 
+<a id="s11"></a>
+## 11. HRO Local-LLM Implementation Companion Document
+
+For a separate end-to-end overview of the migration from the original Azure OpenAI `gpt-5.3-chat` implementation to a local LLM on Hogeschool Rotterdam NutaNix hardware, see:
+
+- `UBIOPS_SHDG_HRO_IMPLEMENTATION_V01.md`
+
+This companion document focuses specifically on:
+
+- the original Azure OpenAI baseline architecture
+- the rationale for moving `FLOW03` to local inference
+- the HRO NutaNix target environment
+- the selected local model: `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF`
+- the CLI-based deployment workflow for `flow03-ga-synthesis:v2`
+- operational considerations such as warm instances, model caching, and token handling
+
+Use this main README as the authoritative migration and governance document, and use `UBIOPS_SHDG_HRO_IMPLEMENTATION_V01.md` as the focused implementation companion for the local-LLM adaptation.
+
+---
+
 ## License
 
 > This repository documentation and the included example source code snippets may be used, copied, and adapted for research, education, and implementation purposes, provided that applicable intellectual property rights, attribution requirements, confidentiality obligations, and third-party rights are respected.
@@ -1759,4 +1746,42 @@ The following official UbiOps resources were explicitly shared as orientation an
 | CI/CD how-to | [https://ubiops.com/docs/howto/howto-deploygit-ubiops/](https://ubiops.com/docs/howto/howto-deploygit-ubiops/) |
 
 This acknowledgement is included for transparency and attribution of practical platform guidance. It should not be interpreted as formal endorsement, co-authorship, or legal approval of the full contents of this README.
+
+---
+
+<a id="s14"></a>
+## 14. Deployment Package Version History
+
+### FLOW01+02 — `flow01-02-ingest-anonymize`
+
+| Package | Status | Notes |
+|---|---|---|
+| `flow01-02-v1-rev1.zip` … `rev11.zip` | Superseded | Earlier iterations; spacy/scispacy variants and various debugging revisions |
+| `flow01-02-v1-rev12.zip` | ✅ **Verified working** | pdfplumber + requests only; regex PHI masking; completed live test 31 May 2026 |
+| `flow01-02-v1-rev13.zip` | Recommended baseline | Same code as rev12; renamed for end-to-end versioning consistency |
+
+### FLOW03 — `flow03-ga-synthesis`
+
+| Package | Status | Notes |
+|---|---|---|
+| `flow03-ga-synthesis-v1.zip` | ❌ Broken | `openai==1.12.0` + `langchain==0.1.0` → `proxies` kwarg error on httpx ≥0.28 |
+| `flow03-ga-synthesis-v1-rev2.zip` | ⚠️ Intermediate | Fixed requirements (`openai>=1.51.0`, no langchain); still using direct OpenAI API |
+| `flow03-ga-synthesis-v1-rev3.zip` | ✅ **Working (Azure OpenAI)** | `openai>=1.51.0` + `AzureOpenAI` client; `gpt-5.3-chat` on `llmfoundrys`; env var `AZURE_OPENAI_API_KEY`; smoke test passed |
+| `flow03-ga-synthesis-v2.zip` | 🆕 **Local LLM (NutaNix HRO)** | `transformers>=4.45.0` + `bitsandbytes` 4-bit NF4; `nvidia/Llama-3.1-Nemotron-70B-Instruct-HF`; `device_map="auto"`; env var `HUGGINGFACE_TOKEN`; instance `HRO - 1 GPU - 14 vCPU - 30GB RAM - 140GB Disk`; no external API calls |
+
+### FLOW04 — `flow04-evaluator`
+
+| Package | Status | Notes |
+|---|---|---|
+| `flow04-evaluator-v1.zip` | ✅ **Working** | `scikit-learn==1.4.0`; TF-IDF cosine similarity; no env vars required |
+
+### Pipeline — `shdg-pipeline`
+
+| Version | Created | Status | Notes |
+|---|---|---|---|
+| `v1` | 2026-05-31 03:16:36 UTC | ✅ **Completed smoke test** | Created via Python SDK by GitHub Copilot DataAnalysisExpert; 4 attachments; input `pipeline_input_epd_filename`; outputs `evaluation_metrics` + `synthetic_document` |
+
+---
+
+> **Document version note:** `SHDG_UbiOps_Migration_README_V12.md` reflects **V12**, updated on **2 June 2026**. This version includes the HRO institutional IB guidance mapping, the DPIA summary, the HRO/NutaNix local-LLM migration additions, the companion reference to `UBIOPS_SHDG_HRO_IMPLEMENTATION_V01.md`, and a final integrity pass with the deployment version history placed at the end of the document.
 
