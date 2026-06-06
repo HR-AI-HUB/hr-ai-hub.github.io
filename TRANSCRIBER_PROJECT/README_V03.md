@@ -1,10 +1,8 @@
 # Whisper v3 Two-Speaker Diarized Transcription with SURF AI-HUB + Langflow
 
 > **Platform:** [SURF AI-HUB (WiLLMa)](https://hr-ai-hub.github.io/) · [SURF Research Cloud](https://www.surf.nl/en/surf-research-cloud-collaborative-research-environment) · [Langflow 1.9.3](https://langflow.org/) · Docker · Ubuntu 22.04  
-> **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)
-> 
-> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` [current](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/Jupyter_Notebooks/LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb)
-> 
+> **Repository:** [HR-DataLab-Healthcare / RESEARCH\_SUPPORT — SRAM\_DOCKER\_LANGFLOW](https://github.com/HR-DataLab-Healthcare/RESEARCH_SUPPORT/tree/main/PROJECTS/SRAM_DOCKER_LANGFLOW)  
+> **Notebook:** `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb` (current) · `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb` (V06 baseline)  
 > **Ready-to-import flow:** Download the Langflow JSON from [HR-AI-HUB GitHub](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/TRANSCRIBER_PROJECT/LANGFLOW_WHISPER_JSON/URL%20NextCLOUD-AUDVIs-PREPRO%2BTRANSCR%2BTIME%2BDIAR-BETA.json)
 
 ---
@@ -29,11 +27,363 @@
 
 ---
 
+## Changelog
+
+### V07 — Video Support + Authenticated Share Links *(current)*
+
+Based on `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
+
+#### What changed
+
+| Area | Change |
+|------|--------|
+| **Video file support** | Component 2 (Audio Preprocessor) detects video containers (`.mp4` `.mkv` `.mov` `.avi` `.webm` `.m4v` `.mpg` `.mpeg`) by file extension and calls `ffmpeg` to extract the audio track before the DSP chain runs |
+| **ffmpeg temp-file strategy** | Video bytes are written to a named `/tmp` temp file; ffmpeg reads from disk (not stdin pipe), which is required for moov-at-end MP4s (Zoom recordings, phone captures, screen recordings) |
+| **Resilient ffmpeg fallback** | If `ffmpeg` is not installed or exits non-zero, the original bytes are forwarded unchanged — the flow never breaks |
+| **Password-protected share links** | Component 1 (Audio Downloader) accepts a new **Share Link Password** (`SecretStr`) field for password-protected Nextcloud / ownCloud / SURF Research Drive public share links |
+| **Cookie-based session auth** | Replaces HTTP Basic Auth (which ownCloud/Nextcloud ignores for public shares); mirrors browser flow: GET share page → extract CSRF `requesttoken` from HTML → POST password to `/authenticate/downloadshare` → session cookie → GET download URL |
+| **Nextcloud file viewer URL rewriting** | `/apps/files/files/{id}?dir=...` viewer URLs are rewritten to `/index.php/f/{id}?download` |
+| **`AUTH_REQUIRED` error code** | Downloader returns `AUTH_REQUIRED` when the server returns HTML (wrong/missing password or login-gated link); HTTP 401/403 also maps to `AUTH_REQUIRED`; the Preprocessor propagates the code unchanged |
+| **Content-Disposition filename** | Downloader prefers the `Content-Disposition: attachment; filename=...` response header over the URL path basename |
+| **Actionable transcriber message** | Transcriber surfaces a detailed Option A/B/C guide when it receives `AUTH_REQUIRED` instead of audio bytes |
+| **Non-WAV direct path in transcriber** | Transcriber probes received bytes as a WAV container; if not valid WAV, bytes are sent to WILLMA Whisper as-is without chunking (handles ffmpeg-unavailable passthrough and native non-WAV formats) |
+| **Docker: `ffmpeg` required for video** | `RUN apt-get update && apt-get install -y ffmpeg` must be added to the Dockerfile and the image rebuilt (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) |
+
+#### Component cells in the V07 notebook
+
+| Component | V06 notebook | V07 notebook |
+|-----------|-------------|-------------|
+| 1. WILLMA Audio Downloader | cell 4 | **cell 6** |
+| 2. Audio Preprocessor | cell 7 | **cell 8** |
+| 3. WILLMA Whisper Diarized Transcriber | cell 9 | **cell 10** |
+
+#### Migration from V06 → V07
+
+1. Add `ffmpeg` to the Dockerfile (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) and rebuild: `docker compose up -d --build`
+2. In Langflow, open the flow and update **1. WILLMA Audio Downloader** with **cell 6** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
+3. Update **2. Audio Preprocessor** with **cell 8**.
+4. Update **3. WILLMA Whisper Diarized Transcriber** with **cell 10**.
+5. If you use password-protected SURF Research Drive share links, enter the share password in the new **Share Link Password** field of the Audio Downloader component.
+
+---
+
+### V06 — Stable Baseline *(prior version)*
+
+Two-speaker diarization, WAV/MP3 audio support, public URL downloads, pure-Python DSP.  
+Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Ready-to-import flow: `URL PREPRO TRANSCR  + TIME + DIARIZATION.json`.
+
+---
+
+## Notebook Reproducibility Guide — V05e and V05f
+
+This section documents the local notebook-based transcription workflow used in:
+
+- `WILLMA_WHISPER_TRANSCRIBER_V05e.ipynb`
+- `WILLMA_WHISPER_TRANSCRIBER_V05f.ipynb`
+
+The target audience is:
+
+- **Data Stewards**, who need to validate data handling, storage paths, access patterns, and reproducibility
+- **Data Scientists**, who need to run, troubleshoot, and extend the transcription workflow on Windows workstations
+
+Both notebook versions use the SURF WILLMA API as the transcription back end, but they differ in how input and output files are handled.
+
+### At a glance
+
+| Version | Input model | Output model | Typical use case |
+|---|---|---|---|
+| `V05e` | Local folder on disk | Local output folders on disk | Researcher-controlled workstation processing from a prepared local audio folder |
+| `V05f` | Public password-protected Research Drive share via `rclone` | Local output folder, then synchronized to writable `RD:` destination | Shared operational workflow where source files are centrally distributed and results must be delivered back to Research Drive |
+
+---
+
+## V05e — Local-folder batch transcription workflow
+
+`V05e` is the baseline notebook for reproducible local batch transcription. It assumes that the audio source files already exist on the local machine or on a mounted drive that the notebook can access directly.
+
+### V05e purpose
+
+Use `V05e` when:
+
+- source audio has already been exported from a secure platform to a controlled local folder
+- a researcher or analyst wants a simple batch transcription run without Research Drive synchronization logic
+- outputs only need to remain on the local workstation or on institution-managed storage mapped as a normal file path
+
+### V05e reproducibility prerequisites
+
+Before running `V05e`, confirm all of the following:
+
+1. A Python environment is available with the required packages:
+   - `pandas`
+   - `requests`
+   - `urllib3`
+   - `soundfile`
+   - `scipy`
+   - `openpyxl`
+   - `reportlab`
+   - optional `noisereduce`
+2. `ffmpeg` is available on the system `PATH`
+3. A valid `WILLMA_API_KEY` is available
+4. `DEFAULT_INPUT_FOLDER` points to a folder containing supported audio or media files
+5. The user has write permissions to the output folders used by the notebook
+
+### V05e minimal `.whisper-env`
+
+The typical `V05e` configuration is:
+
+```text
+WILLMA_API_KEY=<YOUR_API_KEY>
+WILLMA_BASE_URL=https://willma.surf.nl/api/v0
+DEFAULT_INPUT_FOLDER=E:\PATH\TO\LOCAL_AUDIO_BATCH
+```
+
+### V05e operational steps
+
+1. Activate the local notebook environment.
+2. Place source audio files in `DEFAULT_INPUT_FOLDER`.
+3. Run the setup cell to load configuration and create local output folders.
+4. Run the helper-functions cell.
+5. Run the discovery / validation step to confirm that all expected files are visible.
+6. Run the batch cell.
+7. Verify the generated transcript outputs locally.
+
+### V05e data flow
+
+```mermaid
+flowchart TD
+    A[Local audio folder\nDEFAULT_INPUT_FOLDER] --> B[Notebook setup and config]
+    B --> C[Audio discovery and validation]
+    C --> D[Optional preprocessing\nffmpeg / DSP]
+    D --> E[WILLMA Whisper transcription]
+    E --> F[Diarization and alignment]
+    F --> G[Local transcript outputs\nTXT / JSON / XLSX / SRT / PDF]
+    G --> H[Local review and QA]
+```
+
+### V05e reproducibility checkpoints
+
+For auditability and reruns, Data Stewards and Data Scientists should record:
+
+- notebook filename and version (`V05e`)
+- execution date and operator
+- exact `DEFAULT_INPUT_FOLDER`
+- count of discovered source files
+- count of successfully processed files
+- count of failed files and error messages
+- output destination used for review or downstream archiving
+- exact `WILLMA_BASE_URL`
+
+### V05e expected outputs
+
+Depending on the notebook settings, each processed file can produce a set of artifacts such as:
+
+- plain-text transcript (`.txt`)
+- structured transcript JSON (`.json`)
+- diarization spreadsheet (`.xlsx`)
+- subtitle file (`.srt`)
+- formatted PDF report (`.pdf`)
+
+These outputs should be checked for:
+
+- file existence
+- non-zero file size
+- transcription completeness
+- speaker segmentation plausibility
+- correct naming conventions for downstream storage
+
+---
+
+## V05f — Research Drive input/output workflow
+
+`V05f` extends `V05e` by replacing local input discovery with a reproducible Research Drive workflow:
+
+- **input is read from a public password-protected Research Drive share**
+- **output is written locally first and then copied to a writable `RD:` destination**
+
+This separation is important because the public share is suitable for controlled distribution of source material, while final outputs must be written to a normal authenticated Research Drive location.
+
+### V05f purpose
+
+Use `V05f` when:
+
+- source recordings are centrally distributed through a Research Drive share URL
+- multiple analysts need to process the same centrally managed batch definition
+- the transcription outputs must be delivered back to a controlled writable Research Drive folder
+- reproducibility requires a clear split between read-only source access and writable result storage
+
+### V05f prerequisites
+
+In addition to the V05e requirements, `V05f` requires:
+
+1. `rclone` installed and available on the system `PATH`
+2. A configured authenticated remote named `RD:` in the local `rclone` configuration
+3. A valid public share URL in `SHARE_LINK`
+4. A valid share password in `SHARE_PASSWORD`
+5. A writable destination in `RD_OUTPUT_PATH`
+
+### V05f required `.whisper-env`
+
+The required configuration pattern is:
+
+```text
+WILLMA_API_KEY=<YOUR_API_KEY>
+WILLMA_BASE_URL=https://willma.surf.nl/api/v0
+SHARE_LINK=https://hr.data.surf.nl/s/<share_token>
+SHARE_PASSWORD=<share_password>
+RD_OUTPUT_PATH=RD:HR-DATALAB-HEALTHCARE (Projectfolder)/TRANSCRIBED_WILLMA_OUTPUTS/
+```
+
+Optional legacy key:
+
+```text
+DEFAULT_INPUT_FOLDER=...  # ignored as input source in V05f
+```
+
+### V05f access model
+
+The notebook converts the public share configuration into a DAV-compatible `rclone` source using:
+
+- the share token extracted from `SHARE_LINK`
+- an obscured version of `SHARE_PASSWORD` from `rclone obscure`
+- the endpoint `https://hr.data.surf.nl/public.php/dav/files/<share_token>`
+
+The notebook then copies the source files into a local cache before the normal transcription process starts.
+
+### V05f operational steps
+
+1. Activate the `transcriber-env` environment.
+2. Confirm that `rclone listremotes` includes `RD:`.
+3. Confirm that `.whisper-env` contains `SHARE_LINK`, `SHARE_PASSWORD`, and `RD_OUTPUT_PATH`.
+4. Run the setup cell.
+5. Run the helper-functions cell.
+6. Run the diagnostic sync cell to verify that the shared audio is copied into the local cache.
+7. Confirm the number of discovered media files.
+8. Run the batch cell.
+9. Review the generated local outputs.
+10. Confirm that the notebook copied the outputs to `RD_OUTPUT_PATH`.
+
+### V05f data flow
+
+```mermaid
+flowchart TD
+    A[Public Research Drive share\nSHARE_LINK + SHARE_PASSWORD] --> B[Extract share token]
+    B --> C[Build rclone WebDAV source]
+    C --> D[Copy source files to local cache]
+    D --> E[Audio discovery and validation]
+    E --> F[Optional preprocessing\nffmpeg / DSP]
+    F --> G[WILLMA Whisper transcription]
+    G --> H[Diarization and alignment]
+    H --> I[Local transcript outputs\nTXT / JSON / XLSX / SRT / PDF]
+    I --> J[Sync results to writable RD_OUTPUT_PATH]
+    J --> K[Research Drive result folder\nRD: destination]
+```
+
+### V05f control points for Data Stewards
+
+Data Stewards should explicitly verify:
+
+- whether the public share contains the expected batch and only the intended files
+- whether the share password is stored only in `.whisper-env` and not in notebook code
+- whether the writable `RD_OUTPUT_PATH` points to the correct project destination
+- whether the local cache directory is temporary and institutionally acceptable
+- whether local transcript artifacts need post-run deletion after successful upload
+- whether batch results copied to `RD_OUTPUT_PATH` meet project retention and access policies
+
+### V05f control points for Data Scientists
+
+Data Scientists should explicitly verify:
+
+- `rclone` is functioning on the workstation
+- the diagnostic cell reports a non-zero count of copied files
+- file-extension filtering does not exclude uppercase or mixed-case media names
+- `ffmpeg` is available for container extraction where needed
+- WILLMA model loading succeeds before the batch run starts
+- output sync completes without `rclone` errors
+
+### V05f reproducibility checklist
+
+For each run, register at minimum:
+
+- notebook filename and version (`V05f`)
+- execution date and operator
+- source `SHARE_LINK`
+- target `RD_OUTPUT_PATH`
+- discovered file count in the diagnostic step
+- processed file count
+- failed file count
+- output synchronization status
+- any manual reruns or excluded files
+
+### V05f exception handling notes
+
+Common operational failure modes include:
+
+- missing `RD_OUTPUT_PATH`
+- invalid or expired share password
+- unsupported share URL format
+- `rclone` not installed or not on `PATH`
+- `RD:` remote not configured locally
+- uppercase file extensions being skipped by case-sensitive include filters
+- public share used incorrectly as a write target
+
+The notebook should therefore always be run in this order:
+
+```mermaid
+flowchart LR
+    A[Check env file] --> B[Check rclone and RD remote]
+    B --> C[Run setup cell]
+    C --> D[Run helper cell]
+    D --> E[Run diagnostic sync cell]
+    E --> F{Files found?}
+    F -- No --> G[Stop and fix access or filtering]
+    F -- Yes --> H[Run batch transcription]
+    H --> I[Verify local outputs]
+    I --> J[Verify sync to RD_OUTPUT_PATH]
+```
+
+---
+
+## Recommended operating procedure for reproducible notebook runs
+
+For both `V05e` and `V05f`, use this lightweight operational standard.
+
+### Run registration template
+
+Record the following before and after each run:
+
+| Field | Example |
+|---|---|
+| Notebook version | `WILLMA_WHISPER_TRANSCRIBER_V05f.ipynb` |
+| Operator | `initials or researcher name` |
+| Date/time | `2026-06-06 22:51` |
+| Input source | `SHARE_LINK` or `DEFAULT_INPUT_FOLDER` |
+| Output target | local output path or `RD_OUTPUT_PATH` |
+| Source file count | `12` |
+| Processed file count | `12` |
+| Failed file count | `0` |
+| Sync status | `success / failed / not applicable` |
+| Notes | `rerun of 2 failed files`, `share updated`, etc. |
+
+### Generic reproducibility flow
+
+```mermaid
+flowchart TD
+    A[Prepare environment and secrets] --> B[Validate input source]
+    B --> C[Run notebook setup]
+    C --> D[Run discovery / diagnostic step]
+    D --> E[Run transcription batch]
+    E --> F[Review outputs and integrity]
+    F --> G[Archive or sync outputs]
+    G --> H[Register run metadata]
+```
+
+These steps make the notebook workflow easier to reproduce, review, and hand over between analysts, project leads, and governance staff.
+
+---
+
 ## What this tool does
 
-The here described Langflow flow accepts a **private (SURF Research Drive)  or public audio or video file via encrypted https URL** (pasted into the Langflow Chat Playground).
-
-It downloads the audio file into memory, or alternativly, it extracts audio from video containers via `ffmpeg`, <br> cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
+This Langflow flow accepts a **public audio or video file URL** (pasted into the Langflow Chat Playground), downloads the file into memory, optionally extracts audio from video containers via `ffmpeg`, cleans it with a **pure-Python DSP chain**, and sends it to the **SURF WILLMA Whisper API** for transcription and **two-speaker diarization**.
 
 The output is a readable timestamped **dialogue script** rendered directly in the Chat Playground:
 
@@ -63,7 +413,7 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 
 ```
 [Chat Input]
-     │  (audio or video encrypted https URL as text)
+     │  (audio URL as text)
      ▼
 [1. WILLMA Audio Downloader]
      │  (raw audio bytes in RAM)
@@ -78,14 +428,6 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 [Chat Output]
      (dialogue script displayed in Playground)
 ```
-
-#### Grapical interfacing overview of the **"TRANSCRIBER" flow from the  Langflow GUI**
-
-<img align="center"     width="800"     src="./FIGs/TRANSCRIBER_LANGFLOW_FLOW.png"> *FLOW COMPONENTS*
-
-<img align="left"     width="300"     src="./FIGs/TRANSCRIBER_LANGFLOW_PLAYGROUND.png"> *PLAYGROUND: USER input (URL) + SYSTEM output (text)*
-
-<br><br><br><br><br><br><br><br><br><br><br><br>
 
 ### Component summary
 
@@ -108,24 +450,7 @@ All compute stays within **SURF's own data centres** — NEN-ISO/IEC 27001 compl
 | Ubuntu 22.04 VM on SRC | Public IP, DNS A-record, ports 80 / 443 / 8080 open |
 | WILLMA API key | Request via [SURF Servicedesk](https://servicedesk.surf.nl) (login via SURF/SRAM required) |
 | Docker + Docker Compose | Installed on the VM (scripts below handle this) |
-| Audio / video files accessible by encrypted https URL | Public links, like e.g. GitHub raw file URLs as well as Private, password protected, Share links from SURF RESEARCH DRIVE |
-
-
-#### How to create a password protected (private) Shared link with Research Drive / Next Cloud applicatie
-
-<img align="left"     width="300"     src="./FIGs/STAP1_klik-op-PLUS-TEKEN.png">
-<img align="left"     width="300"     src="./FIGs/COPY_PASSWORD.png">
-<img align="center"   width="300"      src="./FIGs/SURF_RESREARCH_DRIVE_EXTERNALSHARE_LINK.png">
-
-
-| Research Drive <br> Next Cloud| output | to-do |
-|-------------|-------|----------|
-| click on + sign  | produces password | past password into component 1: Willma audio downloader |
-| click on + 'copy to clipboard' icon  <img width="100" alt="image" src="https://github.com/user-attachments/assets/7d209885-c6c6-4d4a-97d3-aaf7e00b8d3a" /> | produces url: https://hr.data.surf.nl/s/E6WT93EcrJFAifE  | paste URL in Playground user input window |
-| copy \<*FILENAME*\> :<br> Ape&nbsp;and&nbsp;Super-Ape&nbsp;&nbsp;Bij&nbsp;de&nbsp;beesten&nbsp;af&nbsp;(Bert Haanstra,&nbsp;1972)&nbsp;[4K].mp4 | concatenate with Share link: https://hr.data.surf.nl/s/E6WT93EcrJFAifE>/download?path=/ \<FILENAME\>  | past in Shareable Playground  User input window |
-
-
-
+| Audio files accessible by URL | Public HTTP/HTTPS links, or GitHub raw file URLs |
 
 > **NEN-ISO/IEC 27001 compliance:** Participation in the SURF AI-HUB pilot is only permitted when the applicable information-security framework satisfies [NEN-ISO/IEC 27001](https://www.forumstandaardisatie.nl/open-standaarden/nen-isoiec-27001). SURF holds ISO 27001 certification for all its services.
 
@@ -1350,52 +1675,3 @@ This project is released under the [Creative Commons BY-ND 4.0](https://creative
 | `/audio/custom-diarization` | POST | pyannote/speaker-diarization-3.1 speaker timeline |
 
 All requests use header `X-API-KEY: <your-api-key>` and base URL `https://willma.surf.nl/api/v0`.
-
----
-
-## Changelog
-
-### V07 — Video Support + Authenticated Share Links *(current)*
-
-Based on `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
-
-#### What changed
-
-| Area | Change |
-|------|--------|
-| **Video file support** | Component 2 (Audio Preprocessor) detects video containers (`.mp4` `.mkv` `.mov` `.avi` `.webm` `.m4v` `.mpg` `.mpeg`) by file extension and calls `ffmpeg` to extract the audio track before the DSP chain runs |
-| **ffmpeg temp-file strategy** | Video bytes are written to a named `/tmp` temp file; ffmpeg reads from disk (not stdin pipe), which is required for moov-at-end MP4s (Zoom recordings, phone captures, screen recordings) |
-| **Resilient ffmpeg fallback** | If `ffmpeg` is not installed or exits non-zero, the original bytes are forwarded unchanged — the flow never breaks |
-| **Password-protected share links** | Component 1 (Audio Downloader) accepts a new **Share Link Password** (`SecretStr`) field for password-protected Nextcloud / ownCloud / SURF Research Drive public share links |
-| **Cookie-based session auth** | Replaces HTTP Basic Auth (which ownCloud/Nextcloud ignores for public shares); mirrors browser flow: GET share page → extract CSRF `requesttoken` from HTML → POST password to `/authenticate/downloadshare` → session cookie → GET download URL |
-| **Nextcloud file viewer URL rewriting** | `/apps/files/files/{id}?dir=...` viewer URLs are rewritten to `/index.php/f/{id}?download` |
-| **`AUTH_REQUIRED` error code** | Downloader returns `AUTH_REQUIRED` when the server returns HTML (wrong/missing password or login-gated link); HTTP 401/403 also maps to `AUTH_REQUIRED`; the Preprocessor propagates the code unchanged |
-| **Content-Disposition filename** | Downloader prefers the `Content-Disposition: attachment; filename=...` response header over the URL path basename |
-| **Actionable transcriber message** | Transcriber surfaces a detailed Option A/B/C guide when it receives `AUTH_REQUIRED` instead of audio bytes |
-| **Non-WAV direct path in transcriber** | Transcriber probes received bytes as a WAV container; if not valid WAV, bytes are sent to WILLMA Whisper as-is without chunking (handles ffmpeg-unavailable passthrough and native non-WAV formats) |
-| **Docker: `ffmpeg` required for video** | `RUN apt-get update && apt-get install -y ffmpeg` must be added to the Dockerfile and the image rebuilt (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) |
-
-#### Component cells in the V07 notebook
-
-| Component | V06 notebook | V07 notebook |
-|-----------|-------------|-------------|
-| 1. WILLMA Audio Downloader | cell 4 | **cell 6** |
-| 2. Audio Preprocessor | cell 7 | **cell 8** |
-| 3. WILLMA Whisper Diarized Transcriber | cell 9 | **cell 10** |
-
-#### Migration from V06 → V07
-
-1. Add `ffmpeg` to the Dockerfile (see [Step 2f](#2f-install-ffmpeg-for-video-support-v07)) and rebuild: `docker compose up -d --build`
-2. In Langflow, open the flow and update **1. WILLMA Audio Downloader** with **cell 6** from `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V07.ipynb`.
-3. Update **2. Audio Preprocessor** with **cell 8**.
-4. Update **3. WILLMA Whisper Diarized Transcriber** with **cell 10**.
-5. If you use password-protected SURF Research Drive share links, enter the share password in the new **Share Link Password** field of the Audio Downloader component.
-
----
-
-### V06 — Stable Baseline *(prior version)*
-
-Two-speaker diarization, WAV/MP3 audio support, public URL downloads, pure-Python DSP.  
-Documented in `LANGFLOW_WILLMA_WHISPER_TRANSCRIBER_V06.ipynb`. Ready-to-import flow: `URL PREPRO TRANSCR  + TIME + DIARIZATION.json`.
-
----
