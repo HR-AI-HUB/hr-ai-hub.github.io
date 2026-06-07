@@ -1368,6 +1368,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
+import xlrd
 from langflow.custom import Component
 from langflow.io import DataInput, Output, StrInput
 from langflow.schema import Data
@@ -1381,6 +1382,9 @@ class NSEInputLoadError(Exception):
 
 class NSEInvalidSpreadsheetError(NSEInputLoadError):
     """Raised when a spreadsheet file is corrupt or does not match its extension."""
+
+
+SPREADSHEET_EXCEPTIONS = (BadZipFile, ValueError, OSError, ImportError, xlrd.biffh.XLRDError)
 
 
 class NSETabularInputLoaderComponent(Component):
@@ -1438,11 +1442,11 @@ class NSETabularInputLoaderComponent(Component):
         if suffix in {".xlsx", ".xlsm"}:
             try:
                 return pd.read_excel(file_path, engine="openpyxl")
-            except (BadZipFile, ValueError, OSError, ImportError) as exc:
+            except SPREADSHEET_EXCEPTIONS as exc:
                 if "zip" in str(exc).lower() or "ole2" in str(exc).lower():
                     try:
                         return pd.read_excel(file_path, engine="xlrd")
-                    except (ValueError, OSError, ImportError) as fallback_exc:
+                    except SPREADSHEET_EXCEPTIONS as fallback_exc:
                         raise NSEInvalidSpreadsheetError(
                             f"Invalid Excel workbook '{file_path.name}': {fallback_exc}"
                         ) from fallback_exc
@@ -1450,7 +1454,7 @@ class NSETabularInputLoaderComponent(Component):
         if suffix == ".xls":
             try:
                 return pd.read_excel(file_path, engine="xlrd")
-            except (ValueError, OSError, ImportError) as exc:
+            except SPREADSHEET_EXCEPTIONS as exc:
                 raise NSEInvalidSpreadsheetError(f"Invalid Excel workbook '{file_path.name}': {exc}") from exc
         if suffix == ".json":
             raw = pd.read_json(file_path)
@@ -1504,11 +1508,15 @@ from typing import Dict
 
 import numpy as np
 import pandas as pd
+import xlrd
 from langflow.custom import Component
 from langflow.io import DataInput, Output
 from langflow.schema import Data
 from pandas.errors import ParserError
 from zipfile import BadZipFile
+
+
+SPREADSHEET_EXCEPTIONS = (BadZipFile, ValueError, OSError, ImportError, xlrd.biffh.XLRDError)
 
 
 class NSENormalizerComponent(Component):
@@ -1533,17 +1541,17 @@ class NSENormalizerComponent(Component):
         if suffix in {".xlsx", ".xlsm"}:
             try:
                 return pd.read_excel(file_path, engine="openpyxl")
-            except (BadZipFile, ValueError, OSError, ImportError) as exc:
+            except SPREADSHEET_EXCEPTIONS as exc:
                 if "zip" in str(exc).lower() or "ole2" in str(exc).lower():
                     try:
                         return pd.read_excel(file_path, engine="xlrd")
-                    except (ValueError, OSError, ImportError) as fallback_exc:
+                    except SPREADSHEET_EXCEPTIONS as fallback_exc:
                         raise ValueError(f"Invalid Excel workbook '{file_path.name}': {fallback_exc}") from fallback_exc
                 raise
         if suffix == ".xls":
             try:
                 return pd.read_excel(file_path, engine="xlrd")
-            except (ValueError, OSError, ImportError) as exc:
+            except SPREADSHEET_EXCEPTIONS as exc:
                 raise ValueError(f"Invalid Excel workbook '{file_path.name}': {exc}") from exc
         if suffix == ".json":
             raw = pd.read_json(file_path)
