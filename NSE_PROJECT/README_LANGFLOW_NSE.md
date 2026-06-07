@@ -22,6 +22,15 @@ Doel van deze fase: **beginnen met de omzetting van** `NSE-AI-HUB_EXCEL_DATA_PRE
 | 10 | [Volledige code van de eerste component](#volledige-code-van-de-eerste-component) |
 | 11 | [Hoe deze component in Langflow gebruikt kan worden](#hoe-deze-component-in-langflow-gebruikt-kan-worden) |
 | 12 | [Volgende stap in de migratie](#volgende-stap-in-de-migratie) |
+| 13 | [Opmerking over productiegeschiktheid](#opmerking-over-productiegeschiktheid) |
+| 14 | [Code van de opgesplitste componenten](#code-van-de-opgesplitste-componenten) |
+| 14.1 | [`nse_env_loader_component.py`](#nse_env_loader_componentpy) |
+| 14.2 | [`nse_research_drive_connector_component.py`](#nse_research_drive_connector_componentpy) |
+| 14.3 | [`nse_tabular_input_loader_component.py`](#nse_tabular_input_loader_componentpy) |
+| 14.4 | [`nse_normalizer_component.py`](#nse_normalizer_componentpy) |
+| 14.5 | [`nse_analyzer_component.py`](#nse_analyzer_componentpy) |
+| 14.6 | [`nse_output_writer_component.py`](#nse_output_writer_componentpy) |
+| 14.7 | [`nse_logging_component.py`](#nse_logging_componentpy) |
 
 ---
 
