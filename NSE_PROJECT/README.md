@@ -464,6 +464,24 @@ NSEEnvLoaderComponent
 | 6 | `NSEOutputWriterComponent` | Schrijft analyses en genormaliseerde datasets lokaal en naar RD |
 | 7 | `NSELoggingComponent` | Schrijft de runmetadata en diagnostiek naar logfile |
 
+### Afhandeling van corrupte of verkeerd gelabelde Excelbestanden
+
+De `NSETabularInputLoaderComponent` en `NSENormalizerComponent` gaan nu expliciet robuuster om met ongeldige Excelbestanden.
+
+Belangrijk gedrag:
+
+- `.xlsx` en `.xlsm` worden eerst gelezen met `openpyxl`
+- als dat faalt door een niet-geldige zip-structuur of een foutieve workbook-opmaak, volgt een fallback naar `xlrd`
+- als ook die fallback faalt, wordt het bestand **niet** meer als fatale componentfout behandeld
+- in plaats daarvan wordt een duidelijke melding opgenomen in `load_errors`
+
+Daardoor stopt de Langflow-keten niet meer op fouten zoals:
+
+- `File is not a zip file`
+- `Can't find workbook in OLE2 compound document`
+
+Praktisch betekent dit dat verkeerd gelabelde, corrupte of gedeeltelijk beschadigde Excelbestanden zichtbaar blijven in de outputdiagnostiek, terwijl de rest van de geldige bestanden gewoon verder verwerkt wordt.
+
 ---
 
 ## Ontwerpkeuzes voor echte Langflow-compatibiliteit
@@ -1354,10 +1372,15 @@ from langflow.custom import Component
 from langflow.io import DataInput, Output, StrInput
 from langflow.schema import Data
 from pandas.errors import ParserError
+from zipfile import BadZipFile
 
 
 class NSEInputLoadError(Exception):
     """Raised when a cached tabular input cannot be loaded."""
+
+
+class NSEInvalidSpreadsheetError(NSEInputLoadError):
+    """Raised when a spreadsheet file is corrupt or does not match its extension."""
 
 
 class NSETabularInputLoaderComponent(Component):
@@ -1415,12 +1438,20 @@ class NSETabularInputLoaderComponent(Component):
         if suffix in {".xlsx", ".xlsm"}:
             try:
                 return pd.read_excel(file_path, engine="openpyxl")
-            except Exception as exc:
+            except (BadZipFile, ValueError, OSError, ImportError) as exc:
                 if "zip" in str(exc).lower() or "ole2" in str(exc).lower():
-                    return pd.read_excel(file_path, engine="xlrd")
+                    try:
+                        return pd.read_excel(file_path, engine="xlrd")
+                    except (ValueError, OSError, ImportError) as fallback_exc:
+                        raise NSEInvalidSpreadsheetError(
+                            f"Invalid Excel workbook '{file_path.name}': {fallback_exc}"
+                        ) from fallback_exc
                 raise
         if suffix == ".xls":
-            return pd.read_excel(file_path, engine="xlrd")
+            try:
+                return pd.read_excel(file_path, engine="xlrd")
+            except (ValueError, OSError, ImportError) as exc:
+                raise NSEInvalidSpreadsheetError(f"Invalid Excel workbook '{file_path.name}': {exc}") from exc
         if suffix == ".json":
             raw = pd.read_json(file_path)
             return raw if isinstance(raw, pd.DataFrame) else pd.json_normalize(raw)
@@ -1477,6 +1508,7 @@ from langflow.custom import Component
 from langflow.io import DataInput, Output
 from langflow.schema import Data
 from pandas.errors import ParserError
+from zipfile import BadZipFile
 
 
 class NSENormalizerComponent(Component):
@@ -1501,12 +1533,18 @@ class NSENormalizerComponent(Component):
         if suffix in {".xlsx", ".xlsm"}:
             try:
                 return pd.read_excel(file_path, engine="openpyxl")
-            except Exception as exc:
+            except (BadZipFile, ValueError, OSError, ImportError) as exc:
                 if "zip" in str(exc).lower() or "ole2" in str(exc).lower():
-                    return pd.read_excel(file_path, engine="xlrd")
+                    try:
+                        return pd.read_excel(file_path, engine="xlrd")
+                    except (ValueError, OSError, ImportError) as fallback_exc:
+                        raise ValueError(f"Invalid Excel workbook '{file_path.name}': {fallback_exc}") from fallback_exc
                 raise
         if suffix == ".xls":
-            return pd.read_excel(file_path, engine="xlrd")
+            try:
+                return pd.read_excel(file_path, engine="xlrd")
+            except (ValueError, OSError, ImportError) as exc:
+                raise ValueError(f"Invalid Excel workbook '{file_path.name}': {exc}") from exc
         if suffix == ".json":
             raw = pd.read_json(file_path)
             return raw if isinstance(raw, pd.DataFrame) else pd.json_normalize(raw)
