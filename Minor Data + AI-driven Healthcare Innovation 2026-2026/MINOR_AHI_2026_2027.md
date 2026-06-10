@@ -15,7 +15,7 @@
 - [Beoogde deliverables per project](#beoogde-deliverables-per-project)
 - [Randvoorwaarden voor uitvoering](#randvoorwaarden-voor-uitvoering)
 - [Relatie met de HR AI-Hub](#relatie-met-de-hr-ai-hub)
-- [Samenvatting UbiOps SHDG Pipeline en informatiebeveiliging](#samenvatting-ubiops-shdg-pipeline-en-informatiebeveiliging)
+- [Institutionele informatiebeveiliging & richtlijnen](#institutionele-informatiebeveiliging--richtlijnen)
 - [Samenvatting](#samenvatting)
 - [License](#license)
 
@@ -286,9 +286,9 @@ Binnen het geheel van deze minor kan de HR AI-Hub daarom worden gezien als een *
 
 ---
 
-## Samenvatting UbiOps SHDG Pipeline en informatiebeveiliging
+## Institutionele informatiebeveiliging & richtlijnen
 
-De documentatie van de **UbiOps SHDG Pipeline** laat zien hoe een onderzoeksworkflow voor synthetische zorgdata kan worden opgeschaald naar een beheersbare en veilig ingerichte MLOps-pipeline. De kern bestaat uit vier opeenvolgende stappen: **FLOW01** voor documentinname en parsing, **FLOW02** voor pseudonimisering of privacy masking, **FLOW03** voor generatieve synthese van nieuwe fictieve dossiers, en **FLOW04** voor evaluatie van kwaliteit, semantische overeenkomst en privacyrisico. Deze opzet is relevant voor de minor omdat zij een concreet voorbeeld biedt van hoe studenten een AI-workflow niet alleen inhoudelijk, maar ook technisch en organisatorisch verantwoord kunnen opbouwen.
+De documentatie van de **UbiOps SHDG Pipeline** laat zien hoe een onderzoeksworkflow voor synthetische zorgdata kan worden opgeschaald naar een beheersbare en veilig ingerichte MLOps-pipeline. De kern bestaat uit vier opeenvolgende stappen: **FLOW01** voor documentinname en parsing, **FLOW02** voor pseudonimisering of privacy masking, **FLOW03** voor generatieve synthese van nieuwe fictieve dossiers, en **FLOW04** voor evaluatie van kwaliteit, semantische overeenkomst en privacyrisico. Deze opzet is relevant voor de minor omdat zij een concreet voorbeeld biedt van hoe studenten een AI-workflow niet alleen inhoudelijk, maar ook technisch en organisatorisch verantwoord kunnen opbouwen. De primaire bron voor deze werkwijze is de projectdocumentatie in de repository van de HR AI-Hub: [UbiOps SHDG Pipeline](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/tree/main/UbiOps%20SHDG%20Pipeline).
 
 Een belangrijk uitgangspunt in deze pipeline is de scheiding tussen brondata, verwerkte data en synthetische output. De bronbestanden staan in **SURF Research Drive** en worden niet publiek gedeeld, niet opgenomen in repositories en niet structureel in deployment packages opgeslagen. Voor lokale ontwikkeling kan met gecontroleerde toegang worden gewerkt via een gemounte Research Drive-omgeving, terwijl in runtime-situaties bestanden just-in-time worden opgehaald binnen de container en daarna weer worden verwijderd. Daarmee wordt het principe van dataminimalisatie praktisch toegepast.
 
