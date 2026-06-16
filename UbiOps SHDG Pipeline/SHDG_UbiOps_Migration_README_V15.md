@@ -187,6 +187,11 @@ Purpose:
 - write a local manifest after every submission
 - optionally upload the final manifest to SURF Research Drive
 
+Congruent `v2` usage:
+
+- the same helper can also target `shdg-pipeline:v2` for the validated production path by adding `--pipeline-version v2`
+- this keeps the same 13-EPD, manifest, retry, and PDF-reporting workflow while switching only the pipeline version
+
 What it does:
 
 - submits requests for the validated 13-file EPD set unless `--epd` is used
@@ -208,6 +213,7 @@ python .\DataAnalysisExpert\create_shdg_pipeline_batch_smoke_test.py [options]
 
 Most important options:
 
+- `--pipeline-version`: target pipeline version, for example `v1` or `v2`
 - `--copies-per-epd`: number of requests per source PDF
 - `--delay-seconds`: pause between submissions
 - `--output`: local manifest filename
@@ -218,6 +224,7 @@ Most important options:
 
 Minimal mental model:
 
+- `--pipeline-version` selects whether the batch targets the Azure-path smoke-test pipeline `v1` or the validated production pipeline `v2`
 - `--output` names the local manifest file
 - `--rd-manifest-name` names the optional RD upload target
 - `--copies-per-epd` and `--delay-seconds` control batch size and pacing
@@ -267,6 +274,19 @@ conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CU
 conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"; $env:UBIOPS_API_TOKEN="<your_ubiops_api_token>"; python .\DataAnalysisExpert\create_shdg_pipeline_batch_smoke_test.py --epd "EPDAfdruk_897_59037.pdf"
 ```
 
+1. Congruent 13-EPD batch smoke test for `shdg-pipeline:v2`:
+
+```powershell
+conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"; $env:UBIOPS_API_TOKEN="<your_ubiops_api_token>"; python .\DataAnalysisExpert\create_shdg_pipeline_batch_smoke_test.py --pipeline-version v2 --copies-per-epd 1 --delay-seconds 40 --output ".\dummy_v2.json"
+```
+
+Expected result for the congruent `v2` run:
+
+- the helper submits the same validated 13-file EPD set
+- the manifest structure remains the same as the `v1` batch smoke test
+- the final JSON summary reports `pipeline_version` as `v2`
+- the resulting manifest can be passed explicitly to `SMOKE_TEST/generate_smoke_test_pdf.py --input ".\dummy_v2.json"`
+
 Current observed `dummy.json` summary shape:
 
 ```json
@@ -312,7 +332,7 @@ Failure-reporting behavior:
 PDF report creation:
 
 - report script: `SMOKE_TEST/generate_smoke_test_pdf.py`
-- input: a local manifest such as `dummy.json`
+- input: a local manifest such as `dummy.json` or `dummy_v2.json`, passed explicitly with `--input` when needed
 - output: a timestamped PDF in `SMOKE_TEST`
 - format: portrait A4, with wrapped cells and split request tables so the report remains readable on a local Windows machine
 
@@ -333,7 +353,13 @@ How total duration is calculated in the PDF:
 How to create the PDF report locally:
 
 ```powershell
-conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"; python .\SMOKE_TEST\generate_smoke_test_pdf.py
+conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"; python .\SMOKE_TEST\generate_smoke_test_pdf.py --input ".\dummy.json"
+```
+
+How to create the congruent `v2` PDF report locally:
+
+```powershell
+conda activate pubmed-env; Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"; python .\SMOKE_TEST\generate_smoke_test_pdf.py --input ".\dummy_v2.json"
 ```
 
 Expected result:
@@ -402,6 +428,91 @@ Expected result:
 - FLOW03 child request completes
 - FLOW04 child request completes
 - evaluation returns a valid metrics payload, for example privacy preservation `PASS`
+
+### Step 6 - run a second distinct smoke test on `shdg-pipeline:v2`
+
+Use this when you want a separate, explicitly traceable validation request on the validated production pipeline version `v2`.
+
+Dedicated input file:
+
+- `pipeline_test_input_61014_v2.json`
+
+Input content:
+
+```json
+{
+  "pipeline_input_epd_filename": "EPDAfdruk_897_61014.pdf"
+}
+```
+
+Step-by-step operator procedure:
+
+1. Activate the validated environment.
+
+```powershell
+conda activate pubmed-env
+```
+
+1. Move to the project root.
+
+```powershell
+Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\UbiOps-NutaNix"
+```
+
+1. Load the UbiOps API token.
+
+```powershell
+$env:UBIOPS_API_TOKEN="<your_ubiops_api_token>"
+```
+
+1. Confirm the correct project is active.
+
+```powershell
+ubiops status
+ubiops current_project set shdg-hro-project
+```
+
+1. Submit the second distinct smoke test to the validated production pipeline.
+
+```powershell
+ubiops pipelines requests create shdg-pipeline -v v2 -f ".\pipeline_test_input_61014_v2.json" -fmt json
+```
+
+1. Record the returned top-level request id and confirm the request reaches `completed`.
+
+Expected validated example:
+
+- request id: `5af2a95d-fc70-4ad3-822b-b0807bbbb209`
+- pipeline: `shdg-pipeline:v2`
+- status: `completed`
+
+1. Validate the output payload.
+
+Expected output shape:
+
+```json
+{
+  "evaluation_metrics": {
+    "cosine_similarity": 0.7124427995296532,
+    "privacy_preservation_status": "PASS"
+  },
+  "synthetic_document": "ubiops-file://default/deployment_requests/53747694-07e7-4161-9fa5-08657cb37cbb/output/synthetic_dossier.md"
+}
+```
+
+1. Validate the object-level execution chain.
+
+Minimum checks:
+
+- `flow01` completed on `flow01-02-ingest-anonymize:v1`
+- `flow03` completed on `flow03-ga-synthesis:v3`
+- `flow04` completed on `flow04-evaluator:v1`
+- `privacy_preservation_status` is `PASS`
+
+Interpretation:
+
+- this request is distinct from the earlier batch smoke test because it targets one named EPD, one top-level request id, and the validated production pipeline version `v2`
+- it is suitable as a clean operator-facing proof that the production path can complete end-to-end for a known input file
 
 ---
 
