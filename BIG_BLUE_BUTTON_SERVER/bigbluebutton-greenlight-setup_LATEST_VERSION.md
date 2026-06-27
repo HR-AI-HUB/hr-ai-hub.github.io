@@ -4,6 +4,14 @@ A step-by-step installation guide for deploying BigBlueButton (BBB) with the Gre
 
 ---
 
+## Context
+
+Web conferencing software enables groups of users to meet remotely over the internet. Its primary role in education is supporting synchronous communication — allowing teachers and students to interact in real time through audio and video. Typical features include voice and video calls, screen sharing, live chat, file sharing, audience polling, presentation tools, and session recording.
+
+Beyond teaching, web conferencing platforms are increasingly used as a research instrument. Conducting interviews online removes geographic barriers and can reduce the social pressure participants sometimes feel in face-to-face settings. Because BigBlueButton is self-hosted, researchers retain full control over where data is stored and processed — no recordings or transcripts pass through third-party commercial servers. This makes it a compelling choice for studies that require strong privacy safeguards, such as interviews with vulnerable populations, sensitive health topics, or participants in legally protected circumstances.
+
+BigBlueButton runs entirely inside standard desktop and mobile web browsers using HTML5 and CSS, requiring no plugins or client installations. Self-hosting the platform demands a dedicated server and a degree of technical expertise. Its core components are licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0), a license with specific implications for how the software may be modified and distributed.
+
 ## Prerequisites
 
 Before you begin, make sure you have:
