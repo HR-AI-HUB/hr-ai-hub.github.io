@@ -188,6 +188,28 @@ Grafana is also provisioned automatically in Docker Compose mode:
 
 That means a fresh `docker compose up --build -d` can recreate the Prometheus datasource and load the dashboard without manual UI setup.
 
+To stop the Docker-based demo stack:
+
+```powershell
+Set-Location "D:\OneDrive - Hogeschool Rotterdam\1_CURRENT_DOCUMENTS\DATALAB_ALIGNMENT\PROMETHEUS+GRAFANA\grafana_model_monitoring"
+docker compose down --remove-orphans
+```
+
+If a local notebook-hosted app or a direct `python src/app.py` run is still active on port `8000`, check it with:
+
+```powershell
+Get-NetTCPConnection -LocalPort 8000 -State Listen | Select-Object LocalPort, OwningProcess
+Get-Process -Id <PID>
+```
+
+Then stop it with:
+
+```powershell
+Stop-Process -Id <PID> -Force
+```
+
+If the app was started from a Jupyter notebook, stopping the notebook cell or restarting the kernel is the cleaner option.
+
 ## Final Outcome
 
 The Grafana dashboard was created and verified in the running Grafana instance.
