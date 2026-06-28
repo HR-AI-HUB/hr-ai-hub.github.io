@@ -1,0 +1,28 @@
+services:
+  tutorial-app:
+    build: .
+    container_name: tutorial-app
+    ports:
+      - "8000:8000"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.docker.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - tutorial-app
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./dashboards:/etc/grafana/provisioning/dashboards/json
+    depends_on:
+      - prometheus
