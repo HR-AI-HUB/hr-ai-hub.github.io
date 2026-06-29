@@ -28,6 +28,10 @@ Het doel van deze flow is: een document inlezen, opslaan in Chroma als embedding
 [Prompt] -> [WillmaModel] -> [Chat Output]
 ```
 
+
+<img width="1232" height="553" alt="Screenshot 2026-06-29 041455" src="https://github.com/user-attachments/assets/41e20589-6339-497b-8884-156fab2f08e4" />
+
+
 ## Stap voor stap opbouw van de flow
 
 ### Stap 1. Chat Input
