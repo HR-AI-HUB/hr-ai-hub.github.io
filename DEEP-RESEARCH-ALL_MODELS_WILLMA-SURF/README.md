@@ -1,4 +1,4 @@
-# README - Deep Research Multi-Agent Pipeline (WILLMA SURF) in Langflow
+# TRUTH FINDING WITH AI using SURF AI-HUb in Langflow
 
 ## Inleiding
 
@@ -18,6 +18,10 @@ Het doel van deze flow is: een complexe gebruikersvraag aannemen, het internet d
 
 Hieronder is de visuele weergave van de architectuur te zien. De keten van agenten is aan elkaar gekoppeld, beginnend bij de input en eindigend bij de verschillende output stappen.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d2754b011b1d0f4fa85b7c539808f7d88ac55115
 ![Langflow Deep Research Pipeline Overview](FIGs/DEEP_RESEARCH_FLOW_EXAMPLE_BETA_V001.png)
 *(Visualisatie van de opstelling in Langflow met de 5 WILLMA SURF Agent nodes gekoppeld aan de Web Search en Chat in/outputs)*
 
@@ -176,14 +180,23 @@ Om voor data scientists en stewards de validatiestappen en data lineage visueel 
 ### Stap 1: Het probleem van naïeve bevraging
 Wanneer we een dergelijke vraag direct aan een model stellen zonder research-flow, botst het tegen kennislimieten aan en kan het geen up-to-date, gevalideerde lijst genereren.
 
+<<<<<<< HEAD
 ![Generiek Antwoord Zonder Research](FIGs/TOP_TIER_PROMPT_ANSWER_001.png)
+=======
+![Generiek Antwoord Zonder Research](FIGs/TOP_TIER_PROMPT_ANSWER_001.jpg)
+>>>>>>> d2754b011b1d0f4fa85b7c539808f7d88ac55115
 *(Standaard LLM output zonder toegang tot live data)*
 
 ### Stap 2: Activering van de Reviewer & Summarizer Agents
 Zodra de flow start, analyseert *Agent 3 & 4 (Reviewers)* de ontbrekende informatie ('Gaps') op basis van de initiële aannames. Ze instrueren de onderliggende search/summarize agents over wat er precies ontbreekt (zoals benchmark scores, multimodale parameters, etc.). 
 
+<<<<<<< HEAD
 ![Gaps en Nieuwe Subvragen Deel 1](FIGs/TOP_TIER_PROMPT_ANSWER_003.png)
 ![Gaps en Nieuwe Subvragen Deel 2](FIGs/TOP_TIER_PROMPT_ANSWER_004.png)
+=======
+![Gaps en Nieuwe Subvragen Deel 1](./FIGs/TOP_TIER_PROMPT_ANSWER_003-4.jpg)
+![Gaps en Nieuwe Subvragen Deel 2](../FIGs/TOP_TIER_PROMPT_ANSWER_004-5.jpg)
+>>>>>>> d2754b011b1d0f4fa85b7c539808f7d88ac55115
 *(De Reviewer agents identificeren hiaten en sturen iteratief het onderzoek aan)*
 
 *Agent 2 (Summarization Expert)* verzamelt vervolgens de vers geparste web-data en synthetiseert betrouwbare, controleerbare (bron-geciteerde) samenvattingen voor elke subvraag.
