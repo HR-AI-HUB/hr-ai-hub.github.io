@@ -19,7 +19,7 @@ Het doel van deze flow is: een complexe gebruikersvraag aannemen, het internet d
 Hieronder is de visuele weergave van de architectuur te zien. De keten van agenten is aan elkaar gekoppeld, beginnend bij de input en eindigend bij de verschillende output stappen.
 
 
-![Langflow Deep Research Pipeline Overview](./FIGs/TOP_TIER_PROMPT_ANSWER_001.pn)
+![Langflow Deep Research Pipeline Overview](../FIGs/TOP_TIER_PROMPT_ANSWER_001.pn)
 *(Visualisatie van de opstelling in Langflow met de 5 WILLMA SURF Agent nodes gekoppeld aan de Web Search en Chat in/outputs)*
 
 Schematisch ziet de flow er als volgt uit:
