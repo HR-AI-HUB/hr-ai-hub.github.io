@@ -176,7 +176,7 @@ Om voor data scientists en stewards de validatiestappen en data lineage visueel 
 ### Stap 1: Het probleem van naïeve bevraging
 Wanneer we een dergelijke vraag direct aan een model stellen zonder research-flow, botst het tegen kennislimieten aan en kan het geen up-to-date, gevalideerde lijst genereren.
 
-![Generiek Antwoord Zonder Research](FIGs/TOP_TIER_PROMPT_ANSWER_001-2.jpg)
+![Generiek Antwoord Zonder Research](FIGs/TOP_TIER_PROMPT_ANSWER_001.jpg)
 *(Standaard LLM output zonder toegang tot live data)*
 
 ### Stap 2: Activering van de Reviewer & Summarizer Agents
