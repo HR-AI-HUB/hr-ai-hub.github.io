@@ -1,4 +1,4 @@
-# README - Deep Research Multi-Agent Pipeline (WILLMA SURF) in Langflow
+# TRUTH FINDING WITH AI using SURF AI-HUb in Langflow
 
 ## Inleiding
 
