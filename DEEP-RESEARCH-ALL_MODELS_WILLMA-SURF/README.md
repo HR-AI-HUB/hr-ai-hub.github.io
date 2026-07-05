@@ -182,7 +182,7 @@ Wanneer we een dergelijke vraag direct aan een model stellen zonder research-flo
 ### Stap 2: Activering van de Reviewer & Summarizer Agents
 Zodra de flow start, analyseert *Agent 3 & 4 (Reviewers)* de ontbrekende informatie ('Gaps') op basis van de initiële aannames. Ze instrueren de onderliggende search/summarize agents over wat er precies ontbreekt (zoals benchmark scores, multimodale parameters, etc.). 
 
-![Gaps en Nieuwe Subvragen Deel 1](../FIGs/TOP_TIER_PROMPT_ANSWER_003-4.jpg)
+![Gaps en Nieuwe Subvragen Deel 1](./FIGs/TOP_TIER_PROMPT_ANSWER_003-4.jpg)
 ![Gaps en Nieuwe Subvragen Deel 2](../FIGs/TOP_TIER_PROMPT_ANSWER_004-5.jpg)
 *(De Reviewer agents identificeren hiaten en sturen iteratief het onderzoek aan)*
 
