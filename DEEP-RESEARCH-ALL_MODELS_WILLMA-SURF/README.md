@@ -3,6 +3,7 @@
 ## Inleiding
 
 Deze README beschrijft stap voor stap hoe de werkende Langflow is opgebouwd uit het bestand `DEEP-RESEARCH-ALL_MODELS_WILLMA-SURF.json`. 
+Geintereseerde kunnen mailen naar R.F.van.der.willigen@hr.nl met verzoek om te kunnen beschikken over de json flow file.
 
 De flow implementeert een geavanceerde **Multi-Agent Deep Research pipeline** met:
 
