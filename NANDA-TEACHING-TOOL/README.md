@@ -4,6 +4,8 @@ This document provides a complete, end-to-end use case of the **NANDA-TEACHING-T
 
 ---
 
+<img width="1244" height="561" alt="NANDA_TEACHER_FLOW" src="https://github.com/user-attachments/assets/eaba202e-5f48-4154-832c-4e054daa3c6a" />
+
 
 ## Purpose of the Flow
 The **NANDA-TEACHING-TOOL-SQL** is a multi-agent Langflow application designed to act as an advanced educational aid for healthcare workers and nursing students. It transforms a standard deep-research AI pipeline into a specialized clinical reasoning mentor.
