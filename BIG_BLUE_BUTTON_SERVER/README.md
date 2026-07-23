@@ -40,7 +40,7 @@ De firewall en security groups van de instance zijn geconfigureerd met de volgen
 
 ## 3. Automatisch Installatiescript (`create_BBB+greenlightv3.sh`)
 
-In plaats van handmatige stappen is het gehele deploymentproces geautomatiseerd middels het volgende bash-script:
+Het gehele deploymentproces geautomatiseerd middels het volgende bash-script:
 
 ```bash
 #!/bin/bash
@@ -114,6 +114,20 @@ echo "[+] Admin Email:  $ADMIN_EMAIL"
 echo "[+] Admin Pass:   $ADMIN_PASSWORD"
 echo "=========================================================================="
 ```
+Aanmaken & Activeren van het script:
+>
+> nano create_BBB+greenlightv3.sh
+>
+> copy paste de bovenstaande code
+>
+> ctr X
+>
+> shift Y
+>
+>chmod +x ./create_BBB+greenlightv3.sh
+>
+>sudo ./create_BBB+greenlightv3.sh
+>
 
 ---
 
@@ -122,13 +136,13 @@ echo "==========================================================================
 Tijdens de live implementatie kon het standaardwachtwoord vanwege complexiteitseisen of Bash-escape tekens specifiek worden ingesteld via de volgende handmatige rake-opdracht:
 
 ```bash
-sudo docker compose -f /root/greenlight-v3/docker-compose.yml exec greenlight-v3 bundle exec rake 'admin:create[admin,aihubpilot@hr.nl,Eb462902-e974-4113-a873-947aa360fcec!]'
+sudo docker compose -f /root/greenlight-v3/docker-compose.yml exec greenlight-v3 bundle exec rake 'admin:create[admin,aihubpilot@hr.nl,Exxxxxxx!]'
 ```
 
 **Credentials Resultaat:**
 - **Name:** `admin`
 - **Email:** `aihubpilot@hr.nl`
-- **Password:** `Eb462902-e974-4113-a873-947aa360fcec!`
+- **Password:** `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 - **Role:** `Administrator`
 
 ---
