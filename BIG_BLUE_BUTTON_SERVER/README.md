@@ -114,6 +114,11 @@ echo "[+] Admin Email:  $ADMIN_EMAIL"
 echo "[+] Admin Pass:   $ADMIN_PASSWORD"
 echo "=========================================================================="
 ```
+Activeren van het script:
+>
+>chmod +x ./create_BBB+greenlightv3.sh
+>sudo ./create_BBB+greenlightv3.sh
+>
 
 ---
 
