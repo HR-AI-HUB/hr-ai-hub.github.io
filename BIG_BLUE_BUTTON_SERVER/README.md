@@ -119,7 +119,9 @@ Aanmaken & Activeren van het script:
 > nano create_BBB+greenlightv3.sh
 >
 > copy paste de bovenstaande code
+>
 > ctr X
+>
 > shift Y
 >
 >chmod +x ./create_BBB+greenlightv3.sh
