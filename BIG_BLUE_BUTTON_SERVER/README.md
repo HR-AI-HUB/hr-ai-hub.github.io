@@ -136,7 +136,7 @@ Aanmaken & Activeren van het script:
 Tijdens de live implementatie kon het standaardwachtwoord vanwege complexiteitseisen of Bash-escape tekens specifiek worden ingesteld via de volgende handmatige rake-opdracht:
 
 ```bash
-sudo docker compose -f /root/greenlight-v3/docker-compose.yml exec greenlight-v3 bundle exec rake 'admin:create[admin,aihubpilot@hr.nl,Eb462902-e974-4113-a873-947aa360fcec!]'
+sudo docker compose -f /root/greenlight-v3/docker-compose.yml exec greenlight-v3 bundle exec rake 'admin:create[admin,aihubpilot@hr.nl,Exxxxxxx!]'
 ```
 
 **Credentials Resultaat:**
