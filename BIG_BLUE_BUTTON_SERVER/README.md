@@ -40,7 +40,7 @@ De firewall en security groups van de instance zijn geconfigureerd met de volgen
 
 ## 3. Automatisch Installatiescript (`create_BBB+greenlightv3.sh`)
 
-In plaats van handmatige stappen is het gehele deploymentproces geautomatiseerd middels het volgende bash-script:
+Het gehele deploymentproces geautomatiseerd middels het volgende bash-script:
 
 ```bash
 #!/bin/bash
@@ -114,7 +114,13 @@ echo "[+] Admin Email:  $ADMIN_EMAIL"
 echo "[+] Admin Pass:   $ADMIN_PASSWORD"
 echo "=========================================================================="
 ```
-Activeren van het script:
+Aanmaken & Activeren van het script:
+>
+> nano create_BBB+greenlightv3.sh
+>
+> copy paste de bovenstaande code
+> ctr X
+> shift Y
 >
 >chmod +x ./create_BBB+greenlightv3.sh
 >
