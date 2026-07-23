@@ -128,7 +128,7 @@ sudo docker compose -f /root/greenlight-v3/docker-compose.yml exec greenlight-v3
 **Credentials Resultaat:**
 - **Name:** `admin`
 - **Email:** `aihubpilot@hr.nl`
-- **Password:** `Eb462902-e974-4113-a873-947aa360fcec!`
+- **Password:** `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 - **Role:** `Administrator`
 
 ---
