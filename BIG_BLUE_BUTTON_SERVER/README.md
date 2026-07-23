@@ -117,6 +117,7 @@ echo "==========================================================================
 Activeren van het script:
 >
 >chmod +x ./create_BBB+greenlightv3.sh
+>
 >sudo ./create_BBB+greenlightv3.sh
 >
 
