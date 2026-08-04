@@ -60,7 +60,7 @@ That means the notebook reproduced a true rate-limiting pattern rather than a va
 
 The executed notebook produces one figure with three side-by-side plots.
 
-![WiLLMa stress test plots](assets/results/willma_stress_test_plots.png)
+![WiLLMa stress test plots](FIGs/willma_stress_test_plots.png)
 
 The left plot shows success rate, the middle plot shows failure counts by type, and the right plot shows latency. The explanations below describe how each of these visuals should be interpreted.
 
