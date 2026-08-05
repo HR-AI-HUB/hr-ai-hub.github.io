@@ -1,0 +1,6 @@
+concurrency_level,total_requests,success_count,rate_limited_count,timeout_count,server_error_count,other_error_count,success_rate,avg_latency_seconds,max_latency_seconds,http_errors_seen
+1,10,10,0,0,0,0,1.0,10.636,11.521,none
+5,10,10,0,0,0,0,1.0,11.047,11.927,none
+10,10,5,5,0,0,0,0.5,5.686,12.094,429
+15,10,5,5,0,0,0,0.5,5.745,11.988,429
+20,10,5,5,0,0,0,0.5,5.578,12.116,429

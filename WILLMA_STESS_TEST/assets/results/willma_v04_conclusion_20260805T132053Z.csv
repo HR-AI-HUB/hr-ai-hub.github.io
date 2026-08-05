@@ -1,0 +1,10 @@
+statement
+Selected model: mistralai/Mistral-Small-3.2-24B-Instruct-2506
+Direct run executed: True
+Proxy run executed: True
+Direct HTTP 429 total: 0
+Proxy HTTP 429 total: 0
+Direct request error total: 0
+Proxy request error total: 9
+"Likely interpretation: At least one mode shows local request errors. Inspect transport, connectivity, and proxy configuration before concluding this is purely upstream throttling."
+Proxy log path: D:\OneDrive - Hogeschool Rotterdam\SURF_PILOT\AI_HUB_PILOT\WILLMA_STRESS_TESTS\assets\proxy\mitmproxy.log

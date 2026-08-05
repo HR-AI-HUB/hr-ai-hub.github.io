@@ -1,0 +1,6 @@
+statement
+Selected model: mistralai/Mistral-Small-3.2-24B-Instruct-2506
+Single-user success rate: 1.000
+Total rate-limited responses at concurrency 10-20: 15
+Total timeout responses at concurrency 10-20: 0
+Likely interpretation: The notebook reproduces HTTP 429 rate limiting under higher parallel usage.

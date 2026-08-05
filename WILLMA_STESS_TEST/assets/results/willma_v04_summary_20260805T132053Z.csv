@@ -1,0 +1,7 @@
+transport_mode,concurrency_level,total_requests,success_count,rate_limited_count,timeout_count,request_error_count,server_error_count,other_error_count,success_rate,avg_latency_seconds,max_latency_seconds,http_errors_seen
+direct,1,3,3,0,0,0,0,0,1.0,25.778,27.099,none
+direct,2,3,3,0,0,0,0,0,1.0,27.614,28.987,none
+direct,3,3,3,0,0,0,0,0,1.0,27.261,29.368,none
+proxy,1,3,0,0,0,3,0,0,0.0,2.041,2.061,none
+proxy,2,3,0,0,0,3,0,0,0.0,2.034,2.037,none
+proxy,3,3,0,0,0,3,0,0,0.0,2.057,2.062,none

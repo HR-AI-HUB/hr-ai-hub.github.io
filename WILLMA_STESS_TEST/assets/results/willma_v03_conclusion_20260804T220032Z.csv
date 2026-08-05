@@ -1,0 +1,9 @@
+statement
+Selected model: mistralai/Mistral-Small-3.2-24B-Instruct-2506
+Transport mode: direct
+Single-user success rate: 1.000
+Total HTTP 429 responses at concurrency 10-20: 45
+Total request errors at concurrency 10-20: 0
+Total timeout responses at concurrency 10-20: 0
+Likely interpretation: The notebook reproduces upstream HTTP 429 throttling under higher parallel usage.
+Proxy log path: D:\OneDrive - Hogeschool Rotterdam\SURF_PILOT\AI_HUB_PILOT\WILLMA_STRESS_TESTS\assets\proxy\mitmproxy.log
