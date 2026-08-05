@@ -13,10 +13,11 @@ The practical concern was not whether a single notebook user could occasionally 
 5. Does single-user usage remain mostly error free while concurrent usage fails?
 
 This work was carried out by Tech Lead Rob van der Willigen as part of:
-
 [HR AI Hub](https://hr-ai-hub.github.io/)
 
-The goal of this notebook was to replace a more complex earlier notebook with a much simpler and more readable test that directly answers those questions.
+
+[Sibling folder README](../README_V04_PROXT_TEST.md)
+
 
 ## Why This Stress Test Was Needed
 
