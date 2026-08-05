@@ -2,7 +2,7 @@
 
 ## Context
 
-This README focuses on one question: are the WiLLMa failures caused by the local notebook setup, or by the WiLLMa service upstream at SURF?
+Are the WiLLMa failures of concurrent LLM jobs caused by the local notebook setup, or by the WiLLMa service upstream at SURF?
 
 To answer that, V04 runs the same stress test in two ways:
 
