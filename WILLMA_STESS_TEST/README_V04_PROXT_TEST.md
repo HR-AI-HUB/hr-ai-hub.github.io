@@ -18,20 +18,6 @@ The executed V04 run used:
 - `10` requests per round
 - selected model `mistralai/Mistral-Small-3.2-24B-Instruct-2506`
 
-## Key Result
-
-The latest V04 run produced the same pattern in both transport modes:
-
-- concurrency `1`: `30/30` success
-- concurrency `5`: `30/30` success
-- concurrency `10`: `15/30` success and `15` HTTP `429`
-- concurrency `15`: `15/30` success and `15` HTTP `429`
-- concurrency `20`: `15/30` success and `15` HTTP `429`
-- request errors: `0`
-- timeouts: `0`
-
-This means the proxy did not introduce the failure pattern. Direct mode and proxy mode both showed the same threshold and the same `429` counts.
-
 ## Main Conclusion
 
 The most important findings are:
