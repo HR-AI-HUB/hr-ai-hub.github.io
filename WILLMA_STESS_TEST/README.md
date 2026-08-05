@@ -12,14 +12,12 @@ The practical concern was not whether a single notebook user could occasionally 
 4. Is the problem the same as downtime, or is it a different failure mode?
 5. Does single-user usage remain mostly error free while concurrent usage fails?
 
+Additional test were performed  whether WiLLMa failures are caused locally or upstream at SURF. 
+>> [STESS_TEST WITH PROXY](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/WILLMA_STESS_TEST/README_V04_PROXT_TEST.md)
+>
+
 This work was carried out by Tech Lead Rob van der Willigen as part of:
 [HR AI Hub](https://hr-ai-hub.github.io/)
-
-
- 
->>
->> [STESS_TEST WITH PROXY](https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/WILLMA_STESS_TEST/README_V04_PROXT_TEST.md)
-This README checks whether WiLLMa failures are caused locally or upstream at SURF. 
 
 ## Why This Stress Test Was Needed
 
