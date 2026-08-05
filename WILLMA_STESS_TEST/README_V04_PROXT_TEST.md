@@ -11,8 +11,8 @@ To answer that, V04 runs the same stress test in two ways:
 
 If both paths fail in the same way, the proxy and local notebook are unlikely to be the root cause.
 
-The executed V04 run used:
-
+The executed notebook called:  WILLMA_STRESS_TEST_V04.ipynb 
+used:
 - concurrency levels `1, 5, 10, 15, 20`
 - `3` rounds per level
 - `10` requests per round
