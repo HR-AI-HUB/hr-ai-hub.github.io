@@ -1680,6 +1680,8 @@ print(f'Wrote {len(apa_references)} APA-style references: {apa_references_path}'
 
 ## Appendix C. Recipe: Reusing the Workflow for a New Clinical-Reasoning Topic
 
+SEE also: https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/NandA-found-sources-on-clinical-reasoning-through-SLR.md
+
 <details>
 <summary>Clinical-reasoning reuse recipe <sub>companion protocol-design example</sub></summary>
 
