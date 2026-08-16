@@ -19,14 +19,15 @@ A systematic literature review (SLR) is a structured method to find, screen, and
 The aim of SLR-Engine is to give anyone with a topic they want to explore — students and self-learners, researchers, business and consulting teams with a research question — an easy, lightweight way to do it, grounded in academic papers.
 Less time, less effort, no methodology background required, but built on the same proven methodology that researchers around the world use.
 
-For a detailed introduction on the original approach as created by Tui see https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/docs/articles/introduction-to-slr-engine.md
+For a detailed introduction on the original approach as created by Tui see https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/docs/articles/introduction-to-slr-engine.md.
+
 The motivation behind building an *Open-source engine for running systematic literature review* is described here: https://github.com/tuirk/SLR-Engine/blob/main/docs/articles/why-i-built-slr-engine.md
 
-**Topic:** An automated, AI-assisted systematic literature review addressing:
+### **Topic:** An automated, AI-assisted systematic literature review addressing:
 
 **The Problem With Using AI to Review AI-Written Code**
 
-**Aim:** To synthesize empirical evidence on the reliability, risks, and forms of human oversight required when AI systems evaluate AI-generated code.
+### **Aim:** To synthesize empirical evidence on the reliability, risks, and forms of human oversight required when AI systems evaluate AI-generated code.
 
 This custom-made implementation  [SLR-Engine](https://github.com/tuirk/SLR-Engine) separates retrieved evidence, AI-assisted advice, and the ranking used for inspection. Automated output does not replace scholarly judgement.
 
