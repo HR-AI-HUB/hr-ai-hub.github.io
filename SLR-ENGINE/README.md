@@ -16,6 +16,8 @@ Generated: 2026-08-16 05:43 UTC
 
 ## Scope
 
+SEE ALSO: https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/docs/articles/introduction-to-slr-engine.md
+
 **Topic:** An automated, AI-assisted systematic literature review addressing:
 
 **The Problem With Using AI to Review AI-Written Code**
