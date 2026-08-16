@@ -48,16 +48,14 @@ SURF_AI_HUB_API_KEY=replace-with-your-api-key
 # Leave unset to let the notebook select the largest eligible discovered model.
 SURF_AI_HUB_MODEL=Qwen/Qwen2.5-VL-32B-Instruct-AWQ
 ```
-
-<details>
-<summary>Environment parameter reference <sub>optional supporting detail</sub></summary>
+<div style="font-size: smaller;">
 
 | Parameter | Required | Purpose | Example value | 
 | --- | --- | --- | --- |
 | `SURF_AI_HUB_API_KEY` | Yes | Authenticates model-discovery and chat requests to SURF AI-HUB. | `replace-with-your-api-key` |
 | `SURF_AI_HUB_MODEL` | No | Pins an eligible model visible to the supplied API key. If omitted, the notebook discovers and selects the largest eligible model. | `Qwen/Qwen2.5-VL-32B-Instruct-AWQ` |
 
-</details>
+</div>
 
 ### What WILLMA Actually Did
 
@@ -85,9 +83,7 @@ Human review required: yes
 The notebook searched OpenAlex, Crossref, arXiv, and Semantic Scholar, capped at 25 source hits each. A source failure is an audit limitation, not evidence of no results.
 
 ### Literal Queries
-
-<details>
-<summary>Source-specific literal queries <sub>audit detail</sub></summary>
+<div style="font-size: smaller;">
 
 **OpenAlex**
 
@@ -121,13 +117,11 @@ The notebook searched OpenAlex, Crossref, arXiv, and Semantic Scholar, capped at
   ]
 }
 ```
-
-</details>
+</div>
 
 ### Retrieval and Processing Audit
 
-<details>
-<summary>Retrieval, screening, and download audit <sub>audit detail</sub></summary>
+<div style="font-size: smaller;">
 
 Canonical records after deduplication: **75**.
 
@@ -152,14 +146,13 @@ Download outcomes represent lawful open-access retrieval attempts only; publishe
 | skipped_closed | 1 |
 | success | 5 |
 
-</details>
+</div>
 
 ## Relevance Ranking
 
 Ranking is an inspection aid, not an inclusion decision. Score = number of matched topic terms + 4 for a committed title/abstract include decision + 2 for a verified downloaded open-access PDF. The rationale is listed for each paper.
 
-<details>
-<summary>Top 20 ranked records <sub>inspection aid</sub></summary>
+<div style="font-size: smaller;">
 
 | Rank | Paper | Evidence |
 | --- | --- | --- |
@@ -183,8 +176,7 @@ Ranking is an inspection aid, not an inclusion decision. Score = number of match
 | 18 | **A Review of Research on AI-Assisted Code Generation and AI-Driven Code Review**<br>Wang, Y. (2025) | **Score: 4**<br>matched: code review, llm, large language model, code generation<br>Sources: crossref |
 | 19 | **BitsAI-CR: Automated Code Review via LLM in Practice**<br>Sun, T., Xu, J. Q., Li, Y., Yan, Z., Zhang, G., Xie, L., Geng, L., Wang, Z., Chen, Y., Lin, Q., Duan, W., Sui, K., & Zhu, Y. (2025) | **Score: 4**<br>matched: code review, automated code review, llm, large language model<br>Sources: openalex |
 | 20 | **Can LLMs Replace Human Evaluators? An Empirical Study of LLM-as-a-Judge in Software Engineering**<br>Wang, R., Guo, J., Gao, C., Fan, G., Chong, C. Y., & Xia, X. (2025) | **Score: 4**<br>matched: llm, large language model, generated code, code generation<br>Sources: openalex |
-
-</details>
+</div>
 
 The table is limited to the 20 highest-ranked records; the complete metadata remains in the project database and source inventory below.
 
@@ -192,10 +184,7 @@ The table is limited to the 20 highest-ranked records; the complete metadata rem
 
 This inventory contains the deduplicated records retrieved by the SLR workflow from OpenAlex, Crossref, arXiv, and Semantic Scholar. Entries use APA 7-style author, date, title, source, volume, issue, pages, and DOI/URL formatting when metadata is available. DOI URLs are retained. DOI-bearing records are enriched from Crossref and cached in the local audit database; records without a DOI or unavailable Crossref metadata retain the source fields provided by the original search result. Appearing here does not by itself indicate a final eligibility decision, methodological-quality assessment, or full-text review.
 
-<details>
-<summary>Complete source inventory <sub>75 deduplicated records</sub></summary>
-
-<ol>
+<ol style="font-size: smaller;">
 
 <li>Aarti, A. (2024). Generative Ai in Software Development : an Overview and Evaluation of Modern Coding Tools. <em>International Journal For Multidisciplinary Research</em>, <em>6</em>(3). <a href="https://doi.org/10.36948/ijfmr.2024.v06i03.23271">https://doi.org/10.36948/ijfmr.2024.v06i03.23271</a></li>
 <li>Ahmed, S. (2025). Integrating AI-Driven Automated Code Review in Agile Development: Benefits, Challenges, and Best Practices. <em>International Journal of Advanced Engineering, Management and Science</em>, <em>11</em>(2), 01-10. <a href="https://doi.org/10.22161/ijaems.112.1">https://doi.org/10.22161/ijaems.112.1</a></li>
@@ -274,34 +263,29 @@ This inventory contains the deduplicated records retrieved by the SLR workflow f
 <li>Çağlar, S., Gökırmak, k. E., & Tüzün, E. (2026). Automated Classification of Human Code Review Comments with Large Language Models. <em>cs.SE</em>. <a href="https://arxiv.org/pdf/2604.23667v1">https://arxiv.org/pdf/2604.23667v1</a></li>
 </ol>
 
-</details>
-
 ## Reproducibility Notes
 
-<details>
-<summary>Audit-retention notes <sub>publication checklist</sub></summary>
+<div style="font-size: smaller;">
 
 - The project directory and SQLite audit database retain queries, source hits, deduplication, screening decisions, download attempts, and local PDF paths.
 - SURF AI-HUB advice is runtime-selected and displayed without writing a decision; record the selected model and request scope before publication.
 - Review results, especially metadata-only records and screening decisions, before publication.
 
-</details>
+</div>
 
 ### Jupyter Kernel Transport Security
 
-<details>
-<summary>Local and remote kernel controls <sub>security note</sub></summary>
+<div style="font-size: smaller;">
 
 The warning means ZeroMQ traffic between the notebook interface and kernel is not transport-encrypted. For local Windows use, it is informational when VS Code and the kernel run on the same machine through `127.0.0.1`; do not expose that traffic to a network. IPC is not the dependable Windows alternative.
 
 Keep `jupyter_client`, `ipykernel`, and `pyzmq` current in `prisma-env`; keep secrets out of cells and outputs; and store them only in the uncommitted local `.env`. For a remote kernel, use VS Code Remote SSH or an SSH tunnel with Jupyter bound to `127.0.0.1`. Organization-managed or network-accessible kernels should use administrator-provisioned CurveZMQ encryption.
 
-</details>
+</div>
 
 ## Appendix A. Verantwoording en correcties
 
-<details>
-<summary>Transparency, legal, and ethical qualifications <sub>supporting material</sub></summary>
+<div style="font-size: smaller;">
 
 Deze rapportage is opgesteld met ondersteuning van generatieve AI. De auteur blijft verantwoordelijk voor de onderzoeksopzet, de controle van de feiten, de selectie van bronnen, de inhoudelijke interpretatie en de uiteindelijke tekst. AI-uitvoer is gebruikt als ondersteuning en niet als zelfstandig bewijs of als vervanging van menselijk oordeel.
 
@@ -321,12 +305,11 @@ Deze rapportage is opgesteld met ondersteuning van generatieve AI. De auteur bli
 
 Deze appendix is een transparantieverklaring voor deze rapportage en geen juridisch advies. Bij verwerking van persoonsgegevens of inzet in een gereguleerde context is aanvullende toetsing nodig.
 
-</details>
+</div>
 
 ## Appendix B. Reproducible Procedure and Code-Cell Explanation
 
-<details>
-<summary>Local reproduction procedure and verbatim notebook code <sub>technical appendix</sub></summary>
+<div style="font-size: smaller;">
 
 This appendix documents the executable V04 workflow. It enables local reproduction without treating AI output as a final scholarly decision.
 
@@ -1352,12 +1335,9 @@ report_lines.extend([
     '',
     'Ranking is an inspection aid, not an inclusion decision. Score = number of matched topic terms + 4 for a committed title/abstract include decision + 2 for a verified downloaded open-access PDF. The rationale is listed for each paper.',
     '',
-    '<details>',
-    '<summary>Top 20 ranked records <sub>inspection aid</sub></summary>',
-    '',
+    '<div style="font-size: smaller;">',
     markdown_table(['Rank', 'Paper', 'Evidence'], ranking_rows),
-    '',
-    '</details>',
+    '</div>',
     '',
     'The table is limited to the 20 highest-ranked records; the complete metadata remains in the project database and source inventory below.',
     '',
@@ -1365,15 +1345,10 @@ report_lines.extend([
     '',
     'This inventory contains the deduplicated records retrieved by the SLR workflow from OpenAlex, Crossref, arXiv, and Semantic Scholar. Entries use APA 7-style author, date, title, source, volume, issue, pages, and DOI/URL formatting when metadata is available. DOI URLs are retained. DOI-bearing records are enriched from Crossref and cached in the local audit database; records without a DOI or unavailable Crossref metadata retain the source fields provided by the original search result. Appearing here does not by itself indicate a final eligibility decision, methodological-quality assessment, or full-text review.',
     '',
-    '<details>',
-    '<summary>Complete source inventory <sub>deduplicated records</sub></summary>',
-    '',
-    '<ol>',
+    '<ol style="font-size: smaller;">',
     '',
 ] + reference_lines + [
     '</ol>',
-    '',
-    '</details>',
     '',
     '## Reproducibility Notes',
     '',
@@ -1676,12 +1651,11 @@ apa_references_path.write_text(
 print(f'Wrote {len(apa_references)} APA-style references: {apa_references_path}')
 ```
 
-</details>
+</div>
 
 ## Appendix C. Recipe: Reusing the Workflow for a New Clinical-Reasoning Topic
 
-<details>
-<summary>Clinical-reasoning reuse recipe <sub>companion protocol-design example</sub></summary>
+<div style="font-size: smaller;">
 
 This recipe adapts the workflow and bounded WILLMA advisory step to **the use of NANDA-I, NIC, and NOC terminologies to improve clinical reasoning through generative-AI-based agents**. It is a protocol-design example, not a completed clinical review or clinical decision support.
 
@@ -1759,4 +1733,4 @@ Use lawful open-access retrieval and respect licences, confidentiality, and copy
 6. Respect open-access, terminology-licence, privacy, and governance boundaries.
 7. Report evidence alongside explicit safety, validity, and oversight limitations.
 
-</details>
+</div>
