@@ -1,4 +1,4 @@
-# AI-Written Code Review: Evidence Overview
+# A Prisma-aligned search engine for systematic literature reviews (SLR) driven by (WILLMA) SURF AI-HUB
 
 ## Contents
 
@@ -15,16 +15,21 @@
 Generated: 2026-08-16 05:43 UTC
 
 ## Scope
+A systematic literature review (SLR) is a structured method to find, screen, and summarize published research on a specific question using explicit search strategies and documented criteria.
+The aim of SLR-Engine is to give anyone with a topic they want to explore — students and self-learners, researchers, business and consulting teams with a research question — an easy, lightweight way to do it, grounded in academic papers.
+Less time, less effort, no methodology background required, but built on the same proven methodology that researchers around the world use.
 
-SEE ALSO: https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/docs/articles/introduction-to-slr-engine.md
+For a detailed introduction on the original approach as created by Tui see https://github.com/HR-AI-HUB/hr-ai-hub.github.io/blob/main/SLR-ENGINE/docs/articles/introduction-to-slr-engine.md.
 
-**Topic:** An automated, AI-assisted systematic literature review addressing:
+The motivation behind building an *Open-source engine for running systematic literature review* is described here: https://github.com/tuirk/SLR-Engine/blob/main/docs/articles/why-i-built-slr-engine.md
+
+### **Topic:** An automated, AI-assisted systematic literature review addressing:
 
 **The Problem With Using AI to Review AI-Written Code**
 
-**Aim:** To synthesize empirical evidence on the reliability, risks, and forms of human oversight required when AI systems evaluate AI-generated code.
+### **Aim:** To synthesize empirical evidence on the reliability, risks, and forms of human oversight required when AI systems evaluate AI-generated code.
 
-This reproducible [SLR-Engine](https://github.com/tuirk/SLR-Engine) overview separates retrieved evidence, AI-assisted advice, and the ranking used for inspection. Automated output does not replace scholarly judgement.
+This custom-made implementation  [SLR-Engine](https://github.com/tuirk/SLR-Engine) separates retrieved evidence, AI-assisted advice, and the ranking used for inspection. Automated output does not replace scholarly judgement.
 
 ## Notebook & Code Development
 
