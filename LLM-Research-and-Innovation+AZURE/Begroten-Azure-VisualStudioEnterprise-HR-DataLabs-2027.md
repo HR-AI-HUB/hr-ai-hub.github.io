@@ -11,7 +11,7 @@
 - [3. Beheerst gebruik van Azure en Visual Studio](#3-beheerst-gebruik-van-azure-en-visual-studio)
 - [4. Data, privacy en verantwoord gebruik](#4-data-privacy-en-verantwoord-gebruik)
 - [5. Bronnen](#5-bronnen)
-- [Bijlage A - Huidige deelnemers](#bijlage-a---huidige-deelnemers)
+- [Bijlage A - Geanonimiseerde deelnemers](#bijlage-a---geanonimiseerde-deelnemers)
 - [Bijlage B - Uitgevoerde prompt](#bijlage-b---uitgevoerde-prompt)
 - [Bijlage C - LLM-modelinventaris uit screenshot](#bijlage-c---llm-modelinventaris-uit-screenshot)
 
