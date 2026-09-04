@@ -1,10 +1,10 @@
 # E-mailverzoek behoud Azure en Visual Studio Enterprise voor HR DataLabs 2027
 
-**Aan:** Paans, R. (Ron), Servicemanager Dienst: IDT  
-**E-mailadres:** r.paans@hr.nl  
+**Aan:** [naam en functie verwijderd]  
+**E-mailadres:** [e-mailadres verwijderd]  
 **Onderwerp:** Verzoek behoud Azure en Visual Studio Enterprise in IDT-begroting 2027
 
-Beste Ron,
+Beste [naam verwijderd],
 
 Voor de continuiteit en innovatiekracht van de HR DataLabs verzoek ik je om het bestaande gebruik van **Azure en Visual Studio Enterprise** voor 2027 in de IDT-begroting te behouden.
 
@@ -61,7 +61,7 @@ Alvast bedankt voor je beoordeling en de afstemming met IDT over de opname hierv
 
 Met vriendelijke groet,
 
-**Rob van der Willigen**  
+**[naam verwijderd]**  
 Namens de HR DataLabs
 
 **Onderliggende notitie:** [Begroten Azure en Visual Studio Enterprise voor HR DataLabs 2027](Begroten-Azure-VisualStudioEnterprise-HR-DataLabs-2027.md)

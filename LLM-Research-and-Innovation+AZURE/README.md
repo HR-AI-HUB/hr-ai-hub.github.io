@@ -128,30 +128,30 @@ Escalatie is verplicht bij:
 
 De bronnen ondersteunen de governance-, triage-, hybride infrastructuur- en datamanagementprincipes. Zij bevestigen geen concrete Azure Enterprise Agreement-prijzen, Visual Studio Enterprise-tegoeden of HR-licentievoorwaarden.
 
-## Bijlage A - Huidige deelnemers
+## Bijlage A - Geanonimiseerde deelnemers
 
-| Naam | UPN | E-mail |
+| Deelnemer | UPN | E-mail |
 |---|---|---|
-| Beer, V.J. de (Vincent) | BeerVJ@hr.nl | v.j.de.beer@hr.nl |
-| Cox, S.P. (Stefan) | CoxSP@hr.nl | s.p.cox@hr.nl |
-| Faas, R.L.M. (Ronald) | FaaRL@hr.nl | r.l.m.faas@hr.nl |
-| Graaf-Waar, H.I. de (Helen) | WaaHI@hr.nl | h.i.de.graaf-waar@hr.nl |
-| Javed, H.T.M. (Humère) | JavHT@hr.nl | H.T.M.Javed@hr.nl |
-| Juffermans, E.A.W. (Ellen) | JufEA@hr.nl | E.A.W.Juffermans@hr.nl |
-| Kocken, M.M.F. (Marlous) | KockM@hr.nl | m.m.f.kocken@hr.nl |
-| Lubeek, J.M. van (Marleen) | LubJM@hr.nl | j.m.van.lubeek@hr.nl |
-| Ozaydin, B.A. (Begüm) | OzaBA@hr.nl | b.a.ozaydin@hr.nl |
-| Velzen, M. van (Mark) | MVelz@hr.nl | m.van.velzen@hr.nl |
-| Willigen, M.F. van der (Micha) | MFWil@hr.nl | m.f.van.der.willigen@hr.nl |
-| Willigen, M.J. van der (Martijn) | WilMJ@hr.nl | m.j.van.der.willigen@hr.nl |
-| Willigen, R.F. van der (Rob) | Willi@hr.nl | r.f.van.der.willigen@hr.nl |
+| Deelnemer 01 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 02 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 03 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 04 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 05 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 06 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 07 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 08 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 09 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 10 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 11 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 12 | [UPN verwijderd] | [e-mailadres verwijderd] |
+| Deelnemer 13 | [UPN verwijderd] | [e-mailadres verwijderd] |
 
 ## Bijlage B - Uitgevoerde prompt
 
 ```text
 Pas het Markdown-bestand aan:
 
-D:\OneDrive - Hogeschool Rotterdam\1_AZURE_ENTERPRISE_ACCOUNTS\Begroten-Azure-VisualStudioEnterprise-HR-DataLabs-2027.md
+[lokaal bronbestand verwijderd]
 
 Gebruik de actuele inhoud van het bestand als uitgangspunt en behoud bestaande wijzigingen die niet strijdig zijn met deze opdracht.
 
