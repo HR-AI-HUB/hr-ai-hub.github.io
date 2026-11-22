@@ -118,6 +118,9 @@ getent ahostsv4 visualstudio.cyber-secure-te.src.surf-hosted.nl
 sudo ss -ltnp '( sport = :80 or sport = :443 )'
 ```
 
+![alt text](output001.png)
+
+
 Confirm Ubuntu 22.04, verify that DNS matches the public address in SRC, and ensure ports 80/443 are available. Resolve DNS or port conflicts before continuing.
 
 ## 3. Install Docker Engine and Compose
