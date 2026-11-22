@@ -132,6 +132,8 @@ sudo docker version
 sudo docker compose version
 ```
 
+![alt text](output002.png)
+
 If both work, keep the existing installation and continue to the next section.
 
 On a fresh Ubuntu VM, install from Docker's official APT repository:
