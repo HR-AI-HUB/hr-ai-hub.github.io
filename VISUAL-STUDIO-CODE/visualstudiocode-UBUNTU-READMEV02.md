@@ -12,8 +12,6 @@ code-server provides a browser-accessible editor based on VS Code. It is not the
 
 > This is an independent deployment guide. The linked BIG_BLUE_BUTTON_SERVER directory could not be retrieved when this document was prepared, so its structure and scripts have not been verified or reproduced.
 
-Last updated: 22 November 2026.
-
 ## Contents
 
 1. [Architecture](#architecture)
@@ -120,51 +118,30 @@ getent ahostsv4 visualstudio.cyber-secure-te.src.surf-hosted.nl
 sudo ss -ltnp '( sport = :80 or sport = :443 )'
 ```
 
-![alt text](output001.png)
-
-
 Confirm Ubuntu 22.04, verify that DNS matches the public address in SRC, and ensure ports 80/443 are available. Resolve DNS or port conflicts before continuing.
 
 ## 3. Install Docker Engine and Compose
 
-### 3.1 Check for an existing installation
+Check for an existing installation:
 
 ```bash
 sudo docker version
 sudo docker compose version
 ```
 
-![alt text](output002.png)
+If both work, keep the existing installation and continue to the next section.
 
-If both commands work, keep the existing installation and continue to section 4. The screenshot above is a relative repository asset; keep `output002.png` alongside this README if you want it displayed.
-
-The script below is intended for a fresh Ubuntu 22.04 VM. If Docker reports conflicts with packages such as `docker.io`, `containerd`, or `runc`, consult the official Docker installation guide before removing anything. Do not replace an existing installation blindly on a VM hosting other services.
-
-### 3.2 Create `install-docker.sh`
-
-In your SSH terminal on the Ubuntu VM, paste the entire block below, including the opening `cat` command and final `SCRIPT` line. This creates the script without running it.
-
-Use plain URLs in shell commands, not Markdown links such as `[https://example.com](https://example.com)`.
+On a fresh Ubuntu VM, install from Docker's official APT repository:
 
 ```bash
-cat > ~/install-docker.sh <<'SCRIPT'
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "Installing Docker Engine and Docker Compose..."
-sudo -v
-
-echo "[1/6] Installing prerequisites..."
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl openssl dnsutils
 
-echo "[2/6] Adding Docker's signing key..."
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
   -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-echo "[3/6] Configuring Docker's APT repository..."
 sudo tee /etc/apt/sources.list.d/docker.sources >/dev/null <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
@@ -174,7 +151,6 @@ Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-echo "[4/6] Installing Docker packages..."
 sudo apt-get update
 sudo apt-get install -y \
   docker-ce \
@@ -183,64 +159,14 @@ sudo apt-get install -y \
   docker-buildx-plugin \
   docker-compose-plugin
 
-echo "[5/6] Enabling and starting Docker..."
 sudo systemctl enable --now docker
-
-echo "[6/6] Testing Docker and Docker Compose..."
 sudo docker run --rm hello-world
 sudo docker compose version
-
-echo
-echo "Docker Engine and Docker Compose installation completed."
-SCRIPT
 ```
 
-The quoted outer `SCRIPT` delimiter preserves variable expressions until the installer runs. The inner `EOF` block writes Docker's APT repository configuration during execution. Keep both closing delimiters at the beginning of their lines.
-
-### 3.3 Check the script syntax
-
-```bash
-bash -n ~/install-docker.sh
-```
-
-No output means Bash found no syntax errors. This does not execute the installer or verify package availability, network connectivity, or compatibility with existing software.
-
-### 3.4 Make the script executable and run it
-
-```bash
-chmod +x ~/install-docker.sh
-~/install-docker.sh
-```
-
-Enter your SSH user's sudo password if prompted. Run this from your normal SSH account; the script invokes `sudo` where needed.
-
-Alternatively, execute it explicitly with Bash:
-
-```bash
-bash ~/install-docker.sh
-```
-
-Choose one execution method, not both. Do not invoke this Bash script using `sh`.
-
-`set -euo pipefail` enables stricter error handling. If installation fails, inspect the reported error and resolve it before continuing. A syntax check alone does not demonstrate a successful installation.
-
-### 3.5 Verify the installation
-
-```bash
-sudo docker --version
-sudo docker compose version
-sudo systemctl is-active docker
-```
-
-The service-status command should print:
-
-```text
-active
-```
+If Docker reports conflicts with packages such as `docker.io`, `containerd`, or `runc`, consult the official Docker installation guide before removing anything. Do not replace an existing installation blindly on a VM hosting other services.
 
 This guide uses `sudo docker`; adding your user to the Docker group is not required.
-
-The installer only installs Docker and Compose. It does not create the editor workspace, configure DNS, or start Caddy/code-server. Continue with section 4 below.
 
 ## 4. Create the deployment
 
@@ -697,7 +623,7 @@ The Compose file above is the standalone variant and must be adapted before use 
 - [ ] Actual SRC FQDN verified.
 - [ ] DNS resolves to the intended workspace.
 - [ ] Ports 80/443 are available and reachable.
-- [ ] Docker Engine and Compose plugin work (installed using `install-docker.sh` if needed).
+- [ ] Docker Engine and Compose plugin work.
 - [ ] `.env` created with correct UID/GID and strong password.
 - [ ] Password saved securely.
 - [ ] Compose and Caddy configurations validate.
